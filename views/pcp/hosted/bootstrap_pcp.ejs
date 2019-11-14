@@ -1,0 +1,66 @@
+<style>
+    .panel {
+        width: 80%;
+        margin: 2em auto;
+    }
+
+    .bootstrap-basic {
+        background: white;
+    }
+
+    .panel-body {
+        width: 90%;
+        margin: 2em auto;
+    }
+
+    .helper-text {
+        color: #8A6D3B;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* Braintree Hosted Fields styling classes*/
+    .braintree-hosted-fields-focused {
+        border: 1px solid #0275d8;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    }
+
+    .braintree-hosted-fields-focused.focused-invalid {
+        border: 1px solid red;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px red;
+    }
+</style>
+<div class="panel panel-default bootstrap-basic">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="text-align:center">Hosted Fields with Bootstrap</h3><br/>
+        <h3 class="panel-title">Enter Card Details</h3>
+    </div>
+    <form class="panel-body" id="my-sample-form">
+        <div class="row">
+            <div class="form-group col-sm-8">
+                <label class="control-label">Card Number</label>
+                <!--  Hosted Fields div container -->
+                <div class="form-control" id="card-number"></div>
+                <span class="helper-text"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-8">
+                <label class="control-label">Expiration Date</label>
+                <!--  Hosted Fields div container -->
+                <div class="form-control" id="expiration-date"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-8">
+                <label class="control-label">Security Code</label>
+                <!--  Hosted Fields div container -->
+                <div class="form-control" id="cvv"></div>
+            </div>
+        </div>
+        <button value="submit" id="submit" class="btn btn-success btn-sm">Pay with <span id="card-type">Card</span></button>
+        <div id="payments-sdk__contingency-lightbox"></div>
+    </form>
+    <script src="/pcpstatic/hosted_bootstrap.js"></script>
+</div>
