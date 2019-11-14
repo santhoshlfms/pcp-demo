@@ -1,0 +1,406 @@
+<style>
+  /*----- VARIABLES -----*/
+/*----- GENERAL -----*/
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+
+html {
+  box-sizing: border-box;
+}
+
+
+/*----- POSITIONING -----*/
+.container-min {
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  -webkit-perspective: 100;
+          perspective: 100;
+  position: relative;
+}
+@media (max-width: 467px) {
+  .container {
+    width: 90%;
+  }
+}
+
+#cardForm {
+  height: 5em;
+  width: 100%;
+  height: 5.5em;
+  margin-bottom: 1em;
+  position: relative;
+  -webkit-transform: translateX(0em);
+          transform: translateX(0em);
+}
+
+/*----- HF CONTAINERS -----*/
+.field-container {
+  position: absolute;
+  width: 100%;
+  border: 1px solid #fff;
+  z-index: 2;
+  opacity: 1;
+  transition: all 500ms cubic-bezier(0.2, 1.3, 0.7, 1);
+  -webkit-backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  -webkit-transform-origin: bottom;
+          transform-origin: bottom;
+  transition: opacity 0.5s, -webkit-transform 0.5s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.5s cubic-bezier(0.2, 1.3, 0.7, 1), opacity 0.5s;
+  transition: transform 0.5s cubic-bezier(0.2, 1.3, 0.7, 1), opacity 0.5s, -webkit-transform 0.5s cubic-bezier(0.2, 1.3, 0.7, 1);
+  opacity: 1;
+}
+
+.field-container:nth-child(1) {
+  -webkit-animation: inputIntro 0.5s cubic-bezier(0.2, 1.3, 0.7, 1);
+          animation: inputIntro 0.5s cubic-bezier(0.2, 1.3, 0.7, 1);
+}
+
+.field-container--hidden {
+  opacity: 0;
+  -webkit-transform: translate(0em, 0em) rotateX(180deg);
+          transform: translate(0em, 0em) rotateX(180deg);
+  z-index: -1;
+}
+
+.field-container--button {
+  border: 0;
+}
+
+.hosted-field {
+  height: 5.5em;
+  width: 100%;
+  display: block;
+  padding-left: 1em;
+}
+
+/*----- HF LABELS -----*/
+.hosted-field--label {
+  color: #FFF;
+  position: absolute;
+  top: 0.9em;
+  left: 0.5em;
+  transition: color 0.2s, -webkit-transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1), color 0.2s;
+  transition: transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1), color 0.2s, -webkit-transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  -webkit-transform-origin: 0 0;
+          transform-origin: 0 0;
+  font-size: 2em;
+  line-height: 1;
+}
+
+.hosted-field--label--moved,
+.not-empty {
+  -webkit-transform: scale(0.8) translate(0em, -3em);
+          transform: scale(0.8) translate(0em, -3em);
+  transition: color 0.2s, -webkit-transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1), color 0.2s;
+  transition: transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1), color 0.2s, -webkit-transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  color: #fff;
+}
+
+/*----- HF MESSAGES -----*/
+.field-message {
+  font-size: 1em;
+  margin: 1em;
+  opacity: .3;
+  color: white;
+  padding-bottom: 10px;
+}
+@media (max-width: 467px) {
+  .field-message {
+    margin: 0;
+  }
+}
+
+.field-message--error {
+  color: #f44336;
+}
+
+/*----- HF SUBMIT -----*/
+#button-pay {
+  -webkit-appearance: none;
+  width: 100%;
+  border: 0;
+  text-align: center;
+  font-size: 2em;
+  padding: 0.9em;
+  color: #000;
+  background: #fff;
+  cursor: pointer;
+}
+
+/*----- HF CONTROLS -----*/
+.form-controls__steps {
+  font-size: 1.5em;
+  position: absolute;
+  right: 1em;
+  -webkit-transform: translateY(-1.9em);
+          transform: translateY(-1.9em);
+  opacity: .3;
+}
+
+.form-controls {
+  position: absolute;
+  right: 0;
+  z-index: 5;
+  -webkit-animation: arrowIntroScale 0.3s 0.4s cubic-bezier(0.2, 1.3, 0.7, 1) backwards;
+          animation: arrowIntroScale 0.3s 0.4s cubic-bezier(0.2, 1.3, 0.7, 1) backwards;
+  transition: -webkit-transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1), -webkit-transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+}
+@media (max-width: 467px) {
+  .form-controls {
+    right: 0.5em;
+  }
+}
+.form-controls a {
+  display: inline-block;
+  padding: 1em 0.5em;
+  -webkit-transform: scale(0.8);
+          transform: scale(0.8);
+  transition: -webkit-transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1), -webkit-transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+}
+@media (max-width: 467px) {
+  .form-controls a {
+    padding: 0.7em 0.1em;
+    -webkit-transform: scale(0.6);
+            transform: scale(0.6);
+  }
+}
+.form-controls a:hover {
+  -webkit-transform: scale(0.9);
+          transform: scale(0.9);
+  transition: -webkit-transform 0.1s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.1s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.1s cubic-bezier(0.2, 1.3, 0.7, 1), -webkit-transform 0.1s cubic-bezier(0.2, 1.3, 0.7, 1);
+}
+.form-controls .form-controls--hidden {
+  -webkit-transform: scale(0);
+          transform: scale(0);
+  transition: -webkit-transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1), -webkit-transform 0.3s cubic-bezier(0.2, 1.3, 0.7, 1);
+}
+.form-controls .form-controls--hidden:hover {
+  -webkit-transform: scale(0);
+          transform: scale(0);
+}
+
+.form-controls--back {
+  transition: -webkit-transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1), -webkit-transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  -webkit-transform: translateX(2em);
+          transform: translateX(2em);
+}
+
+.form-controls--end {
+  transition: -webkit-transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1), -webkit-transform 0.2s cubic-bezier(0.2, 1.3, 0.7, 1);
+  -webkit-transform: translateY(-5em) translateX(-3.5em);
+          transform: translateY(-5em) translateX(-3.5em);
+}
+
+/*----- BT CLASSES -----*/
+.braintree-hosted-fields-valid {
+  background: rgba(76, 175, 80, 0.5);
+  -webkit-animation: success 0.5s cubic-bezier(0.2, 1.3, 0.7, 1);
+          animation: success 0.5s cubic-bezier(0.2, 1.3, 0.7, 1);
+}
+
+.braintree-hosted-fields-invalid {
+  background: rgba(244, 67, 54, 0.5);
+  color: #fff;
+  -webkit-animation: error 0.5s cubic-bezier(0.2, 1.3, 0.7, 1);
+          animation: error 0.5s cubic-bezier(0.2, 1.3, 0.7, 1);
+}
+
+/*----- ANIMATIONS -----*/
+@-webkit-keyframes inputIntro {
+  0% {
+    -webkit-transform: translate(0, 0.2em) rotateX(90deg) scale(0.9);
+            transform: translate(0, 0.2em) rotateX(90deg) scale(0.9);
+  }
+  100% {
+    -webkit-transform: translate(0, 0) rotateX(0) scale(1);
+            transform: translate(0, 0) rotateX(0) scale(1);
+  }
+}
+@keyframes inputIntro {
+  0% {
+    -webkit-transform: translate(0, 0.2em) rotateX(90deg) scale(0.9);
+            transform: translate(0, 0.2em) rotateX(90deg) scale(0.9);
+  }
+  100% {
+    -webkit-transform: translate(0, 0) rotateX(0) scale(1);
+            transform: translate(0, 0) rotateX(0) scale(1);
+  }
+}
+@-webkit-keyframes arrowIntroScale {
+  0% {
+    -webkit-transform: translate(-1em, 0) scale(0);
+            transform: translate(-1em, 0) scale(0);
+  }
+  100% {
+    -webkit-transform: translate(0, 0) scale(1);
+            transform: translate(0, 0) scale(1);
+  }
+}
+@keyframes arrowIntroScale {
+  0% {
+    -webkit-transform: translate(-1em, 0) scale(0);
+            transform: translate(-1em, 0) scale(0);
+  }
+  100% {
+    -webkit-transform: translate(0, 0) scale(1);
+            transform: translate(0, 0) scale(1);
+  }
+}
+@-webkit-keyframes error {
+  0% {
+    background: #282828;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  50% {
+    background: #f44336;
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+  100% {
+    background: rgba(244, 67, 54, 0.5);
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@keyframes error {
+  0% {
+    background: #282828;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  50% {
+    background: #f44336;
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+  100% {
+    background: rgba(244, 67, 54, 0.5);
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@-webkit-keyframes success {
+  0% {
+    background: #282828;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  50% {
+    background: #3d8b40;
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+  100% {
+    background: rgba(76, 175, 80, 0.5);
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@keyframes success {
+  0% {
+    background: #282828;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  50% {
+    background: #3d8b40;
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+  100% {
+    background: rgba(76, 175, 80, 0.5);
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+</style>
+<!--[if IE 9]>
+<style>
+body {
+  padding-top: 5em;
+}
+
+.hosted-field--label {
+  top: -1.2em;
+}
+
+.form-controls__steps {
+  top: -1.2em;
+}
+</style>
+<![endif]-->
+<h3 style='color:black'>Hosted Fields with Minimal Flow</h3>
+<div class="container-min" style="background-color:black;padding-top:70px;margin:0;width:90%">
+        <div class="container-wrap per">
+          
+          <div class="form-controls__steps" style="color:white !important">1/4</div>
+      
+          <nav class="form-controls">
+            <a href="" class="form-controls__prev form-controls--hidden">
+              <svg width="19" height="32" viewBox="0 0 19 32" xmlns="http://www.w3.org/2000/svg"><title>next</title><path fill="#ffffff" d="M5.657 15.556L18.385 2.828 15.555 0 0 15.556l15.556 15.557 2.83-2.83" fill-rule="evenodd"/></svg>
+            </a>
+            <a href="" class="form-controls__next form-controls--hidden">
+              <svg width="19" height="32" viewBox="0 0 19 32" xmlns="http://www.w3.org/2000/svg"><title>prev</title><path fill="#ffffff" d="M12.727 15.556L0 2.828 2.828 0l15.557 15.556L2.828 31.113 0 28.283" fill-rule="evenodd"/></svg>
+            </a>
+          </nav>
+      
+          <form action="/" method="post" id="cardForm">
+            <div class="field-container">
+              <label class="hosted-field--label " for="card-number">Card Number
+              </label>
+              <div class="hosted-field" id="card-number"></div>
+            </div>
+      
+            <div class="field-container field-container--hidden">
+              <label class="hosted-field--label " for="expiration-date">
+                Exp (MM/YYYY)
+              </label>
+              <div class="hosted-field" id="expiration-date"></div>
+            </div>
+      
+            <div class="field-container field-container--hidden">
+              <label class="hosted-field--label " for="cvv">
+              CVV
+            </label>
+              <div class="hosted-field" id="cvv"></div>
+            </div>
+      
+            <div class="field-container field-container--hidden field-container--button">
+              <input id="button-pay" type="submit" value="Pay" />
+            </div>
+          </form>
+      
+          <div class="form-info">
+            <p class="field-message">Let's add your card number.</p>
+          </div>
+          
+        </div>
+        <div id="payments-sdk__contingency-lightbox"></div>
+	    </div>
+      <script src="/pcpstatic/hosted_minimal.js"></script>
