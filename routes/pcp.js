@@ -1,7 +1,16 @@
-const { COUNTRY , LOCALES, CURRENCY, LANG } = require("./constants");
 const request = require("request");
+const jwt = require('jsonwebtoken');
 
+const { COUNTRY , LOCALES, CURRENCY, LANG } = require("./constants");
 const getConfig = require("./pcpConfig").getConfig;
+
+function getAuthAssertion(apiConfiguration) {
+  var token = jwt.sign({"iss": apiConfiguration.CLIENT_ID,
+  "payer_id": apiConfiguration.MERCHANTID },null, { algorithm: 'none' });
+  console.log("Get Auth Assertion value for "+ apiConfiguration.MERCHANTID);
+  console.log("Auth Assertion "+token);
+  return token;
+}
 
 function getAccessToken(apiConfiguration) {
    return new Promise((resolve,reject) => {
@@ -64,15 +73,23 @@ function getAccessToken(apiConfiguration) {
 
 function getOrder(accessToken, apiConfiguration) {
   return new Promise((resolve,reject) => {
-    try {    
-      request.get(apiConfiguration.GET_ORDER_URL+apiConfiguration.orderId, {
+    try {
+      
+      var options = {
         headers: {
-            'content-type': "application/json",
-            'authorization': "Bearer "+accessToken,
-            'PayPal-Auth-Assertion':"ewogICJhbGciOiAibm9uZSIKfQ==.ewogICJpc3MiOiAiQVQ1dkl2SS1iN2hUbGZ3UVFkamZfX2hoTUc0ODlfa3hFaWx4Q19BWEgyaktINl9FN0dqYVRQYjhodC1DVE01WW1XOVp5OTJIaUQ0aWd0WEciLAogICJwYXllcl9pZCI6ICJQUEM2Q1JHWk5XWTVDIgp9."
+          'content-type': "application/json",
+          'authorization': "Bearer "+accessToken,
         },
         json: true
-      }, function (err, response, body) {
+      }
+    
+      console.log("Is Partner "+ apiConfiguration.isPartner)
+    
+      if(apiConfiguration.isPartner) {
+        options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
+      }
+
+      request.get(apiConfiguration.GET_ORDER_URL + apiConfiguration.orderId, options , function (err, response, body) {
           if (err) {
               console.error(err);
               return resolve({
@@ -104,15 +121,23 @@ function getOrder(accessToken, apiConfiguration) {
 function createOrder(accessToken, apiConfiguration) {
   return new Promise((resolve,reject) => {
     try {    
-      request.post(apiConfiguration.CREATE_ORDER_URL, {
+
+      var options = {
         headers: {
-            'content-type': "application/json",
-            'authorization': "Bearer "+accessToken,
-            'PayPal-Auth-Assertion':"ewogICJhbGciOiAibm9uZSIKfQ==.ewogICJpc3MiOiAiQVQ1dkl2SS1iN2hUbGZ3UVFkamZfX2hoTUc0ODlfa3hFaWx4Q19BWEgyaktINl9FN0dqYVRQYjhodC1DVE01WW1XOVp5OTJIaUQ0aWd0WEciLAogICJwYXllcl9pZCI6ICJQUEM2Q1JHWk5XWTVDIgp9."
+          'content-type': "application/json",
+          'authorization': "Bearer "+accessToken,
         },
         body: apiConfiguration.payload,
         json: true
-      }, function (err, response, body) {
+      }
+
+      console.log("Is Partner "+ apiConfiguration.isPartner)
+    
+      if(apiConfiguration.isPartner) {
+        options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
+      }
+
+      request.post(apiConfiguration.CREATE_ORDER_URL, options, function (err, response, body) {
           if (err) {
               console.error(err);
               return resolve({
@@ -127,11 +152,10 @@ function createOrder(accessToken, apiConfiguration) {
 
           // STC API Call
           console.log("Before calling STC API");
-          request.put(apiConfiguration.STC +apiConfiguration.MERCHANTID+ '/'+body.id, {
+          var stcOptions = {
             headers: {
               'content-type': "application/json",
               'authorization': "Bearer "+accessToken,
-              'PayPal-Auth-Assertion':"ewogICJhbGciOiAibm9uZSIKfQ==.ewogICJpc3MiOiAiQVQ1dkl2SS1iN2hUbGZ3UVFkamZfX2hoTUc0ODlfa3hFaWx4Q19BWEgyaktINl9FN0dqYVRQYjhodC1DVE01WW1XOVp5OTJIaUQ0aWd0WEciLAogICJwYXllcl9pZCI6ICJQUEM2Q1JHWk5XWTVDIgp9."
             },
             body: {
               "additional_data": [
@@ -158,7 +182,13 @@ function createOrder(accessToken, apiConfiguration) {
               
             },
             json: true
-          },function (err, response, body) {
+          };
+
+          if(apiConfiguration.isPartner) {
+            stcOptions.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
+          }
+
+          request.put(apiConfiguration.STC +apiConfiguration.MERCHANTID+ '/'+body.id, stcOptions ,function (err, response, body) {
               if (err) {
                 console.error("Error in calling STC API "+ err);
                 return resolve({
@@ -190,15 +220,22 @@ function createOrder(accessToken, apiConfiguration) {
 function captureOrder(accessToken, apiConfiguration) {
   return new Promise((resolve,reject) => {
     try {    
-      request.post(apiConfiguration.CAPTURE_ORDER_URL + apiConfiguration.orderId + '/capture', {
+      var options = {
         headers: {
-            'content-type': "application/json",
-            'authorization': "Bearer "+accessToken,
-            'PayPal-Auth-Assertion':"ewogICJhbGciOiAibm9uZSIKfQ==.ewogICJpc3MiOiAiQVQ1dkl2SS1iN2hUbGZ3UVFkamZfX2hoTUc0ODlfa3hFaWx4Q19BWEgyaktINl9FN0dqYVRQYjhodC1DVE01WW1XOVp5OTJIaUQ0aWd0WEciLAogICJwYXllcl9pZCI6ICJQUEM2Q1JHWk5XWTVDIgp9."
+          'content-type': "application/json",
+          'authorization': "Bearer "+accessToken,
         },
-        body :{},
-        json: true
-      }, function (err, response, body) {
+        json: true,
+        body : {}
+      }
+      
+      console.log("Is Partner "+ apiConfiguration.isPartner)
+    
+      if(apiConfiguration.isPartner) {
+        options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
+      }
+
+      request.post(apiConfiguration.CAPTURE_ORDER_URL + apiConfiguration.orderId + '/capture', options, function (err, response, body) {
           if (err) {
               console.error(err);
               return resolve({
@@ -229,16 +266,24 @@ function captureOrder(accessToken, apiConfiguration) {
 
 function authOrder(accessToken, apiConfiguration) {
   return new Promise((resolve,reject) => {
-    try {    
-      request.post(apiConfiguration.AUTH_ORDER_URL + apiConfiguration.orderId + '/authorize', {
+    try {   
+      
+      var options = {
         headers: {
-            'content-type': "application/json",
-            'authorization': "Bearer "+accessToken,
-            'PayPal-Auth-Assertion':"ewogICJhbGciOiAibm9uZSIKfQ==.ewogICJpc3MiOiAiQVQ1dkl2SS1iN2hUbGZ3UVFkamZfX2hoTUc0ODlfa3hFaWx4Q19BWEgyaktINl9FN0dqYVRQYjhodC1DVE01WW1XOVp5OTJIaUQ0aWd0WEciLAogICJwYXllcl9pZCI6ICJQUEM2Q1JHWk5XWTVDIgp9."
+          'content-type': "application/json",
+          'authorization': "Bearer "+accessToken,
         },
-        body :{},
-        json: true
-      }, function (err, response, body) {
+        json: true,
+        body : {}
+      }
+      
+      console.log("Is Partner "+ apiConfiguration.isPartner)
+    
+      if(apiConfiguration.isPartner) {;
+        options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
+      }
+
+      request.post(apiConfiguration.AUTH_ORDER_URL + apiConfiguration.orderId + '/authorize', options , function (err, response, body) {
           if (err) {
               console.error(err);
               return resolve({
@@ -276,12 +321,17 @@ function getClientToken(accessToken, apiConfiguration) {
             'authorization': "Bearer " + accessToken,
             'cache-control': "no-cache",
             'content-type': "application/json",
-            'PayPal-Auth-Assertion':"ewogICJhbGciOiAibm9uZSIKfQ==.ewogICJpc3MiOiAiQVQ1dkl2SS1iN2hUbGZ3UVFkamZfX2hoTUc0ODlfa3hFaWx4Q19BWEgyaktINl9FN0dqYVRQYjhodC1DVE01WW1XOVp5OTJIaUQ0aWd0WEciLAogICJwYXllcl9pZCI6ICJQUEM2Q1JHWk5XWTVDIgp9."
-			    },
-     
-      json: true
+          },
+     json: true
     }
-    console.log("Is Vaulting Enabled "+ apiConfiguration.isVaulting)
+    console.log("Is Partner "+ apiConfiguration.isPartner);
+    
+    if(apiConfiguration.isPartner) {
+      options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
+    }
+
+    console.log("Is Vaulting Enabled "+ apiConfiguration.isVaulting);
+
     if(apiConfiguration.isVaulting) {
       options.body = {
         customer_id : apiConfiguration.CUSTOMER_ID
@@ -339,18 +389,19 @@ module.exports = function(router) {
 
   router.post("/pcp-create-order", async function(req,res,next) {
     try {
-      console.log("***Create Order ***");
+      console.log("*** Create Order ***");
 
       if(!req.body.envObj || !req.body.orderObj) {
         return res.status(400);
       }
-      console.log("ENV OBJ  " + JSON.stringify(req.body.envObj))
-      console.log("ORDER OBJ " + JSON.stringify(req.body.orderObj))
+      console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj))
+      console.log(" ORDER OBJ *** " + JSON.stringify(req.body.orderObj))
       
       let { envObj, orderObj} = req.body;
 
       let apiConfiguration = {
         ...getConfig(envObj.env),
+        ...envObj,
         CLIENT_ID: envObj.clientId,
         SECRET: envObj.clientSecret,
         MERCHANTID: envObj.merchantId,
@@ -386,18 +437,19 @@ module.exports = function(router) {
 
   router.post("/pcp-get-order", async function(req,res,next) {
     try {
-      console.log("***GET Order ***");
+      console.log("*** GET Order ***");
 
       if(!req.body.envObj || !req.query.id) {
         return res.status(400);
       }
-      console.log("ENV OBJ " + JSON.stringify(req.body.envObj))
+      console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj))
           
       let { envObj} = req.body;
       let orderId = req.query.id;
 
       let apiConfiguration = {
         ...getConfig(envObj.env),
+        ...envObj,
         CLIENT_ID: envObj.clientId,
         SECRET: envObj.clientSecret,
         MERCHANTID: envObj.merchantId,
@@ -431,18 +483,19 @@ module.exports = function(router) {
 
   router.post("/pcp-capture-order", async function(req,res,next) {
     try {
-      console.log("***Capture Order ***");
+      console.log("*** Capture Order ***");
       
       if(!req.body.envObj || !req.query.id) {
         return res.status(400);
       }
-      console.log("ENV OBJ " + JSON.stringify(req.body.envObj))
+      console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj))
 
       let { envObj} = req.body;
       let orderId = req.query.id;
 
       let apiConfiguration = {
         ...getConfig(envObj.env),
+        ...envObj,
         CLIENT_ID: envObj.clientId,
         SECRET: envObj.clientSecret,
         MERCHANTID: envObj.merchantId,
@@ -476,8 +529,8 @@ module.exports = function(router) {
 
   router.post("/pcp-auth-order", async function(req,res,next) {
     try {
-      console.log("***Auth Order ***");
-      console.log("ENV OBJ " + JSON.stringify(req.body.envObj))
+      console.log("*** Auth Order ***");
+      console.log("ENV OBJ *** " + JSON.stringify(req.body.envObj))
       
       if(!req.body.envObj || !req.query.id) {
         return res.status(400);
@@ -487,6 +540,7 @@ module.exports = function(router) {
 
       let apiConfiguration = {
         ...getConfig(envObj.env),
+        ...envObj,
         CLIENT_ID: envObj.clientId,
         SECRET: envObj.clientSecret,
         MERCHANTID: envObj.merchantId,
@@ -520,24 +574,25 @@ module.exports = function(router) {
 
   router.post("/pcp-get-client-token", async function(req,res,next) {
     try {
-      console.log("***GET Client Token ***");
+      console.log("*** GET Client Token ***");
 
       
       if(!req.body.envObj) {
         return res.status(400);
       }
 
-      console.log("ENV OBJ " + JSON.stringify(req.body.envObj))
+      console.log("ENV OBJ *** " + JSON.stringify(req.body.envObj))
             
       let { envObj} = req.body;
     
       let apiConfiguration = {
         ...getConfig(envObj.env),
+        ...envObj,
         CLIENT_ID: envObj.clientId,
         SECRET: envObj.clientSecret,
         MERCHANTID: envObj.merchantId,
         CUSTOMER_ID: envObj.customerId,
-        isVaulting: envObj.isVaulting
+        isVaulting: envObj.isVaulting,
       }
 
       let accessTokenResp = await getAccessToken(apiConfiguration);
