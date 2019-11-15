@@ -1,6 +1,7 @@
 // util to render pp button
 function renderPPButton() {
   $("#paypal-button").empty();
+  $("#paypal-button").show();
   //var label = $("[name=label]").val();
   
   const { envObj , orderObj } = getCreateOrderPayload();

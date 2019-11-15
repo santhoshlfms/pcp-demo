@@ -103,19 +103,19 @@ function loadHostedButtons() {
 
       $("#my-sample-form").submit(function(event) {
         event.preventDefault();
+        
         addToConsole("Submitting card form to SDK...");
 		
         const envObj = getEnvObj();
         const intent = $("[name=intent]:checked").attr("data-value");
-        const vaultingEnabled = $("[name=vaultingEnabled]").val();
-
+       
         var is3dsEnabled = $("#3dsEnabled").val() == "Yes";
         var contingencies = [];
         if (is3dsEnabled) contingencies.push("3D_SECURE");
 
         hf.submit({
           contingencies: contingencies,
-          vault: vaultingEnabled == "Yes"
+          vault: envObj.isVaulting
         })
           .then(function(payload) {
             addToConsole("Payload " + JSON.stringify(payload, null, "\t"));

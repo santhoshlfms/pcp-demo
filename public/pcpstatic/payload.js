@@ -1,10 +1,6 @@
 function getCreateOrderPayload() {
   var amount = $("[name=amount]").val();
   var currency = $("[name=currency]").val();
-  var env = $("[name=environment]").val();
-  var clientId = $("[name=clientId]").val();
-  var clientSecret = $("[name=clientSecret]").val();
-  var merchantId = $("[name=merchantId]").val();
   var intent = $("[name=intent]:checked").attr("data-value");
 
   var isShippingPrefillAddressUsed = $(
@@ -16,6 +12,7 @@ function getCreateOrderPayload() {
   ).attr("data-value");
 
   var country = $("[name=country]").val();
+  var merchantId = $("[name=merchantId]").val();
 
   var shippingObj = getInlineGuestShippingDetails(country);
 
@@ -68,8 +65,8 @@ function getCreateOrderPayload() {
           value: amount.toString(),
           currency_code: currency
         },
-        "payee":{
-          "merchant_id": merchantId
+        payee: {
+          merchant_id: merchantId
         },
         shipping: {
           address: shippingAddress
@@ -87,12 +84,7 @@ function getCreateOrderPayload() {
     delete orderObj.payer.address;
   }
 
-  var envObj = {
-    clientId,
-    clientSecret,
-    merchantId,
-    env
-  };
+  var envObj = getEnvObj();
 
   return { envObj, orderObj };
 }
@@ -112,7 +104,9 @@ function getScriptQueryParam() {
   var setLocale = $("[name=set-locale]:checked").attr("data-value");
   var setBuyerCountry = $("[name=set-buyercountry]:checked").attr("data-value");
 
+  var isPartner = $("[name=isPartner]").val() == "Yes";
   var intent = $("[name=intent]:checked").attr("data-value");
+  var isVaulting = $("[name=vaultingEnabled]").val() == "Yes";
 
   return {
     env,
@@ -126,18 +120,20 @@ function getScriptQueryParam() {
     currency,
     setLocale,
     setBuyerCountry,
-    intent
+    intent,
+    isPartner,
+    isVaulting
   };
 }
 
-
 function getEnvObj() {
-
   var env = $("[name=environment]").val();
   var clientId = $("[name=clientId]").val();
   var clientSecret = $("[name=clientSecret]").val();
   var merchantId = $("[name=merchantId]").val();
   var customerId = $("[name=customerId]").val();
+  var isPartner = $("[name=isPartner]").val() == "Yes";
+  var isVaulting = $("[name=vaultingEnabled]").val() == "Yes";
 
-  return { clientId, clientSecret, merchantId, env, customerId };
+  return { clientId, clientSecret, merchantId, env, customerId, isPartner, isVaulting };
 }
