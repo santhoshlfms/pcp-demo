@@ -33,26 +33,6 @@ var config = {
 		"CANCEL_URL":"https://ignis.serveo.net/cancel-url",
 		"RETURN_URL":"https://android-ec-nvp-server.herokuapp.com/execute-payments",
 		"BN_CODE":"PCP-DEMO-PORTAL"
-	},
-
-	"live" : {
-		"CLIENT_ID" :"AeIP3_gc2KU8iMd1JAZ-3P0WJMQCijHaqvTV6rwN7kLTjPl5oRyM0xZ43U6gwKjVhRciR-LQy21d7E74",
-		"SECRET":"EJQyU0dEc-d_uvm4QzpsQNexTx146ZTVz-gE_1ZArO53AUiyNKuppjTrcfuZDl3de6csjclXQhHcq-It",
-		"ACCESS_TOKEN_URL":"https://api.paypal.com/v1/oauth2/token",
-		"MERCHANTID":"SKBHKJUHPEPS8",
-		"GET_CLIENT_TOKEN":"https://api.paypal.com/v1/identity/generate-token",
-		"CREATE_PAYMENT_URL":"https://api.paypal.com/v1/payments/payment",
-		"STC":"https://api.paypal.com/v1/risk/transaction-contexts/",
-		"CREATE_ORDER_URL":"https://api.paypal.com/v2/checkout/orders",
-		"GET_ORDER_URL": "https://api.paypal.com/v2/checkout/orders/",
-		"CAPTURE_ORDER_URL":"https://api.paypal.com/v2/checkout/orders/",
-		"AUTH_ORDER_URL":"https://api.paypal.com/v2/checkout/orders/",
-		"CUSTOMER_ID": "CUSTOMER_ID_123456",
-		"EXECUTE_PAYMENT_URL":"https://api.paypal.com/v1/payments/payment/{payment_id}/execute/",
-		"GET_PAYMENT_DETAILS":"https://api.paypal.com/v1/payments/payment/{payment_id}",
-		"CANCEL_URL":"https://ignis.serveo.net/cancel-url",
-		"RETURN_URL":"https://android-ec-nvp-server.herokuapp.com/execute-payments",
-		"BN_CODE":"PCP-DEMO-PORTAL"
 	}
 }
 
