@@ -11,7 +11,6 @@ function renderPPButton() {
   paypal
     .Buttons({
       // Specify the style of the button
-      enableStandardCardFields: true,
       style: {
         layout: "vertical",
         shape: "rect", // pill | rect
