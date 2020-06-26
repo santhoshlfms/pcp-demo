@@ -16,8 +16,8 @@ function loadHostedButtons() {
       fields: {
         number: {
           selector: "#card-number",
-          placeholder: "4000 0000 0000 0002",
-          prefill: "4000000000000002"
+          placeholder: "4111 1111 1111 1111",
+          prefill: "4111111111111111"
         },
         cvv: {
           selector: "#cvv",
@@ -26,8 +26,8 @@ function loadHostedButtons() {
         },
         expirationDate: {
           selector: "#expiration-date",
-          placeholder: "01/2020",
-          prefill: "01/2020"
+          placeholder: "01/2021",
+          prefill: "01/2021"
         }
       }
     }).then(function(hf) {
@@ -157,14 +157,22 @@ function loadHostedButtons() {
                 .then(res => res.json())
                 .then(res => {
                   if (!res.id) {
-                    addToConsole(JSON.stringify(res, null, 4));
+                    addToConsole(JSON.stringify(res, null, 4),"error");
+                    return "Error";
                   }
                   return res;
+                }).catch(err=>{
+                  addToConsole(JSON.stringify(err, null, 4),"error");
                 });
             }
           })
           .then(function(details) {
+            if(details === "Error") { 
+              alert("Some Error Occurred");
+              return;
+            }
             // Show a success message to your buyer
+            
             if (intent == "capture") {
               alert("Payment Successful");
               addToConsole("Payment successful");
@@ -179,6 +187,8 @@ function loadHostedButtons() {
                 JSON.stringify(details, null, 2) +
                 "</pre>"
             );
+          }).catch(err=>{
+            addToConsole(JSON.stringify(err, null, 4),"error");
           });
       });
     });

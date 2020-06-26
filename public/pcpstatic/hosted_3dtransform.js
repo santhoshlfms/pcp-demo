@@ -87,6 +87,8 @@ function loadHostedButtons() {
                     addToConsole(JSON.stringify(res, null, 4));
                   }
                   return res;
+                }).catch(err=>{
+                  addToConsole(JSON.stringify(err, null, 4),"error");
                 });
             } else {
               return fetch("/pcp-capture-order?id=" + payload.orderId, {
@@ -102,13 +104,20 @@ function loadHostedButtons() {
                 .then(res => res.json())
                 .then(res => {
                   if (!res.id) {
-                    addToConsole(JSON.stringify(res, null, 4));
+                    addToConsole(JSON.stringify(res, null, 4),"error");
+                    return "Error";
                   }
                   return res;
+                }).catch(err=>{
+                  addToConsole(JSON.stringify(err, null, 4),"error");
                 });
             }
           })
           .then(function(details) {
+            if(details === "Error") { 
+              alert("Some Error Occurred");
+              return;
+            }
             // Show a success message to your buyer
             if (intent == "capture") {
               alert("Payment Successful");
@@ -124,6 +133,8 @@ function loadHostedButtons() {
                 JSON.stringify(details, null, 2) +
                 "</pre>"
             );
+          }).catch(err=>{
+            addToConsole(JSON.stringify(err, null, 4),"error");
           });
       });
     });

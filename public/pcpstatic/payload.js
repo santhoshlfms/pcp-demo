@@ -66,7 +66,7 @@ function getCreateOrderPayload() {
           currency_code: currency
         },
         payee: {
-          merchant_id: merchantId
+           merchant_id: merchantId
         },
         shipping: {
           address: shippingAddress
