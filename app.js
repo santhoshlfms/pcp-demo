@@ -11,7 +11,7 @@ var index = require('./routes/index');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'hw-components/build')]);
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors())
 
-
+app.use(express.static(path.join(__dirname, 'hw-components/')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public/images'), {
   maxage: '5d'
@@ -31,6 +31,8 @@ app.use(express.static(path.join(__dirname, 'public/images'), {
 app.use(express.static(path.join(__dirname, 'views/pcp/hosted')));
 
 app.use('/', index);
+app.use(express.static(path.join(__dirname, 'hw-components/build')));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

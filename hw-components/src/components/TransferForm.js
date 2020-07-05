@@ -3,6 +3,8 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
 import HyperwalletTranferMethodDropIn from "./HyperWalletDropin";
+import { host } from "./Config";
+
 
 const useStyles = makeStyles({
   root: {
@@ -44,7 +46,7 @@ function TransferForm(props) {
 
           updateStatus([{ message: "Fetching Auth Token", type: "info" }]);
 
-          fetch("http://localhost:3500/hw-auth-token", {
+          fetch(host + "/hw-auth-token", {
             method: "POST",
             headers: {
               Accept: "application/json",

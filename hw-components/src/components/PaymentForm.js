@@ -11,6 +11,8 @@ import Loader from "./Loader";
 
 import { CURRENCY, PURPOSE } from "./Constants";
 
+import { host } from "./Config";
+
 const useStyles = makeStyles({
   button: {
     marginTop: 10,
@@ -178,9 +180,8 @@ function PaymentForm(props) {
   };
 
   const handleSubmit = () => {
-    
     setShowLoader((prevState) => true);
-    
+
     updateStatus([{ message: "Calling Make Payment API....", type: "info" }]);
 
     let request = `curl --location --request POST 'https://api.sandbox.hyperwallet.com/rest/v3/payments' 
@@ -201,7 +202,7 @@ function PaymentForm(props) {
       { message: "Make Payment Request....", type: "request", req: request },
     ]);
 
-    fetch("http://localhost:3500/hw-make-payment", {
+    fetch(host + "/hw-make-payment", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -257,8 +258,7 @@ function PaymentForm(props) {
         ]);
         setShowLoader((prevState) => false);
       })
-      .finally(() => {
-      });
+      .finally(() => {});
   };
 
   return (
@@ -293,7 +293,7 @@ function PaymentForm(props) {
             color="primary"
             className={classes.button}
           >
-            {activeStep === steps.length - 1 ? "Make Payment": null}
+            {activeStep === steps.length - 1 ? "Make Payment" : null}
           </Button>
         </div>
       </ValidatorForm>

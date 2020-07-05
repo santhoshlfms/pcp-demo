@@ -3,13 +3,7 @@ var Hyperwallet = require("hyperwallet-sdk");
 
 module.exports = function (router) {
   router.get(["/hw"], function (req, res, next) {
-    var obj = {
-      COUNTRY,
-      LANG,
-      LOCALES,
-      CURRENCY,
-    };
-    res.render("hw/hw", { config: obj });
+    res.render("hw/hw");
   });
 
   router.post("/hw-create-user", (req, res, next) => {

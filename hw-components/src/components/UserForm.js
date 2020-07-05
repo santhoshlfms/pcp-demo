@@ -10,6 +10,8 @@ import Loader from "./Loader";
 
 import { COUNTRY } from "./Constants";
 
+import { host } from "./Config";
+
 const useStyles = makeStyles({
   button: {
     marginTop: 10,
@@ -259,7 +261,7 @@ function UserForm(props) {
     ]);
 
     let userToken = "";
-    fetch("http://localhost:3500/hw-create-user", {
+    fetch(host + "/hw-create-user", {
       method: "POST",
       headers: {
         Accept: "application/json",
