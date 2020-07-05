@@ -2,7 +2,7 @@ const { COUNTRY, LOCALES, CURRENCY, LANG } = require("./constants");
 var Hyperwallet = require("hyperwallet-sdk");
 
 module.exports = function (router) {
-  router.get(["/", "/hw"], function (req, res, next) {
+  router.get(["/hw"], function (req, res, next) {
     var obj = {
       COUNTRY,
       LANG,
