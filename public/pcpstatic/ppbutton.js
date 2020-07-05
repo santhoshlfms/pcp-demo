@@ -82,8 +82,9 @@ function renderPPButton() {
               })
               .then(res => res.json())
               .then(res => {
-                if(!res.id) {
-                    addToConsole(JSON.stringify(res,null,4));
+                if (!res.id) {
+                  addToConsole(JSON.stringify(res, null, 4),"error");
+                  return "Error";
                 }
                 return res;
             })
@@ -101,13 +102,18 @@ function renderPPButton() {
             })
             .then(res => res.json())
             .then(res => {
-                if(!res.id) {
-                    addToConsole(JSON.stringify(res,null,4));
-                }
+              if (!res.id) {
+                addToConsole(JSON.stringify(res, null, 4),"error");
+                return "Error";
+              }
                 return res;
             })
           }
         }).then(function(details) {
+            if(details === "Error") { 
+              alert("Some Error Occurred");
+              return;
+            }
             // Show a success message to your buyer
             if(intent=='capture') {
                 alert("Payment Successful")

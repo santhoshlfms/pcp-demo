@@ -30,7 +30,8 @@
           }
           li.active {
           font-weight : bolder;
-          font-size: 1.5em;
+          font-size: 1.2em;
+          border-bottom: 1px solid cornsilk
           }
 
           @media screen and (min-width: 602px) {
@@ -126,10 +127,10 @@
                             </li>
 
                            
-                            <li style="margin-left:33vw" <% if (page_name == 'pcp') { %>class="active" <% } %> ><a href="/">PCP Demo </a></li>
+                            <li <% if (page_name == 'pcp') { %>class="active" <% } %> ><a href="/pcp">PayPal </a></li>
 
-                         <!--   <li <% if (page_name == 'ecbt') { %>class="active" <% } %> ><a href="/ecbt">ECBT </a></li>
-                         -->
+                           <li <% if (page_name == 'hw') { %>class="active" <% } %> ><a href="/hw">Hyper Wallet </a></li>
+                         
                         </ul>
                         
                       </div><!-- /.navbar-collapse -->

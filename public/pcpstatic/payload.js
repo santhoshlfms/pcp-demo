@@ -14,6 +14,8 @@ function getCreateOrderPayload() {
   var country = $("[name=country]").val();
   var merchantId = $("[name=merchantId]").val();
 
+  var isPartner = $("[name=isPartner]").val() == "Yes";
+
   var shippingObj = getInlineGuestShippingDetails(country);
 
   let shippingAddress = {};
@@ -29,7 +31,7 @@ function getCreateOrderPayload() {
       admin_area_2: shippingObj.city,
       admin_area_1: shippingObj.state,
       postal_code: shippingObj.postal_code,
-      country_code: country
+      country_code: country,
     };
     phoneNo = shippingObj.phone;
 
@@ -39,7 +41,7 @@ function getCreateOrderPayload() {
       admin_area_2: shippingObj.city,
       admin_area_1: shippingObj.state,
       postal_code: shippingObj.postal_code,
-      country_code: country
+      country_code: country,
     };
   }
 
@@ -48,33 +50,36 @@ function getCreateOrderPayload() {
     payer: {
       name: {
         given_name: "PayPal",
-        surname: "Customer"
+        surname: "Customer",
       },
       address: billingAddress,
       //email_address: "customer@domain.com",
       phone: {
         phone_type: "MOBILE",
         phone_number: {
-          national_number: phoneNo
-        }
-      }
+          national_number: phoneNo,
+        },
+      },
     },
     purchase_units: [
       {
         amount: {
           value: amount.toString(),
-          currency_code: currency
-        },
-        payee: {
-           merchant_id: merchantId
+          currency_code: currency,
         },
         shipping: {
-          address: shippingAddress
-        }
-      }
+          address: shippingAddress,
+        },
+      },
     ],
-    application_context: {}
+    application_context: {},
   };
+
+  if (isPartner) {
+    orderObj.purchase_units[0].payee = {
+      merchant_id: merchantId,
+    };
+  }
 
   if (isShippingPrefillAddressUsed == "false") {
     delete orderObj.purchase_units[0].shipping;
@@ -122,7 +127,7 @@ function getScriptQueryParam() {
     setBuyerCountry,
     intent,
     isPartner,
-    isVaulting
+    isVaulting,
   };
 }
 
@@ -135,5 +140,13 @@ function getEnvObj() {
   var isPartner = $("[name=isPartner]").val() == "Yes";
   var isVaulting = $("[name=vaultingEnabled]").val() == "Yes";
 
-  return { clientId, clientSecret, merchantId, env, customerId, isPartner, isVaulting };
+  return {
+    clientId,
+    clientSecret,
+    merchantId,
+    env,
+    customerId,
+    isPartner,
+    isVaulting,
+  };
 }

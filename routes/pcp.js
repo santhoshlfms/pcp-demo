@@ -380,7 +380,7 @@ function getClientToken(accessToken, apiConfiguration) {
 
 module.exports = function(router) {
 
-  router.get('/', function(req, res, next) {
+  router.get('/pcp', function(req, res, next) {
     var obj = {
       COUNTRY, LANG, LOCALES, CURRENCY
     }
