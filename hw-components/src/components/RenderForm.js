@@ -76,6 +76,7 @@ export default function RenderForm(props) {
               ref={elem.ref}
               onChange={handleFieldChange}
               name={elem.name}
+              disabled={elem.disabled}
               id={elem.name}
               value={fields[elem.id]}
               validators={elem.validators}

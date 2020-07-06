@@ -312,6 +312,7 @@ function UserForm(props) {
         setTimeout(() => {
           setLoaderObj({ open: false, message: "" });
           handleNext();
+          return;
         }, 1000);
       })
       .catch((err) => {
