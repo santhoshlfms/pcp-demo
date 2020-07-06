@@ -61,7 +61,7 @@ function StepperContainer(props) {
   const { updateStatus } = props;
 
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(4);
+  const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
 
   console.log("Rendering stepper ");
