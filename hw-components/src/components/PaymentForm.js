@@ -32,7 +32,10 @@ const useStyles = makeStyles({
 });
 
 function PaymentForm(props) {
-  const [showLoader, setShowLoader] = useState(false);
+  const [loaderObj, setLoaderObj] = useState({
+    open: false,
+    message: "Making Payment...",
+  });
 
   const {
     handleNext,
@@ -180,7 +183,7 @@ function PaymentForm(props) {
   };
 
   const handleSubmit = () => {
-    setShowLoader((prevState) => true);
+    setLoaderObj({ open: true, message: "Making Payment..." });
 
     updateStatus([{ message: "Calling Make Payment API....", type: "info" }]);
 
@@ -226,8 +229,7 @@ function PaymentForm(props) {
               status: "error",
             },
           ]);
-          setShowLoader((prevState) => false);
-
+          setLoaderObj({ open: false, message: "" });
           return;
         }
         console.log("Payment Successful");
@@ -241,7 +243,7 @@ function PaymentForm(props) {
         ]);
 
         setTimeout(() => {
-          setShowLoader((prevState) => false);
+          setLoaderObj({ open: false, message: "" });
           handleNext();
         }, 3000);
       })
@@ -256,14 +258,14 @@ function PaymentForm(props) {
             status: "error",
           },
         ]);
-        setShowLoader((prevState) => false);
+        setLoaderObj({ open: false, message: "" });
       })
       .finally(() => {});
   };
 
   return (
     <>
-      <Loader open={showLoader}> </Loader>
+      <Loader obj={loaderObj}> </Loader>
       <ValidatorForm
         onSubmit={() => {
           handleSubmit();

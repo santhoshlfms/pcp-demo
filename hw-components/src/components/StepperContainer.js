@@ -14,14 +14,14 @@ import CredentialForm from "./CredentialForm";
 import TransferForm from "./TransferForm";
 import PaymentForm from "./PaymentForm";
 
-import { INITIALSTATE } from "../hooks/InitalState";
+import { INITIALSTATE, getInitalState } from "../hooks/InitalState";
 
 const useStyles = makeStyles({
   root: {
     marginTop: 0,
   },
   button: {
-    marginTop: 10,
+    marginTop: 30,
     marginRight: 10,
   },
   actionsContainer: {
@@ -61,7 +61,7 @@ function StepperContainer(props) {
   const { updateStatus } = props;
 
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(4);
   const steps = getSteps();
 
   console.log("Rendering stepper ");
@@ -85,6 +85,7 @@ function StepperContainer(props) {
   }, [setActiveStep]);
 
   const handleReset = useCallback(() => {
+    setAppData(getInitalState());
     setActiveStep(0);
   }, [setActiveStep]);
 
@@ -126,9 +127,24 @@ function StepperContainer(props) {
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
-            Reset
+          <Typography variant="h5">
+            All steps completed - Payment Successful
+          </Typography>
+          <Button
+            onClick={handleBack}
+            className={classes.button}
+            variant="contained"
+            color="secondary"
+          >
+            Back
+          </Button>
+          <Button
+            onClick={handleReset}
+            className={classes.button}
+            variant="contained"
+            color="primary"
+          >
+            Restart Flow
           </Button>
         </Paper>
       )}

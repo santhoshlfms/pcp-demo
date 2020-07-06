@@ -20,10 +20,17 @@ export const INITIALSTATE = {
   stateProvince: "California",
   country: "US",
 
-  userToken: "usr-a7ea5be7-37a4-4430-be59-b8223f2e6663",
-  destinationToken: "trm-f299cffe-ca3f-44fc-ad65-d2403aea3ec0",
+  userToken: "",
+
+  destinationToken: "",
   clientPaymentId: `${uuid()}`,
   amount: "10",
   currency: "USD",
   purpose: "GP0005",
 };
+export const getInitalState = () => ({
+  ...INITIALSTATE,
+  clientUserId: `${uuid()}`,
+  email: chance.email({ domain: "test.com" }),
+  clientPaymentId: `${uuid()}`,
+});

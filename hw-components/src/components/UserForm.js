@@ -31,7 +31,10 @@ const useStyles = makeStyles({
 });
 
 function UserForm(props) {
-  const [showLoader, setShowLoader] = useState(false);
+  const [loaderObj, setLoaderObj] = useState({
+    open: false,
+    message: "Creating Users...",
+  });
 
   const {
     handleNext,
@@ -230,7 +233,7 @@ function UserForm(props) {
   };
 
   const handleSubmit = () => {
-    setShowLoader((prevState) => true);
+    setLoaderObj({ open: true, message: "Creating User..." });
 
     updateStatus([{ message: "Creating User", type: "info" }]);
 
@@ -277,6 +280,9 @@ function UserForm(props) {
         if (data.error) {
           console.log("error in creating user");
           console.log(data.error);
+
+          alert("Error Occurred. Check Playground Status");
+
           updateStatus([
             {
               message: "Create User API Error...",
@@ -285,7 +291,8 @@ function UserForm(props) {
               status: "error",
             },
           ]);
-          setShowLoader((prevState) => false);
+
+          setLoaderObj({ open: false, message: "" });
 
           return;
         }
@@ -303,13 +310,14 @@ function UserForm(props) {
           userToken = data.data.token;
         }
         setTimeout(() => {
-          setShowLoader((prevState) => false);
+          setLoaderObj({ open: false, message: "" });
           handleNext();
         }, 1000);
       })
       .catch((err) => {
         console.log("error in creating user");
         console.log(err);
+        alert("Error Occurred. Check Playground Status");
         updateStatus([
           {
             message: "Create User API Error...",
@@ -318,7 +326,7 @@ function UserForm(props) {
             status: "error",
           },
         ]);
-        setShowLoader((prevState) => false);
+        setLoaderObj({ open: false, message: "" });
       })
       .finally(() => {
         updateAppData({ ...fields, userToken: userToken });
@@ -327,7 +335,7 @@ function UserForm(props) {
 
   return (
     <>
-      <Loader open={showLoader}> </Loader>
+      <Loader obj={loaderObj}> </Loader>
       <ValidatorForm
         onSubmit={() => {
           handleSubmit();

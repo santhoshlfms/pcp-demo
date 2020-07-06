@@ -21,28 +21,34 @@ const useStyles = makeStyles({
   info: {
     color: "#4dabf5",
     paddingLeft: 20,
+    marginTop: 20,
   },
   req: {
     color: "green",
     paddingLeft: 20,
+    marginTop: 20,
   },
   reqMessage: {
     color: "green",
     whiteSpace: "break-spaces",
     paddingLeft: 20,
+    marginTop: 20,
   },
   error: {
     color: "#f6685e",
     paddingLeft: 20,
+    marginTop: 20,
   },
   errorMessage: {
     color: "red",
     whiteSpace: "break-spaces",
     paddingLeft: 20,
+    marginTop: 20,
   },
 
   statusheight: {
     height: "85vh",
+    paddingTop: 20,
     overflowY: "auto",
     background: "black",
   },
@@ -52,14 +58,18 @@ export default function StatusBar(props) {
   const classes = useStyles();
 
   console.log("rendering status bar");
-  let { status } = props;
+  let { status: statusArr = [] } = props;
 
-  let playgroundMsg = status.map((state) => {
+  let playgroundMsg = statusArr.map((state, i) => {
     let { req, type, status, message } = state;
 
     switch (type) {
       case "info":
-        return <p className={classes.info}>{message}</p>;
+        return (
+          <p className={classes.info}>
+            {statusArr.length - i} - {message}
+          </p>
+        );
 
       case "request":
         let classNameHeading =
@@ -69,12 +79,14 @@ export default function StatusBar(props) {
 
         return (
           <>
-            <span className={classNameHeading}>{message}</span>
+            <span className={classNameHeading}>
+              {statusArr.length - i} - {message}
+            </span>
             <pre className={classNameReq}>{req}</pre>
           </>
         );
-        default:
-          return null;
+      default:
+        return null;
     }
   });
 
