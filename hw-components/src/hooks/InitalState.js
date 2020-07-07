@@ -4,10 +4,9 @@ import Chance from "chance";
 let chance = new Chance();
 
 export const INITIALSTATE = {
-  username: "restapiuser@47164691611",
+  username: "restapiuser@47164771611",
   password: "Pp12345678!",
-  programToken: "prg-be37583f-2c75-4dd6-9c26-eec2b4cafccf",
-
+  programToken: "prg-e74fb339-7b4e-44de-a278-89e5f63523e0",
   profileType: "INDIVIDUAL",
   clientUserId: `${uuid()}`,
   firstName: "John",
@@ -27,6 +26,7 @@ export const INITIALSTATE = {
   amount: "10",
   currency: "USD",
   purpose: "GP0005",
+  parentToken: "prg-e74fb339-7b4e-44de-a278-89e5f63523e0",
 };
 export const getInitalState = () => ({
   ...INITIALSTATE,

@@ -16,7 +16,6 @@ const useStyles = makeStyles({
     marginRight: 10,
   },
   actionsContainer: {
-    width: 800,
     marginBottom: 10,
     marginTop: 20,
   },

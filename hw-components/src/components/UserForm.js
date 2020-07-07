@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm } from "react-material-ui-form-validator";
@@ -6,11 +6,13 @@ import { ValidatorForm } from "react-material-ui-form-validator";
 import { useFormFields } from "../hooks/useFormFields";
 
 import RenderForm from "./RenderForm";
-import Loader from "./Loader";
 
 import { COUNTRY } from "./Constants";
 
 import { host } from "./Config";
+
+import $ from "jquery";
+import "gasparesganga-jquery-loading-overlay";
 
 const useStyles = makeStyles({
   button: {
@@ -18,7 +20,6 @@ const useStyles = makeStyles({
     marginRight: 10,
   },
   actionsContainer: {
-    width: 800,
     marginBottom: 10,
     marginTop: 20,
   },
@@ -31,11 +32,7 @@ const useStyles = makeStyles({
 });
 
 function UserForm(props) {
-  const [loaderObj, setLoaderObj] = useState({
-    open: false,
-    message: "Creating Users...",
-  });
-
+ 
   const {
     handleNext,
     activeStep,
@@ -233,11 +230,16 @@ function UserForm(props) {
   };
 
   const handleSubmit = () => {
-    setLoaderObj({ open: true, message: "Creating User..." });
+    
+    $.LoadingOverlay("show", {
+      image: "",
+      text: "Creating User...",
+      textClass: "loadingText"                                
+    });
 
     updateStatus([{ message: "Creating User", type: "info" }]);
 
-    updateStatus([{ message: "Calling Create User API....", type: "info" }]);
+    //updateStatus([{ message: "Calling Create User API....", type: "info" }]);
 
     let request = `curl --location --request POST 'https://api.sandbox.hyperwallet.com/rest/v3/users' 
 --header 'Authorization: Basic <username>:<password>' 
@@ -280,6 +282,8 @@ function UserForm(props) {
         if (data.error) {
           console.log("error in creating user");
           console.log(data.error);
+          
+          $.LoadingOverlay("hide");
 
           alert("Error Occurred. Check Playground Status");
 
@@ -292,7 +296,6 @@ function UserForm(props) {
             },
           ]);
 
-          setLoaderObj({ open: false, message: "" });
 
           return;
         }
@@ -310,7 +313,6 @@ function UserForm(props) {
           userToken = data.data.token;
         }
         setTimeout(() => {
-          setLoaderObj({ open: false, message: "" });
           handleNext();
           return;
         }, 1000);
@@ -318,6 +320,7 @@ function UserForm(props) {
       .catch((err) => {
         console.log("error in creating user");
         console.log(err);
+        $.LoadingOverlay("hide");
         alert("Error Occurred. Check Playground Status");
         updateStatus([
           {
@@ -327,16 +330,15 @@ function UserForm(props) {
             status: "error",
           },
         ]);
-        setLoaderObj({ open: false, message: "" });
       })
       .finally(() => {
         updateAppData({ ...fields, userToken: userToken });
+        $.LoadingOverlay("hide");
       });
   };
 
   return (
     <>
-      <Loader obj={loaderObj}> </Loader>
       <ValidatorForm
         onSubmit={() => {
           handleSubmit();

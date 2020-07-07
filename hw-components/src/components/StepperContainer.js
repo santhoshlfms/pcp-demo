@@ -25,7 +25,7 @@ const useStyles = makeStyles({
     marginRight: 10,
   },
   actionsContainer: {
-    width: 800,
+    
     marginBottom: 10,
   },
   resetContainer: {
@@ -58,7 +58,7 @@ function getSteps() {
 function StepperContainer(props) {
   const [appData, setAppData] = useState(INITIALSTATE);
 
-  const { updateStatus } = props;
+  const { updateStatus, resetStatus } = props;
 
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
@@ -87,7 +87,8 @@ function StepperContainer(props) {
   const handleReset = useCallback(() => {
     setAppData(getInitalState());
     setActiveStep(0);
-  }, [setActiveStep]);
+    resetStatus();
+  }, [setActiveStep, resetStatus]);
 
   const ActiveStepContent = function (props) {
     let ComponentA = props.obj.component;
@@ -112,7 +113,7 @@ function StepperContainer(props) {
   };
 
   return (
-    <Container fixed className={classes.root}>
+    <Container maxWidth="sm" className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((stepObj, index) => {
           return (

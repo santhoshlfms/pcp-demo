@@ -6,6 +6,7 @@ import HyperwalletTranferMethodDropIn from "./HyperWalletDropin";
 
 import { host } from "./Config";
 
+
 const useStyles = makeStyles({
   root: {
     width: "100%",
@@ -15,7 +16,6 @@ const useStyles = makeStyles({
     marginRight: 10,
   },
   actionsContainer: {
-    width: 800,
     marginBottom: 10,
     marginTop: 20,
   },
@@ -37,9 +37,19 @@ function TransferForm(props) {
   let getAuthToken = useCallback(
     (callback) => {
       console.log("Auth callback");
-
+      
       updateStatus([{ message: "Fetching Auth Token", type: "info" }]);
-
+      
+    let request = `curl -X "POST" "https://api.sandbox.hyperwallet.com/rest/v3/users/${appData.userToken}/authentication-token"  
+    --header 'Authorization: Basic <username>:<password>' 
+    --header 'Content-Type: application/json' 
+    --header 'Accept: application/json' 
+    `;
+    
+      updateStatus([
+        { message: "Auth Token API Request....", type: "request", req: request },
+      ]);
+  
       fetch(host + "/hw-auth-token", {
         method: "POST",
         headers: {
@@ -76,6 +86,7 @@ function TransferForm(props) {
               req: JSON.stringify(data.data, null, 2),
             },
           ]);
+          
           callback(data.data.value);
         })
         .catch((err) => {
@@ -90,7 +101,8 @@ function TransferForm(props) {
             },
           ]);
         })
-        .finally(() => {});
+        .finally(() => {
+        });
     },
     [appData.userToken, appData.username, appData.password, updateStatus]
   );

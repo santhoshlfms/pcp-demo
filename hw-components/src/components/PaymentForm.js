@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -7,11 +7,13 @@ import { ValidatorForm } from "react-material-ui-form-validator";
 import { useFormFields } from "../hooks/useFormFields";
 
 import RenderForm from "./RenderForm";
-import Loader from "./Loader";
 
 import { CURRENCY, PURPOSE } from "./Constants";
 
 import { host } from "./Config";
+
+import $ from "jquery";
+import "gasparesganga-jquery-loading-overlay";
 
 const useStyles = makeStyles({
   button: {
@@ -19,7 +21,6 @@ const useStyles = makeStyles({
     marginRight: 10,
   },
   actionsContainer: {
-    width: 800,
     marginBottom: 10,
     marginTop: 20,
   },
@@ -32,11 +33,6 @@ const useStyles = makeStyles({
 });
 
 function PaymentForm(props) {
-  const [loaderObj, setLoaderObj] = useState({
-    open: false,
-    message: "Making Payment...",
-  });
-
   const {
     handleNext,
     activeStep,
@@ -70,8 +66,8 @@ function PaymentForm(props) {
       label: "Program Token",
       ref: { programTokenRef },
       disabled: true,
-      name: "programToken",
-      id: "programToken",
+      name: "parentToken",
+      id: "parentToken",
       validators: ["required", "isNotEmpty"],
       errorMessages: ["Program Token is required", "Program Token is required"],
       helperText: "Enter Program Token",
@@ -184,7 +180,11 @@ function PaymentForm(props) {
   };
 
   const handleSubmit = () => {
-    setLoaderObj({ open: true, message: "Making Payment..." });
+    $.LoadingOverlay("show", {
+      image: "",
+      text: "Making Payment...",
+      textClass: "loadingText"                                
+    });
 
     updateStatus([{ message: "Calling Make Payment API....", type: "info" }]);
 
@@ -193,7 +193,7 @@ function PaymentForm(props) {
 --header 'Content-Type: application/json' 
 --header 'Accept: application/json' 
 --data-raw '{
-      "programToken": "${fields.programToken}",
+      "programToken": "${fields.parentToken}",
       "destinationToken": "${fields.destinationToken}",
       "clientPaymentId": "${fields.clientPaymentId}",
       "amount": "${fields.amount}",
@@ -222,6 +222,7 @@ function PaymentForm(props) {
         if (data.error) {
           console.log("error in making payment");
           console.log(data.error);
+          alert("Error Occurred. Check Playground Status");
           updateStatus([
             {
               message: "Make Payment API Error...",
@@ -230,7 +231,8 @@ function PaymentForm(props) {
               status: "error",
             },
           ]);
-          setLoaderObj({ open: false, message: "" });
+          $.LoadingOverlay("hide");
+
           return;
         }
         console.log("Payment Successful");
@@ -244,13 +246,16 @@ function PaymentForm(props) {
         ]);
 
         setTimeout(() => {
-          setLoaderObj({ open: false, message: "" });
+          $.LoadingOverlay("hide");
           handleNext();
+          return;
         }, 3000);
       })
       .catch((err) => {
         console.log("error in making payment");
         console.log(err);
+        alert("Error Occurred. Check Playground Status");
+
         updateStatus([
           {
             message: "Make Payment API Error...",
@@ -259,14 +264,15 @@ function PaymentForm(props) {
             status: "error",
           },
         ]);
-        setLoaderObj({ open: false, message: "" });
+        $.LoadingOverlay("hide");
       })
-      .finally(() => {});
+      .finally(() => {
+        $.LoadingOverlay("hide");
+      });
   };
 
   return (
     <>
-      <Loader obj={loaderObj}> </Loader>
       <ValidatorForm
         onSubmit={() => {
           handleSubmit();
