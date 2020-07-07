@@ -6,6 +6,10 @@ module.exports = function (router) {
     res.render("hw/hw");
   });
 
+  router.get(["/hw-about"], function (req, res, next) {
+    res.render("hw/about");
+  });
+
   router.post("/hw-create-user", (req, res, next) => {
     try {
       var { username, password, state, ...userBody } = req.body;
