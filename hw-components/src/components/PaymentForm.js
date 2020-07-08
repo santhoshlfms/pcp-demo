@@ -231,8 +231,6 @@ function PaymentForm(props) {
               status: "error",
             },
           ]);
-          $.LoadingOverlay("hide");
-
           return;
         }
         console.log("Payment Successful");
@@ -250,7 +248,7 @@ function PaymentForm(props) {
           $.LoadingOverlay("hide");
           handleNext();
           return;
-        }, 3000);
+        }, 2000);
       })
       .catch((err) => {
         console.log("error in making payment");
