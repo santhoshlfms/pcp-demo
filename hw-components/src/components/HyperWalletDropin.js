@@ -47,9 +47,9 @@ export default class HyperwalletTranferMethodDropIn extends React.PureComponent 
         })
         .display(
           function () {
-            console.log("Dispay");
+            console.log("Display");
             // this is a callback event called when display is done
-            setTimeout(() => this.setState({ isUILoaded: true }), 6000);
+            setTimeout(() => this.setState({ isUILoaded: true }), 7000);
           }.bind(this)
         );
     };
