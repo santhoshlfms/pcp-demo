@@ -66,8 +66,8 @@ function PaymentForm(props) {
       label: "Program Token",
       ref: { programTokenRef },
       disabled: true,
-      name: "parentToken",
-      id: "parentToken",
+      name: "programToken",
+      id: "programToken",
       validators: ["required", "isNotEmpty"],
       errorMessages: ["Program Token is required", "Program Token is required"],
       helperText: "Enter Program Token",
@@ -236,6 +236,7 @@ function PaymentForm(props) {
           return;
         }
         console.log("Payment Successful");
+        alert("Payment Successful");
         console.log(data.data);
         updateStatus([
           {
