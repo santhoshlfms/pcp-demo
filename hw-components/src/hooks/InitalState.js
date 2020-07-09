@@ -9,9 +9,9 @@ export const INITIALSTATE = {
    //password: "Pp12345678!",
   
   // DIRECT
-  username: "restapiuser@44225781614",
-  password: "Pp12345678!",
-  programToken: "prg-db4977a4-5e2d-477f-b17d-dabca7a18b93",
+  username: "restapiuser@33086521615",
+  password: "Test@123456",
+  programToken: "prg-a4f57e52-a848-42bd-9b53-250102c4eac2",
   
   profileType: "INDIVIDUAL",
   clientUserId: `${uuid()}`,
