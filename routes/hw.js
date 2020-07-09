@@ -80,18 +80,38 @@ module.exports = function (router) {
         server: "https://api.sandbox.hyperwallet.com",
       });
 
-      client.createPayment(paymentData, function (error, body, response) {
-        // handle response body here
-        console.log("*** Make payment ***", response.statusCode);
+      var {
+        destinationToken,
+        clientPaymentId,
+        amount,
+        currency,
+        purpose,
 
-        if (error) {
-          console.log("errror in making payment ", error);
-          return res.status(response.statusCode).json({ error: error });
+        programToken,
+      } = req.body;
+
+      client.createPayment(
+        {
+          destinationToken,
+          clientPaymentId,
+          amount,
+          currency,
+          purpose,
+          programToken,
+        },
+        function (error, body, response) {
+          // handle response body here
+          console.log("*** Make payment ***", response.statusCode);
+
+          if (error) {
+            console.log("errror in making payment ", error);
+            return res.status(response.statusCode).json({ error: error });
+          }
+          console.log(body);
+
+          return res.status(response.statusCode).json({ data: body });
         }
-        console.log(body);
-
-        return res.status(response.statusCode).json({ data: body });
-      });
+      );
     } catch (error) {
       console.log("errror in making payment ", error);
       return res.status(500).json({ error: error });

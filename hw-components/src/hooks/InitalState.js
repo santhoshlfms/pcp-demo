@@ -9,16 +9,19 @@ export const INITIALSTATE = {
    //password: "Pp12345678!",
   
   // DIRECT
-  username: "restapiuser@47164771611",
-  password: "Pp123456789!",
-  programToken: "prg-e74fb339-7b4e-44de-a278-89e5f63523e0",
+  username: "restapiuser@44225781614",
+  password: "Pp12345678!",
+  programToken: "prg-db4977a4-5e2d-477f-b17d-dabca7a18b93",
+  
   profileType: "INDIVIDUAL",
   clientUserId: `${uuid()}`,
   firstName: "John",
+  middleName: "",
   lastName: "Doe",
   email: chance.email({ domain: "test.com" }),
   dateOfBirth: "1990-03-03",
   addressLine1: "1st Lane street",
+  addressLine2: "",
   city: "San Jose",
   postalCode: "65001",
   stateProvince: "California",
@@ -36,7 +39,7 @@ export const INITIALSTATE = {
   //parentToken: "prg-e26409f3-ec79-4746-908b-b2398f001574",
   
   // DIRECT
-  programToken: "prg-e74fb339-7b4e-44de-a278-89e5f63523e0",
+  //parentToken: "prg-db4977a4-5e2d-477f-b17d-dabca7a18b93",
 };
 export const getInitalState = () => ({
   ...INITIALSTATE,

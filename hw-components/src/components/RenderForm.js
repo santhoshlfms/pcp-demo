@@ -5,7 +5,6 @@ import { TextValidator } from "react-material-ui-form-validator";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-
 const useStyles = makeStyles({
   helperText: {
     marginBottom: 5,
@@ -38,7 +37,7 @@ export default function RenderForm(props) {
             />
 
             <FormHelperText id="my-helper-text" className={classes.helperText}>
-              {`${elem.helperText} *`}
+              {elem.helperText} {elem.isOptional ? "" : "*"}
             </FormHelperText>
           </FormControl>
         );
@@ -61,7 +60,7 @@ export default function RenderForm(props) {
             />
 
             <FormHelperText id="my-helper-text" className={classes.helperText}>
-              {`${elem.helperText} *`}
+              {elem.helperText} {elem.isOptional ? "" : "*"}
             </FormHelperText>
           </FormControl>
         );
@@ -93,7 +92,7 @@ export default function RenderForm(props) {
             </TextValidator>
 
             <FormHelperText id="my-helper-text" className={classes.helperText}>
-              {`${elem.helperText} *`}
+              {elem.helperText} {elem.isOptional ? "" : "*"}
             </FormHelperText>
           </FormControl>
         );

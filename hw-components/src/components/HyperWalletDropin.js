@@ -29,18 +29,38 @@ export default class HyperwalletTranferMethodDropIn extends React.PureComponent 
   }
 
   _addPaypalSdk = () => {
-    const { userToken, environment, onComplete, onError } = this.props;
+    const { environment, onComplete, onError,
+    appData } = this.props;
 
     const script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = `https://${environment}.hyperwallet.com/rest/widgets/transfer-methods/${userToken}/en.min.js`;
+    script.src = `https://${environment}.hyperwallet.com/rest/widgets/transfer-methods/${appData.userToken}/en.min.js`;
     script.async = true;
     script.onload = () => {
       this.setState({ isSdkReady: true });
+
+      console.log("provile type ", appData.profileType)
       window.HWWidgets.transferMethods
         .configure({
           template: "plain",
           el: document.getElementById("TransferMethodUI"),
+          // transferMethodConfiguration: {
+          //   country: appData.country
+          // },
+          profile: {
+            profileType: appData.profileType,
+            firstName: appData.firstName,
+            middleName: appData.middleName,
+            lastName: appData.lastName,
+            addressLine1: appData.addressLine1,
+            addressLine2: appData.addressLine2,
+            country: appData.country,
+            stateProvince: appData.stateProvince,
+            city: appData.city,
+            postalCode: appData.postalCode,
+            email: appData.email
+
+          },
           onComplete: function (trmObject, completionResult) {
             onComplete(trmObject, completionResult);
           },
@@ -49,7 +69,11 @@ export default class HyperwalletTranferMethodDropIn extends React.PureComponent 
           function () {
             console.log("Display");
             // this is a callback event called when display is done
-            setTimeout(() => this.setState({ isUILoaded: true }), 7000);
+            setTimeout(() => {
+
+             console.log("Inside Display time out") 
+             this.setState({ isUILoaded: true });
+            },7000)
           }.bind(this)
         );
     };

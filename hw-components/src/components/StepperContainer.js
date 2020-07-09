@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
 
 import UserForm from "./UserForm";
 import CredentialForm from "./CredentialForm";
@@ -25,12 +26,14 @@ const useStyles = makeStyles({
     marginRight: 10,
   },
   actionsContainer: {
-    
     marginBottom: 10,
   },
   resetContainer: {
     padding: 20,
   },
+  grid :{
+    marginTop: 20
+  }
 });
 
 function getSteps() {
@@ -127,10 +130,35 @@ function StepperContainer(props) {
         })}
       </Stepper>
       {activeStep === steps.length && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography variant="h5">
-            All steps completed - Payment Successful
-          </Typography>
+        <>
+          <Paper square elevation={3} className={classes.resetContainer}>
+            <Typography variant="h5" color="primary" gutterBottom>
+              Payment Successful. Details below
+            </Typography>
+
+            <Grid container spacing={3} className={classes.grid}>
+              <Grid item xs={6}>
+                <Typography variant="h6">Email </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="h6">{appData.email} </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography variant="h6">Amount </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="h6">{appData.amount} </Typography>
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography variant="h6">Currency </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="h6">{appData.currency} </Typography>
+              </Grid>
+            </Grid>
+          </Paper>
           <Button
             onClick={handleBack}
             className={classes.button}
@@ -147,7 +175,7 @@ function StepperContainer(props) {
           >
             Restart Flow
           </Button>
-        </Paper>
+        </>
       )}
     </Container>
   );

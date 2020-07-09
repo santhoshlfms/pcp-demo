@@ -116,8 +116,8 @@ function TransferForm(props) {
         { message: "Transfer method has been created", type: "info" },
       ]);
       updateAppData({
-        //destinationToken: trmObject.token,
-        destinationToken: trmObject.userToken,
+        destinationToken: trmObject.token,
+        //destinationToken: trmObject.userToken,
         currency: trmObject.transferMethodCurrency,
       });
 
@@ -152,11 +152,11 @@ function TransferForm(props) {
   return (
     <>
       <HyperwalletTranferMethodDropIn
-        userToken={appData.userToken}
         environment="sandbox"
         getAuthenticationToken={getAuthToken} //token should be renewed every 10 mins
         onComplete={onComplete}
         onError={onError}
+        appData={appData}
         template="plain" //Specifies the UI template. Allowed values are:[bootstrap3|plain]
       />
 

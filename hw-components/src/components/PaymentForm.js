@@ -40,6 +40,7 @@ function PaymentForm(props) {
     handleBack,
     appData,
     updateStatus,
+    updateAppData
   } = props;
 
   const classes = useStyles();
@@ -193,7 +194,7 @@ function PaymentForm(props) {
 --header 'Content-Type: application/json' 
 --header 'Accept: application/json' 
 --data-raw '{
-      "programToken": "${fields.parentToken}",
+      "programToken": "${fields.programToken}",
       "destinationToken": "${fields.destinationToken}",
       "clientPaymentId": "${fields.clientPaymentId}",
       "amount": "${fields.amount}",
@@ -266,6 +267,7 @@ function PaymentForm(props) {
         $.LoadingOverlay("hide");
       })
       .finally(() => {
+        updateAppData({ ...fields });
         $.LoadingOverlay("hide");
       });
   };

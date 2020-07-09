@@ -48,10 +48,12 @@ function UserForm(props) {
   const profileTypeRef = useRef();
   const clientUserIdRef = useRef();
   const firstNameRef = useRef();
+  const middleNameRef = useRef();
   const lastNameRef = useRef();
   const emailRef = useRef();
   const dateOfBirthRef = useRef();
   const addressLine1Ref = useRef();
+  const addressLine2Ref = useRef();
   const cityRef = useRef();
   const postalCodeRef = useRef();
   const stateRef = useRef();
@@ -61,10 +63,12 @@ function UserForm(props) {
     profileType: "",
     clientUserId: "",
     firstName: "",
+    middleName: "",
     lastName: "",
     email: "",
     dateOfBirth: "",
     addressLine1: "",
+    addressLine2: "",
     city: "",
     postalCode: "",
     stateProvince: "",
@@ -106,6 +110,16 @@ function UserForm(props) {
       validators: ["required", "isNotEmpty"],
       errorMessages: ["First Name is required", "First Name is required"],
       helperText: "Enter First Name",
+    },
+
+    {
+      type: "text",
+      label: "Middle Name",
+      ref: { middleNameRef },
+      name: "middleName",
+      id: "middleName",
+      isOptional: true,
+      helperText: "Enter Middle Name",
     },
 
     {
@@ -157,6 +171,16 @@ function UserForm(props) {
         "Address Line 1 is required",
       ],
       helperText: "Enter Address Line 1",
+    },
+
+    {
+      type: "text",
+      label: "Address Line 2",
+      ref: { addressLine2Ref },
+      name: "addressLine2",
+      id: "addressLine2",
+      isOptional: true,
+      helperText: "Enter Address Line 2",
     },
 
     {
@@ -249,10 +273,12 @@ function UserForm(props) {
       "profileType": "${fields.profileType}",
       "clientUserId": "${fields.clientUserId}",
       "firstName": "${fields.firstName}",
+      "middleName": "${fields.middleName}",
       "lastName": "${fields.lastName}",
       "email": "${fields.email}",
       "dateOfBirth": "${fields.dateOfBirth}",
       "addressLine1": "${fields.addressLine1}",
+      "addressLine2": "${fields.addressLine2}",
       "city": "${fields.city}",
       "country": "${fields.country}",
       "stateProvince": "${fields.stateProvince}",
