@@ -4,22 +4,30 @@ import "./DropIn.css";
 
 let obj = { open: true, message: "Loading Drop-in UI..." };
 
-export default class HyperwalletTranferMethodDropIn extends React.PureComponent {
+export default class HyperwalletTransferMethodDropIn extends React.Component {
   state = {
     isSdkReady: false,
     isUILoaded: false,
     isError: false,
   };
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      nextProps.appData.userToken !== this.props.appData.userToken ||
+      nextState.isSdkReady !== this.state.isSdkReady ||
+      nextState.isUILoaded !== this.state.isUILoaded ||
+      nextState.isError !== this.state.isError
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   componentDidMount() {
     this._addPaypalSdk();
   }
 
   render() {
-    if (this.state.isSdkReady) {
-      window.HWWidgets.initialize(this._getAuthenticationToken);
-    }
-
     return (
       <div style={{ padding: 20 }}>
         {this.state.isUILoaded ? null : <Loader obj={obj}></Loader>}
@@ -29,8 +37,7 @@ export default class HyperwalletTranferMethodDropIn extends React.PureComponent 
   }
 
   _addPaypalSdk = () => {
-    const { environment, onComplete, onError,
-    appData } = this.props;
+    const { environment, onComplete, onError, appData } = this.props;
 
     const script = document.createElement("script");
     script.type = "text/javascript";
@@ -39,7 +46,10 @@ export default class HyperwalletTranferMethodDropIn extends React.PureComponent 
     script.onload = () => {
       this.setState({ isSdkReady: true });
 
-      console.log("provile type ", appData.profileType)
+      console.log("profile type ", appData.profileType);
+
+      window.HWWidgets.initialize(this._getAuthenticationToken);
+
       window.HWWidgets.transferMethods
         .configure({
           template: "plain",
@@ -58,22 +68,19 @@ export default class HyperwalletTranferMethodDropIn extends React.PureComponent 
             stateProvince: appData.stateProvince,
             city: appData.city,
             postalCode: appData.postalCode,
-            email: appData.email
-
+            email: appData.email,
           },
+          
           onComplete: function (trmObject, completionResult) {
             onComplete(trmObject, completionResult);
           },
         })
         .display(
           function () {
-            console.log("Display");
             // this is a callback event called when display is done
             setTimeout(() => {
-
-             console.log("Inside Display time out") 
-             this.setState({ isUILoaded: true });
-            },7000)
+              this.setState({ isUILoaded: true });
+            }, 7000);
           }.bind(this)
         );
     };
@@ -86,7 +93,7 @@ export default class HyperwalletTranferMethodDropIn extends React.PureComponent 
   };
 
   _getAuthenticationToken = (callback) => {
-    console.log("getAuth");
+    console.log("get auth token");
     obj.message = "Creating Transfer method...";
     this.props.getAuthenticationToken(callback);
   };

@@ -326,7 +326,6 @@ function UserForm(props) {
           return;
         }
         console.log("Created user");
-        console.log(data.data);
         updateStatus([
           {
             message: "User created Successfully...",

@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
-import HWTransferMethodDropin from "./HWTransferMethodDropin";
+import HWPayeeVerificationDropin from "./HWPayeeVerificationDropin";
 
 import { useAuthToken } from "../hooks/useAuthToken";
 
@@ -96,7 +96,7 @@ function TransferForm(props) {
   };
   return (
     <>
-      <HWTransferMethodDropin
+      <HWPayeeVerificationDropin
         environment="sandbox"
         getAuthenticationToken={getAuthToken} //token should be renewed every 10 mins
         onComplete={onComplete}

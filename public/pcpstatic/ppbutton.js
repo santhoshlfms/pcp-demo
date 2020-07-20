@@ -1,22 +1,36 @@
 // util to render pp button
-function renderPPButton() {
+function renderPPButton(isChange) {
+
+  if(isChange) {
+    $.LoadingOverlay("show");
+
+    setTimeout(()=>{
+      $.LoadingOverlay("hide");
+    },1000);
+  }
   $("#paypal-button").empty();
   $("#paypal-button").show();
-  //var label = $("[name=label]").val();
   
   const { envObj , orderObj } = getCreateOrderPayload();
   
   const intent = $("[name=intent]:checked").attr("data-value");
 
+  let styleObj = {
+    layout: $("#layout").val(),
+    shape: $("#hape").val(), // pill | rect
+    color: $("#color").val(), // gold | blue | silve | black
+    label: $("#label").val() // checkout | pay | paypal
+  };
+
+  if($("#layout").val() === "horizontal") {
+    styleObj.tagline = $("#tagline").val() // true | false
+  }
+
   paypal
     .Buttons({
       // Specify the style of the button
-      style: {
-        layout: "vertical",
-        shape: "rect", // pill | rect
-        color: "gold", // gold | blue | silve | black
-        label: "checkout" // checkout | pay | paypal
-      },
+      style: styleObj,
+
       createOrder: function(data, actions) {
        
         addToConsole("Creating Order");

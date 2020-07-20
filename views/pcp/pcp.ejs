@@ -1,385 +1,455 @@
 <!DOCTYPE html>
 <%- include("../pcpheader",{page_name:"pcp",section_name:'pcp'}) %>
-  <head>
-    <link rel="stylesheet" href="/stylesheets/style.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <style>
-      ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        background-color: #F5F5F5;
-      }
+<head>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-      ::-webkit-scrollbar {
-        width: 10px;
-        background-color: #F5F5F5;
-      }
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <style>
+    ::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      background-color: #F5F5F5;
+    }
 
-      ::-webkit-scrollbar-thumb {
-        background-color: grey;
-      }
+    ::-webkit-scrollbar {
+      width: 10px;
+      background-color: #F5F5F5;
+    }
 
-      ::-webkit-scrollbar {
-        width: 10px;
-        background-color: #F5F5F5;
-      }
+    ::-webkit-scrollbar-thumb {
+      background-color: grey;
+    }
 
-      ::-webkit-scrollbar-thumb {
-        background-color: grey;
-      }
+    ::-webkit-scrollbar {
+      width: 10px;
+      background-color: #F5F5F5;
+    }
 
-      th {
-        text-align: center;
-      }
+    ::-webkit-scrollbar-thumb {
+      background-color: grey;
+    }
 
-      .alert {
-        margin-bottom: 1px;
-        height: 30px;
-        line-height: 30px;
-        padding: 0px 15px;
-        font-weight: bold;
-      }
+    th {
+      text-align: center;
+    }
 
-      .modal-dialog {
-        width: 600px;
-        height: 580px !important;
-      }
+    .alert {
+      margin-bottom: 1px;
+      height: 30px;
+      line-height: 30px;
+      padding: 0px 15px;
+      font-weight: bold;
+    }
 
-      .modal-content {
-        /* 60% of window height */
-        height: 60%;
-      }
+    .modal-dialog {
+      width: 600px;
+      height: 580px !important;
+    }
 
-      #prettyprintHead {
-        opacity: 0;
-        position: absolute;
-        z-index: -9999;
-        pointer-events: none;
-      }
+    .modal-content {
+      /* 60% of window height */
+      height: 60%;
+    }
 
-      .segmented-control {
-        height:30px;
-        font-size:11px;
-      }
+    #prettyprintHead {
+      opacity: 0;
+      position: absolute;
+      z-index: -9999;
+      pointer-events: none;
+    }
 
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    .segmented-control {
+      height: 30px;
+      font-size: 11px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 
-    <script src="/pcpstatic/payload.js"></script>
-    <script src="/pcpstatic/address.js"></script>
-    <script src="/pcpstatic/ppbutton.js"></script>
-    <script src="/pcpstatic/hosted.js"></script>
-    <script src="/pcpstatic/scriptloader.js"></script>
-    
-  </head>
+  <script src="/pcpstatic/payload.js"></script>
+  <script src="/pcpstatic/address.js"></script>
+  <script src="/pcpstatic/ppbutton.js"></script>
+  <script src="/pcpstatic/hosted.js"></script>
+  <script src="/pcpstatic/scriptloader.js"></script>
 
-  <body>
-    <div class="container">
-      <div class="row">
+</head>
 
-        <div class="col-md-6">
-          <h4><u><center><mark>Customize the PayPal experience and click on Save</mark> </center></u></h4>
-          
-            <button class="btn btn-md" style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white" onclick="save()">
-                Save
-            </button> 
+<body>
+  <div class="container">
+    <div class="row">
 
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Environment </h5>
-              <select name="environment" class="form-control input-sm" style="color:#319DD4">
-                <option value="sandbox" selected>Sandbox</option>
-              </select>
-            </div>
-          </div> 
+      <div class="col-md-6">
+        <h4><u>
+            <center><mark>Customize the PayPal experience and click on Save</mark> </center>
+          </u></h4>
 
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Client ID </h5>
-              <input type="text" class="form-control input-sm" placeholder="Enter Client Id" style="color:black" name="clientId"
-                value="AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG">
-            </div>
+        <button class="btn btn-md" style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white"
+          onclick="save()">
+          Save
+        </button>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Environment </h5>
+            <select name="environment" class="form-control input-sm" style="color:#319DD4">
+              <option value="sandbox" selected>Sandbox</option>
+            </select>
           </div>
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Client Secret </h5>
-              <input type="text" class="form-control input-sm" placeholder="Enter Client Secret" style="color:black" name="clientSecret"
-                value="EFRHK9CFJKH8X1P1CmpG_sGk-S5ScH3Rg-2vGJsYNu9E2mKW4JYca5mdbEl0ccPBbdHQ0DAGus5WcToy">
-            </div>
-          </div>
-
-          <div class="row">  
-              <div class="col-md-10">
-                  <h5>Is Partner ?</h5>
-                      <select name="isPartner"  id="isPartner" class="form-control input-sm control-sm" style="color:black">
-                          <option value="Yes" selected>Yes</option>
-                          <option value="No">No</option>		
-                      </select> 
-              </div>
-          </div>
-
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Merchant ID (Required for Partner Integration)</h5>
-              <input type="text" class="form-control input-sm" placeholder="Enter Merchant Id" style="color:black" name="merchantId"
-                value="PPC6CRGZNWY5C">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-10">
-                <h5>Intent</h5>
-                <div class="segmented-control" style="width: 100%; color: #f7ae40">
-                    <input type="radio" name="intent" id="intent-capture" data-value="capture" checked>
-                    <input type="radio" name="intent" id="intent-auth" data-value="authorize">
-
-                    <label for="intent-capture" data-value="capture">capture</label>
-                    <label for="intent-auth" data-value="authorize">authorize</label>
-                </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-10">
-                <h5>Components</h5>
-
-                <div class="segmented-control" style="width: 100%;color:#8D74C0">
-                    <input type="checkbox" name="components" id="sc-6-1-1" data-value="buttons" checked value="buttons">
-                    <label for="sc-6-1-1" data-value="buttons">buttons</label>
-                </div>
-
-                <div class="segmented-control" style="width: 100%;color:#8D74C0">
-                    <input type="checkbox" name="components" id="sc-6-1-2" data-value="hosted-fields" value="hosted-fields">
-                    <label for="sc-6-1-2" data-value="hosted-fields">hosted-fields</label>
-                </div>
-
-            </div>
         </div>
 
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Customer Id (Required for Vaulting) </h5>
-              <input type="text" class="form-control input-sm" placeholder="Enter Customer Id" style="color:black" name="customerId"
-                value="CUSTOMER_ID_123456">
-            </div>
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Client ID </h5>
+            <input type="text" class="form-control input-sm" placeholder="Enter Client Id" style="color:black"
+              name="clientId" value="AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG">
           </div>
-
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Locale - Language</h5>
-              <select name="lang" class="form-control input-sm control-sm" style="color:#319DD4">
-                <% Object.keys(config.LANG).forEach(function(key){ %>
-                  <option value="<%= config.LANG[key] %>">
-                    <%= config.LANG[key] %>
-                  </option>
-                  <% }); %>
-              </select>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Locale - Country</h5>
-              <select name="country" class="form-control input-sm control-sm" style="color:#319DD4">
-                <% Object.keys(config.COUNTRY).forEach(function(key){ %>
-                  <option value="<%= config.COUNTRY[key] %>">
-                    <%- config.COUNTRY[key] %>
-                  </option>
-                  <% }); %>
-              </select>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Buyer Country</h5>
-              <select name="buyercountry" class="form-control input-sm control-sm" style="color:#319DD4">
-                <% Object.keys(config.COUNTRY).forEach(function(key){ %>
-                  <option value="<%= config.COUNTRY[key] %>">
-                    <%- config.COUNTRY[key] %>
-                  </option>
-                  <% }); %>
-              </select>
-            </div>
-          </div>
-
-
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Amount </h5>
-              <input type="number" value="1.00" name="amount" class="form-control input-sm control-sm" />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Currency</h5>
-
-              <select name="currency" class="form-control input-sm control-sm" style="color:#319DD4">
-                <% Object.keys(config.CURRENCY).forEach(function(key){ %>
-                  <option value="<%= config.CURRENCY[key] %>">
-                    <%- config.CURRENCY[key] %>
-                  </option>
-                  <% }); %>
-              </select>
-            </div>
-          </div>
-
-          <!-- <div class="row">
-            <div class="col-md-10">
-              <h5>Label </h5>
-              <select name="label" class="form-control control-sm input-sm" style="color:black">
-                <option value="checkout" selected>Checkout</option>
-                <option value="pay">Pay</option>
-                <option value="paypal">PayPal</option>
-              </select>
-            </div>
-          </div> -->
-
-          <div class="row">
-              <div class="col-md-10">
-                  <h5>Hosted Fields Template</h5>
-                      <select name="hostedFieldsType"  id="hostedFieldsType" class="form-control input-sm control-sm" style="color:black">
-                        <option value="Bootstrap" selected>Bootstrap</option>
-                        <option value="Animate">Animate</option>
-                        <option value="3dtransform">3dtransform</option>
-                        <option value="Minimal">Minimal</option>		
-                      </select> 
-              </div>
-            </div>
-
-            <div class="row">  
-              <div class="col-md-10">
-                  <h5>3DS Enabled ?</h5>
-                      <select name="3dsEnabled"  id="3dsEnabled" class="form-control input-sm control-sm" style="color:black">
-                              <option value="Yes" >Yes</option>
-                              <option value="No" selected>No</option>		
-                      </select> 
-              </div>
-          </div>
-
-          <div class="row">  
-              <div class="col-md-10">
-                  <h5>Vaulting Enabled ?</h5>
-                      <select name="vaultingEnabled"  id="vaultingEnabled" class="form-control input-sm control-sm" style="color:black">
-                              <option value="Yes" >Yes</option>
-                              <option value="No" selected>No</option>		
-                      </select> 
-              </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Prefill Shipping Address ?</h5>
-              <div class="segmented-control" style="width: 100%; color: #f7ae40">
-                <input type="radio" name="prefill-shipping-address" id="prefill-shipping-address-true" data-value="true" checked>
-                <input type="radio" name="prefill-shipping-address" id="prefill-shipping-address-false" data-value="false">
-
-                <label for="prefill-shipping-address-true" data-value="true">true</label>
-                <label for="prefill-shipping-address-false" data-value="false">false</label>
-              </div>
-            </div>
-          </div> 
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Prefill Billing Address ?</h5>
-              <div class="segmented-control" style="width: 100%; color: #f7ae40">
-                <input type="radio" name="prefill-billing-address" id="prefill-billing-address-true" data-value="true" checked>
-                <input type="radio" name="prefill-billing-address" id="prefill-billing-address-false" data-value="false">
-
-                <label for="prefill-billing-address-true" data-value="true">true</label>
-                <label for="prefill-billing-address-false" data-value="false">false</label>
-              </div>
-            </div>
-          </div> 
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Set Locale ?</h5>
-              <div class="segmented-control" style="width: 100%; color: #5FBAAC">
-                <input type="radio" name="set-locale" id="set-locale-true" data-value="true" checked>
-                <input type="radio" name="set-locale" id="set-locale-false" data-value="false">
-
-                <label for="set-locale-true" data-value="true">true</label>
-                <label for="set-locale-false" data-value="false">false</label>
-              </div>
-            </div>
-          </div> 
-
-
-          <div class="row">
-            <div class="col-md-10">
-              <h5>Set Buyer-Country ?</h5>
-              <div class="segmented-control" style="width: 100%; color: #8D74C0">
-                <input type="radio" name="set-buyercountry" id="set-buyercountry-true" data-value="true" checked>
-                <input type="radio" name="set-buyercountry" id="set-buyercountry-false" data-value="false">
-
-                <label for="set-buyercountry-true" data-value="true">true</label>
-                <label for="set-buyercountry-false" data-value="false">false</label>
-              </div>
-            </div>
-          </div> 
-
-          <br/><br/>
-
-
         </div>
-        <div class="col-md-6 col-sm-12 col-xs-12">
 
-            <!-- <div id="loader-wrapper">
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Client Secret </h5>
+            <input type="text" class="form-control input-sm" placeholder="Enter Client Secret" style="color:black"
+              name="clientSecret"
+              value="EFRHK9CFJKH8X1P1CmpG_sGk-S5ScH3Rg-2vGJsYNu9E2mKW4JYca5mdbEl0ccPBbdHQ0DAGus5WcToy">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Is Partner ?</h5>
+            <select name="isPartner" id="isPartner" class="form-control input-sm control-sm" style="color:black">
+              <option value="Yes" selected>Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Merchant ID (Required for Partner Integration)</h5>
+            <input type="text" class="form-control input-sm" placeholder="Enter Merchant Id" style="color:black"
+              name="merchantId" value="PPC6CRGZNWY5C">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Intent</h5>
+            <div class="segmented-control" style="width: 100%; color: #f7ae40">
+              <input type="radio" name="intent" id="intent-capture" data-value="capture" checked>
+              <input type="radio" name="intent" id="intent-auth" data-value="authorize">
+
+              <label for="intent-capture" data-value="capture">capture</label>
+              <label for="intent-auth" data-value="authorize">authorize</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Components</h5>
+
+            <div class="segmented-control" style="width: 100%;color:#8D74C0">
+              <input type="checkbox" name="components" id="sc-6-1-1" data-value="buttons" checked value="buttons">
+              <label for="sc-6-1-1" data-value="buttons">buttons</label>
+            </div>
+
+            <div class="segmented-control" style="width: 100%;color:#8D74C0">
+              <input type="checkbox" name="components" id="sc-6-1-2" data-value="hosted-fields" value="hosted-fields">
+              <label for="sc-6-1-2" data-value="hosted-fields">hosted-fields</label>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Customer Id (Required for Vaulting) </h5>
+            <input type="text" class="form-control input-sm" placeholder="Enter Customer Id" style="color:black"
+              name="customerId" value="CUSTOMER_ID_123456">
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Locale - Language</h5>
+            <select name="lang" class="form-control input-sm control-sm" style="color:#319DD4">
+              <% Object.keys(config.LANG).forEach(function(key){ %>
+              <option value="<%= config.LANG[key] %>">
+                <%= config.LANG[key] %>
+              </option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Locale - Country</h5>
+            <select name="country" class="form-control input-sm control-sm" style="color:#319DD4">
+              <% Object.keys(config.COUNTRY).forEach(function(key){ %>
+              <option value="<%= config.COUNTRY[key] %>">
+                <%- config.COUNTRY[key] %>
+              </option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Buyer Country</h5>
+            <select name="buyercountry" class="form-control input-sm control-sm" style="color:#319DD4">
+              <% Object.keys(config.COUNTRY).forEach(function(key){ %>
+              <option value="<%= config.COUNTRY[key] %>">
+                <%- config.COUNTRY[key] %>
+              </option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Amount </h5>
+            <input type="number" value="1.00" name="amount" class="form-control input-sm control-sm" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Currency</h5>
+
+            <select name="currency" class="form-control input-sm control-sm" style="color:#319DD4">
+              <% Object.keys(config.CURRENCY).forEach(function(key){ %>
+              <option value="<%= config.CURRENCY[key] %>">
+                <%- config.CURRENCY[key] %>
+              </option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Hosted Fields Template</h5>
+            <select name="hostedFieldsType" id="hostedFieldsType" class="form-control input-sm control-sm"
+              style="color:black">
+              <option value="Bootstrap" selected>Bootstrap</option>
+              <option value="Animate">Animate</option>
+              <option value="3dtransform">3dtransform</option>
+              <option value="Minimal">Minimal</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>3DS Enabled ?</h5>
+            <select name="3dsEnabled" id="3dsEnabled" class="form-control input-sm control-sm" style="color:black">
+              <option value="Yes">Yes</option>
+              <option value="No" selected>No</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Vaulting Enabled ?</h5>
+            <select name="vaultingEnabled" id="vaultingEnabled" class="form-control input-sm control-sm"
+              style="color:black">
+              <option value="Yes">Yes</option>
+              <option value="No" selected>No</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Prefill Shipping Address ?</h5>
+            <div class="segmented-control" style="width: 100%; color: #f7ae40">
+              <input type="radio" name="prefill-shipping-address" id="prefill-shipping-address-true" data-value="true"
+                checked>
+              <input type="radio" name="prefill-shipping-address" id="prefill-shipping-address-false"
+                data-value="false">
+
+              <label for="prefill-shipping-address-true" data-value="true">true</label>
+              <label for="prefill-shipping-address-false" data-value="false">false</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Prefill Billing Address ?</h5>
+            <div class="segmented-control" style="width: 100%; color: #f7ae40">
+              <input type="radio" name="prefill-billing-address" id="prefill-billing-address-true" data-value="true"
+                checked>
+              <input type="radio" name="prefill-billing-address" id="prefill-billing-address-false" data-value="false">
+
+              <label for="prefill-billing-address-true" data-value="true">true</label>
+              <label for="prefill-billing-address-false" data-value="false">false</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Set Locale ?</h5>
+            <div class="segmented-control" style="width: 100%; color: #5FBAAC">
+              <input type="radio" name="set-locale" id="set-locale-true" data-value="true" checked>
+              <input type="radio" name="set-locale" id="set-locale-false" data-value="false">
+
+              <label for="set-locale-true" data-value="true">true</label>
+              <label for="set-locale-false" data-value="false">false</label>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Set Buyer-Country ?</h5>
+            <div class="segmented-control" style="width: 100%; color: #8D74C0">
+              <input type="radio" name="set-buyercountry" id="set-buyercountry-true" data-value="true" checked>
+              <input type="radio" name="set-buyercountry" id="set-buyercountry-false" data-value="false">
+
+              <label for="set-buyercountry-true" data-value="true">true</label>
+              <label for="set-buyercountry-false" data-value="false">false</label>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Layout</h5>
+            <select name="layout" id="layout" class="form-control input-sm control-sm" style="color:#319DD4"
+            onchange="renderPPButton(true)"
+            >
+              <option value="vertical" selected>Vertical</option>
+              <option value="horizontal">Horizontal</option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Color</h5>
+            <select name="color" id="color" class="form-control input-sm control-sm" style="color:#319DD4"
+            onchange="renderPPButton(true)"
+            >
+              <option value="gold" selected>Gold</option>
+              <option value="blue">Blue</option>
+              <option value="silver">Silver</option>
+              <option value="black">Black</option>
+              <option value="white">White</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Shape</h5>
+            <select name="shape" id="shape" class="form-control input-sm control-sm" style="color:#319DD4"
+            onchange="renderPPButton(true)"
+            >
+              <option value="rect" selected>Rectangle</option>
+              <option value="pill">Pill</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Label </h5>
+            <select name="label" id="label" class="form-control control-sm input-sm" style="color:#319DD4"
+            onchange="renderPPButton(true)"
+            >
+              <option value="paypal" selected>PayPal</option>
+              <option value="checkout">Checkout</option>
+              <option value="pay">Pay</option>
+              <option value="buynow">Buynow</option>
+              <option value="installment">Installment</option>
+            </select>
+          </div>
+        </div> 
+
+
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Tagline ?</h5>
+            <select name="tagline" id="tagline" class="form-control input-sm control-sm" style="color:#319DD4"
+            onchange="renderPPButton(true)"
+            >
+              <option value="true">Yes</option>
+              <option value="false" selected>No</option>
+            </select>
+          </div>
+        </div>
+
+
+
+        <br /><br />
+
+
+      </div>
+      <div class="col-md-6 col-sm-12 col-xs-12">
+
+        <!-- <div id="loader-wrapper">
                 <div id="loader"></div>
                 <div class="loader-section section-left"></div>
                 <div class="loader-section section-right"></div>
               </div> -->
 
-          <div id="paypal-button" style="margin-top:10%;display:none"></div>
-          <div id="paypal-error-container" style="display:none;color:red;font-weight:bold"></div>
-          <br/>
+        <div id="paypal-button" style="margin-top:10%;display:none"></div>
+        <div id="paypal-error-container" style="display:none;color:red;font-weight:bold"></div>
+        <br />
 
-          <div id="hostedButton" style="display:none">
-            <div id="hcontainer">
-              
+        <div id="hostedButton" style="display:none">
+          <div id="hcontainer">
+
+          </div>
+        </div>
+
+        <div id="consoleWindow" class="panel panel-primary" style="width:100%;background-color:black">
+
+          <div class="panel-heading">
+            <p>Playground Status</p>
+          </div>
+
+          <div class="panel-body" style="margin:0px;margin-bottom:10px;width:100%;max-height:100vh;overflow-y:auto;">
+            <div id="plgStatus" style="color:white;">
             </div>
           </div>
 
-          <div id="consoleWindow" class="panel panel-primary" style="width:100%;background-color:black">
-
-            <div class="panel-heading">
-                <p>Playground Status</p>
-            </div>
-            
-            <div class="panel-body" style="margin:0px;margin-bottom:10px;width:100%;max-height:100vh;overflow-y:auto;">
-                <div id="plgStatus" style="color:white;">
-                </div>  
-            </div>
-        
         </div>
-        
-        
-          <!-- <button class="btn btn-primary btn-md openBtn">View Source Code</button> -->
 
-        </div>
+
+        <!-- <button class="btn btn-primary btn-md openBtn">View Source Code</button> -->
 
       </div>
 
     </div>
 
-    <script>
+  </div>
 
-        loadPPAndHostedJS('buttons');
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
-    
-    <%- include("../footer") %>
+  <script>
+    loadPPAndHostedJS('buttons');
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 
-  </body>
+  <%- include("../footer") %>
 
-  </html>
+</body>
+
+</html>

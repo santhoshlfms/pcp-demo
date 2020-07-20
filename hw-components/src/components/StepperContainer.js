@@ -14,6 +14,7 @@ import UserForm from "./UserForm";
 import CredentialForm from "./CredentialForm";
 import TransferForm from "./TransferForm";
 import PaymentForm from "./PaymentForm";
+//import VerifyForm from "./VerifyForm";
 
 import { INITIALSTATE, getInitalState } from "../hooks/InitalState";
 
@@ -43,9 +44,13 @@ function getSteps() {
       component: CredentialForm,
     },
     {
-      title: "Create User",
+      title: "Create User/Payee",
       component: UserForm,
     },
+    // {
+    //   title: "Verify Payee",
+    //   component: VerifyForm,
+    // },
     {
       title: "Create Transfer",
       component: TransferForm,
@@ -66,8 +71,6 @@ function StepperContainer(props) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
-
-  console.log("Rendering stepper ");
 
   const updateAppData = useCallback(
     (obj) => {

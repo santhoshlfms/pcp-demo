@@ -56,7 +56,6 @@ const useStyles = makeStyles({
 export default function StatusBar(props) {
   const classes = useStyles();
 
-  console.log("rendering status bar");
   let { status: statusArr = [] } = props;
 
   let playgroundMsg = statusArr.map((state, i) => {
@@ -65,7 +64,7 @@ export default function StatusBar(props) {
     switch (type) {
       case "info":
         return (
-          <p className={classes.info}>
+          <p className={classes.info} key={message}>
             {statusArr.length - i} - {message}
           </p>
         );
@@ -77,12 +76,12 @@ export default function StatusBar(props) {
           status === "error" ? classes.errorMessage : classes.reqMessage;
 
         return (
-          <>
+          <div key={message}>
             <span className={classNameHeading}>
               {statusArr.length - i} - {message}
             </span>
             <pre className={classNameReq}>{req}</pre>
-          </>
+          </div>
         );
       default:
         return null;

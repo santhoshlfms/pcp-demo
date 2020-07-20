@@ -161,7 +161,6 @@ function PaymentForm(props) {
     });
 
     ValidatorForm.addValidationRule("isLessThan", (value) => {
-      console.log(value);
       let val = parseInt(value);
       if (val > 100) {
         return false;
@@ -236,7 +235,7 @@ function PaymentForm(props) {
         }
         console.log("Payment Successful");
         alert("Payment Successful");
-        console.log(data.data);
+        
         updateStatus([
           {
             message: "Payment successfull...",

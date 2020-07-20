@@ -21,7 +21,7 @@ export default function RenderForm(props) {
       case "text":
       case "password":
         renderElem = (
-          <FormControl fullWidth margin="dense">
+          <FormControl  key={elem+ '' + i} fullWidth margin="dense">
             <TextValidator
               type={elem.type}
               label={elem.label}
@@ -46,7 +46,7 @@ export default function RenderForm(props) {
 
       case "date":
         renderElem = (
-          <FormControl fullWidth margin="dense">
+          <FormControl key={elem+ '' + i} fullWidth margin="dense">
             <TextValidator
               type={elem.type}
               ref={elem.ref}
@@ -69,7 +69,7 @@ export default function RenderForm(props) {
 
       case "select":
         renderElem = (
-          <FormControl fullWidth margin="dense">
+          <FormControl key={elem+ '' + i} fullWidth margin="dense">
             <TextValidator
               select
               ref={elem.ref}

@@ -1,4 +1,4 @@
-import React, {  useEffect, useReducer } from "react";
+import React, {  useEffect, useReducer, useCallback } from "react";
 import Grid from "@material-ui/core/Grid";
 
 
@@ -14,9 +14,9 @@ const reducer = (state, action) => {
 export default function App() {
   let [status, setStatus] = useReducer(reducer, []);
 
-  const resetStatus = () => {
+  const resetStatus = useCallback(() => {
     setStatus(null)
-  }
+  },[setStatus])
 
   useEffect(() => {
     window.scrollTo(0,0);
