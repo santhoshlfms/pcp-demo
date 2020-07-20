@@ -11,7 +11,7 @@ function getCreateOrderPayload() {
     "[name=prefill-billing-address]:checked"
   ).attr("data-value");
 
-  var country = $("[name=country]").val();
+  var country = $("[name=buyercountry]").val();
   var merchantId = $("[name=merchantId]").val();
 
   var isPartner = $("[name=isPartner]").val() == "Yes";

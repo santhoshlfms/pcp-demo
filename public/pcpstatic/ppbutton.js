@@ -17,7 +17,7 @@ function renderPPButton(isChange) {
 
   let styleObj = {
     layout: $("#layout").val(),
-    shape: $("#hape").val(), // pill | rect
+    shape: $("#shape").val(), // pill | rect
     color: $("#color").val(), // gold | blue | silve | black
     label: $("#label").val() // checkout | pay | paypal
   };
