@@ -150,43 +150,43 @@ function createOrder(accessToken, apiConfiguration) {
           console.log(body);
           let orderResp = body;
 
-          // STC API Call
-          console.log("Before calling STC API");
-          var stcOptions = {
-            headers: {
-              'content-type': "application/json",
-              'authorization': "Bearer "+accessToken,
-            },
-            body: {
-              "additional_data": [
-              {
-                "key": "sender_account_id",
-                "value": "A12345N343"
-              },
-              {
-                "key": "sender_first_name",
-                "value": "Saurabh"
-              },
-              {
-                "key":"sender_last_name",
-                "value":"Nigam"
-              },
-              {
-                "key":"sender_email",
-                "value":"saunig+1@gmail.com"
-              },
-              {
-                "key":"sender_country_code",
-                "value":"IN"
-              }]
+          // // STC API Call
+          // console.log("Before calling STC API");
+          // var stcOptions = {
+          //   headers: {
+          //     'content-type': "application/json",
+          //     'authorization': "Bearer "+accessToken,
+          //   },
+          //   body: {
+          //     "additional_data": [
+          //     {
+          //       "key": "sender_account_id",
+          //       "value": "A12345N343"
+          //     },
+          //     {
+          //       "key": "sender_first_name",
+          //       "value": "Saurabh"
+          //     },
+          //     {
+          //       "key":"sender_last_name",
+          //       "value":"Nigam"
+          //     },
+          //     {
+          //       "key":"sender_email",
+          //       "value":"saunig+1@gmail.com"
+          //     },
+          //     {
+          //       "key":"sender_country_code",
+          //       "value":"IN"
+          //     }]
               
-            },
-            json: true
-          };
+          //   },
+          //   json: true
+          // };
 
-          if(apiConfiguration.isPartner) {
-            stcOptions.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
-          }
+          // if(apiConfiguration.isPartner) {
+          //   stcOptions.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
+          // }
 
           // request.put(apiConfiguration.STC +apiConfiguration.MERCHANTID+ '/'+body.id, stcOptions ,function (err, response, body) {
           //     if (err) {
