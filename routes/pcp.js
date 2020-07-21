@@ -188,23 +188,31 @@ function createOrder(accessToken, apiConfiguration) {
             stcOptions.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
           }
 
-          request.put(apiConfiguration.STC +apiConfiguration.MERCHANTID+ '/'+body.id, stcOptions ,function (err, response, body) {
-              if (err) {
-                console.error("Error in calling STC API "+ err);
-                return resolve({
-                  orderResp: null,
-                  status: false,
-                  error: err
-                })
-              }
-              console.log("After calling STC API");
-              console.log ("Order ID is :"+orderResp.id);
-              return resolve({
-                orderResp,
-                status: true,
-                error: null
-              })
-          });
+          // request.put(apiConfiguration.STC +apiConfiguration.MERCHANTID+ '/'+body.id, stcOptions ,function (err, response, body) {
+          //     if (err) {
+          //       console.error("Error in calling STC API "+ err);
+          //       return resolve({
+          //         orderResp: null,
+          //         status: false,
+          //         error: err
+          //       })
+          //     }
+          //     console.log("After calling STC API");
+          //     console.log ("Order ID is :"+orderResp.id);
+          //     return resolve({
+          //       orderResp,
+          //       status: true,
+          //       error: null
+          //     })
+          // });
+
+          console.log ("Order ID is :"+orderResp.id);
+          return resolve({
+            orderResp,
+            status: true,
+            error: null
+          })
+
       });
     } catch(err) {
       console.log("Some Error occurred in calling create orders api "+ JSON.stringify(err));
