@@ -109,7 +109,7 @@ async function loadPPAndHostedJS(type) {
       file += `&locale=${lang + "_" + country}`;
     }
 
-    if (setBuyerCountry == "true") {
+    if (env == "sandbox" && setBuyerCountry == "true") {
       file += `&buyer-country=${buyercountry}`;
     }
 
