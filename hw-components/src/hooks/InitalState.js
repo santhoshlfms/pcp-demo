@@ -22,9 +22,9 @@ export const INITIALSTATE = {
   dateOfBirth: "1990-03-03",
   addressLine1: "1st Lane street",
   addressLine2: "",
-  city: "San Jose",
-  postalCode: "65001",
-  stateProvince: "California",
+  city: "New Jersey",
+  postalCode: "10016",
+  stateProvince: "NY",
   country: "US",
 
   userToken: "",

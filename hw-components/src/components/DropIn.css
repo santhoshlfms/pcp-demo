@@ -77,22 +77,77 @@ has-error .form-control {
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 
-.hw-button {
+.hw-button, .hw-field-confirm-button, .hw-field-buttons {
     color: #fff;
     background-color: #00544a !important;
     padding: 6px 16px;
     font-size: 0.875rem;
-    min-width: 64px;
+    min-width: 40px;
     box-sizing: border-box;
     transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-weight: 500;
-    line-height: 1.75;
+    line-height: 1;
     border-radius: 4px;
     letter-spacing: 0.02857em;
     text-transform: uppercase;
     cursor: pointer;
 }
 
-.hw-group-with-template {
+.hw-group-with-template,.hw-field-groups, fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.hw-fields {
+  margin-bottom: 15px;
+}
+
+.hw-breadcrumb-links { 
+     display: inline-block; 
+     padding: 6px 12px; 
+     margin-bottom: 0; 
+     font-size: 14px; 
+     font-weight: 400; 
+    line-height: 1.42857143;
+     text-align: center; 
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+     user-select: none; 
+     background-image: none; 
+     border: 1px solid transparent; 
+    border-radius: 4px;
+    font-weight: 400; 
+     color: #337ab7; 
+     border-radius: 0;
+     background: none;
+}
+.hw-breadcrumb-active-link {
+  font-weight: bold;
+}
+.hw-breadcrumb-headers {
+  font-weight: 400;
+}
+.hw-field-headers {
+  font-weight: 400;;
+}
+.hw-breadcrumb-container {
+  border-right: 1px solid #ddd;
+  padding-right: 5px;
+}
+
+.hw-input[disabled], .hw-input[readonly] ,.hw-select[disabled], .hw-select[readonly]
+,.hw-date[disabled], .hw-date[readonly]
+{
+  background-color: #eee;
+  opacity: 1;
+  cursor: not-allowed;
 }

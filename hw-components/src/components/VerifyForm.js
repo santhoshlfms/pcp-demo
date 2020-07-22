@@ -24,7 +24,7 @@ const useStyles = makeStyles({
   },
 });
 
-function TransferForm(props) {
+function VerifyForm(props) {
   const {
     handleNext,
     activeStep,
@@ -37,30 +37,25 @@ function TransferForm(props) {
   let getAuthToken = useAuthToken(updateStatus,appData)[0];
 
   let onComplete = useCallback(
-    (trmObject, completionResult) => {
+    (verificationObj, completionResult) => {
       //logic to be executed on completion of setting up transfer method.
-      console.log("Transfer method created");
-      console.log(trmObject, completionResult);
+      console.log("Payee verification form submitted");
+      console.log(verificationObj, completionResult);
       updateStatus([
-        { message: "Transfer method has been created", type: "info" },
+        { message: "Payee verification form submitted", type: "info" },
       ]);
-      updateAppData({
-        destinationToken: trmObject.token,
-        //destinationToken: trmObject.userToken,
-        currency: trmObject.transferMethodCurrency,
-      });
-
+     
       updateStatus([
         {
-          message: "Transfer Method API Response...",
+          message: "Payee verification form Response...",
           type: "request",
-          req: JSON.stringify(trmObject, null, 2),
+          req: JSON.stringify({ verificationObj, completionResult}, null, 2),
         },
       ]);
       setTimeout(() => {
         updateStatus([
           {
-            message: "You can make a payment to this user now...",
+            message: "User can add Transfer Method now...",
             type: "info",
           },
         ]);
@@ -120,4 +115,4 @@ function TransferForm(props) {
   );
 }
 
-export default React.memo(TransferForm);
+export default React.memo(VerifyForm);

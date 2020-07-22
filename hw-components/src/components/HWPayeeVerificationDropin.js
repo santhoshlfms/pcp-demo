@@ -2,7 +2,7 @@ import React from "react";
 import Loader from "./Loader";
 import "./DropIn.css";
 
-let obj = { open: true, message: "Loading Drop-in UI..." };
+let obj = { open: true, message: "Loading Payee Drop-in UI..." };
 
 export default class HyperwalletPayeeVerificationDropIn extends React.Component {
   state = {
@@ -38,10 +38,9 @@ export default class HyperwalletPayeeVerificationDropIn extends React.Component 
 
   _addPaypalSdk = () => {
     const { environment, onComplete, onError, appData } = this.props;
-
     const script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = `https://${environment}.hyperwallet.com/rest/widgets/users/${appData.userToken}/en.min.js`;
+    script.src = `https://${environment}.hyperwallet.com/rest/widgets/users/${appData.userToken}/en.v2_3_0.min.js`;
     script.async = true;
     script.onload = () => {
       this.setState({ isSdkReady: true });
@@ -84,17 +83,25 @@ export default class HyperwalletPayeeVerificationDropIn extends React.Component 
             }, 7000);
           }.bind(this)
         );
+
+
+        window.HWWidgets.events.on("widget:loading:shown", () => {
+          
+          });
+  
+        window.HWWidgets.events.on("widget:loading:hidden", () => {
+          this.setState({ isUILoaded: true });
+        });
+  
+        window.HWWidgets.events.on("widget:users:completed", (verificationObject, completionResult) => {
+          var token = verificationObject.token;
+          var status = verificationObject.status;
+          console.log(token, status)
+          onComplete(verificationObject, completionResult);
+        });  
     };
 
-    // window.HWWidgets.events.on("widget:loading:shown", () => {
-    //   // code to add spinner or loading icon
-    // });
     
-    // window.HWWidgets.events.on("widget:loading:hidden", () => {
-    //   // code to hide spinner or loading icon
-    //   this.setState({ isUILoaded: true });
-    // });
-
     script.onerror = () => {
       this.setState({ isError: true });
       onError();
@@ -105,7 +112,7 @@ export default class HyperwalletPayeeVerificationDropIn extends React.Component 
 
   _getAuthenticationToken = (callback) => {
     console.log("get auth token");
-    obj.message = "Creating Transfer method...";
+    obj.message = "Submitting Payee Details for Verification...";
     this.props.getAuthenticationToken(callback);
   };
 }

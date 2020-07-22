@@ -51,7 +51,7 @@ export const useAuthToken = function (updateStatus, appData) {
             return;
           }
           console.log("Got auth token");
-          console.log(" Token "+data.data.value);
+          //console.log(" Token "+data.data.value);
           updateStatus([
             {
               message: "Received auth token...",

@@ -64,7 +64,7 @@ export default function StatusBar(props) {
     switch (type) {
       case "info":
         return (
-          <p className={classes.info} key={message}>
+          <p className={classes.info} key={message+ i}>
             {statusArr.length - i} - {message}
           </p>
         );
@@ -76,7 +76,7 @@ export default function StatusBar(props) {
           status === "error" ? classes.errorMessage : classes.reqMessage;
 
         return (
-          <div key={message}>
+          <div key={message+ i}>
             <span className={classNameHeading}>
               {statusArr.length - i} - {message}
             </span>

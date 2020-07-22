@@ -2,7 +2,7 @@ import React from "react";
 import Loader from "./Loader";
 import "./DropIn.css";
 
-let obj = { open: true, message: "Loading Drop-in UI..." };
+let obj = { open: true, message: "Loading Transfer Method Drop-in UI..." };
 
 export default class HyperwalletTransferMethodDropIn extends React.Component {
   state = {

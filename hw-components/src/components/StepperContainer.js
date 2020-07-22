@@ -14,7 +14,7 @@ import UserForm from "./UserForm";
 import CredentialForm from "./CredentialForm";
 import TransferForm from "./TransferForm";
 import PaymentForm from "./PaymentForm";
-//import VerifyForm from "./VerifyForm";
+import VerifyForm from "./VerifyForm";
 
 import { INITIALSTATE, getInitalState } from "../hooks/InitalState";
 
@@ -25,6 +25,7 @@ const useStyles = makeStyles({
   button: {
     marginTop: 30,
     marginRight: 10,
+    marginBottom: 20
   },
   actionsContainer: {
     marginBottom: 10,
@@ -47,10 +48,10 @@ function getSteps() {
       title: "Create User/Payee",
       component: UserForm,
     },
-    // {
-    //   title: "Verify Payee",
-    //   component: VerifyForm,
-    // },
+     {
+       title: "Verify Payee",
+       component: VerifyForm,
+     },
     {
       title: "Create Transfer",
       component: TransferForm,
@@ -69,7 +70,7 @@ function StepperContainer(props) {
   const { updateStatus, resetStatus } = props;
 
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(5);
   const steps = getSteps();
 
   const updateAppData = useCallback(
@@ -119,7 +120,7 @@ function StepperContainer(props) {
   };
 
   return (
-    <Container maxWidth="sm" className={classes.root}>
+    <Container className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((stepObj, index) => {
           return (
