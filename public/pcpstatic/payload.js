@@ -49,11 +49,12 @@ function getCreateOrderPayload() {
     intent: intent.toUpperCase(),
     payer: {
       name: {
-        given_name: "PayPal",
-        surname: "Customer",
+        "given_name": "Arvindan",
+        "surname": "TA",
       },
+
       address: billingAddress,
-      //email_address: "customer@domain.com",
+      email_address: "spp1@paypal.com",
       phone: {
         phone_type: "MOBILE",
         phone_number: {
@@ -66,13 +67,25 @@ function getCreateOrderPayload() {
         amount: {
           value: amount.toString(),
           currency_code: currency,
+          "breakdown": {
+            "item_total": {
+              "currency_code": currency,
+              "value": amount.toString()
+            },
+            "tax_total": {
+              "currency_code": currency,
+              "value": "0.00"
+            },
+          }
         },
         shipping: {
           address: shippingAddress,
+          name: {
+            full_name :"Arvindan TA"
+          }
         },
       },
-    ],
-    application_context: {},
+    ]
   };
 
   if (isPartner) {
@@ -80,7 +93,7 @@ function getCreateOrderPayload() {
       merchant_id: merchantId,
     };
   }
-
+  
   if (isShippingPrefillAddressUsed == "false") {
     delete orderObj.purchase_units[0].shipping;
   }

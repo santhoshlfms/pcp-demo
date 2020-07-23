@@ -32,6 +32,12 @@ function renderPPButton(isChange) {
       style: styleObj,
 
       createOrder: function(data, actions) {
+
+        $.LoadingOverlay("show", {
+          image: "",
+          text: "Creating Order...",
+          textClass: "loadingText"                                
+        });
        
         addToConsole("Creating Order");
         return fetch("/pcp-create-order", {
@@ -47,44 +53,59 @@ function renderPPButton(isChange) {
         })
         .then(res => res.json())
         .then(res => {
-          if(!res.id)
-            addToConsole(JSON.stringify(res, null, 4));
-          else
-            addToConsole("Order Id : "+ res.id)
+          
+          addToConsole("Create order response");  
+          addToConsole("<pre style='height:200px'>"+JSON.stringify(res, null, 2)+"</pre>");  
+
+          addToConsole("Order Id : "+ res.id);
+          
+          $.LoadingOverlay("hide");
+
           return res;
         })
-        .then(d => d.id);
+        .then(d => d.id)
+        .finally(() => {
+          $.LoadingOverlay("hide");
+        })
       },
      
       onApprove: function(data, actions) {
-        // Get the transaction details
-        return fetch("/pcp-get-order?id="+data.orderID,{
-          method: 'POST',
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            envObj,
-          })
-        })
-        .then(res => res.json())
-        .then(res => {
-            if(!res.id) {
-                addToConsole(JSON.stringify(res,null,4));
-            }
-            return res;
-        })
-        .then(function(details) {
+
+        $.LoadingOverlay("show", {
+          image: "",
+          text: "Capturing Order...",
+          textClass: "loadingText"                                
+        });
+
+        let pr = null;
+        // // Get the transaction details
+        // return fetch("/pcp-get-order?id="+data.orderID,{
+        //   method: 'POST',
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json"
+        //   },
+        //   body: JSON.stringify({
+        //     envObj,
+        //   })
+        // })
+        // .then(res => res.json())
+        // .then(res => {
+        //     if(!res.id) {
+        //         addToConsole(JSON.stringify(res,null,4));
+        //     }
+        //     return res;
+        // })
+        // .then(function(details) {
           // Optionally display the transaction details to the buyer
           addToConsole("Authorized by Buyer");
-          addToConsole("Create order response");  
-          addToConsole("<pre style='height:200px'>"+JSON.stringify(details, null, 2)+"</pre>");  
+          addToConsole("Authorized Info ");  
+          addToConsole("<pre style='height:200px'>"+JSON.stringify(data, null, 2)+"</pre>");  
 
-          console.log(data.orderID, details.id);
+          console.log(data.orderID, data.payerID);
           // Capture the funds from the transaction
           if(intent == 'authorize') {
-              return fetch("/pcp-auth-order?id="+details.id,{
+              pr = fetch("/pcp-auth-order?id="+data.payerID,{
                 method: 'POST',
                   headers: {
                     'Accept': 'application/json',
@@ -104,7 +125,7 @@ function renderPPButton(isChange) {
             })
           }
           else {
-            return fetch("/pcp-capture-order?id="+data.orderID,{
+            pr = fetch("/pcp-capture-order?id="+data.orderID,{
                 method: 'POST',
                   headers: {
                     'Accept': 'application/json',
@@ -123,7 +144,11 @@ function renderPPButton(isChange) {
                 return res;
             })
           }
-        }).then(function(details) {
+          return pr
+          .then(function(details) {
+          
+            $.LoadingOverlay("hide");
+
             if(details === "Error") { 
               alert("Some Error Occurred");
               return;
@@ -137,13 +162,19 @@ function renderPPButton(isChange) {
                 addToConsole("Payment Authorized. Capture the Order once you are ready");
             }
             addToConsole("<pre style='height:200px'>"+JSON.stringify(details, null, 2)+"</pre>");  
+        }).finally(() => {
+          $.LoadingOverlay("hide");
         });
       },
       onCancel : function(err) {
+        $.LoadingOverlay("hide");
         addToConsole("You cancelled the operation","error");
         return  alert("You cancelled the operation");
       },
       onError: function(err) {
+       
+        $.LoadingOverlay("hide");
+       
         console.log("Some error occurred " + err);
         addToConsole("ERROR - "+err.message,"error");
         alert(
@@ -157,6 +188,7 @@ function renderPPButton(isChange) {
     })
     .render("#paypal-button")
     .catch(err => {
+      $.LoadingOverlay("hide");
       console.log("errrrrror ", err);
       $("#paypal-error-container").html("<br/> " + err.message);
       $("#paypal-error-container").show();

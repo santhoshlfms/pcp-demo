@@ -69,6 +69,12 @@ function loadHostedButtons() {
             }
             addToConsole("LiabilityShifted " + payload.liabilityShifted);
 
+            $.LoadingOverlay("show", {
+              image: "",
+              text: "Capturing Order...",
+              textClass: "loadingText"                                
+            });
+
             // Capture/ Authorize the funds from the transaction
             if (intent == "authorize") {
               return fetch("/pcp-auth-order?id=" + payload.orderId, {
@@ -135,10 +141,14 @@ function loadHostedButtons() {
             );
           }).catch(err=>{
             addToConsole(JSON.stringify(err, null, 4),"error");
-          });
+          })
+          .finally(() => {
+            $.LoadingOverlay("hide");
+          })
       });
     });
   } catch (e) {
+    $.LoadingOverlay("hide");
     addToConsole("Error"+ JSON.stringify(e),'error');
     throw e;
   }

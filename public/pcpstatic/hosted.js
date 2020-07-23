@@ -38,6 +38,13 @@ function renderHostedButton() {
 
 function createOrderHosted() {
 
+
+    $.LoadingOverlay("show", {
+        image: "",
+        text: "Creating Order...",
+        textClass: "loadingText"                                
+    });
+
     const { envObj , orderObj } = getCreateOrderPayload();
     
     addToConsole("Creating Order");
@@ -60,5 +67,11 @@ function createOrderHosted() {
         addToConsole("Order Id : "+ res.id)
         return res;
     })
-    .then(d => d.id);
+    .then(d => d.id)
+    .catch((err) => {
+        console.log("error", err)
+    })
+    .finally(() => {
+        $.LoadingOverlay("hide");
+    })
 }

@@ -199,6 +199,7 @@ function addToConsole(msg, state) {
 }
 
 window.onerror = function(message, url, line, column, error) {
+  $.LoadingOverlay("hide");
   console.log("Uncaught error" + message + " " + error);
   $("#paypal-error-container").html(
     "<br/>Error Occurred while rendering buttons."

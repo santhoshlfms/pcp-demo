@@ -1,5 +1,6 @@
 
 const COUNTRY = {
+    DE: 'DE',
     US: 'US',
     AD: 'AD',
     AE: 'AE',
@@ -45,7 +46,6 @@ const COUNTRY = {
     CV: 'CV',
     CY: 'CY',
     CZ: 'CZ',
-    DE: 'DE',
     DJ: 'DJ',
     DK: 'DK',
     DM: 'DM',
