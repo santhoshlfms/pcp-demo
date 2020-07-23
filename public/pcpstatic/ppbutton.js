@@ -55,7 +55,7 @@ function renderPPButton(isChange) {
         .then(res => {
           
           addToConsole("Create order response");  
-          addToConsole("<pre style='height:200px'>"+JSON.stringify(res, null, 2)+"</pre>");  
+          addToConsole("<pre style='height:320px'>"+JSON.stringify(res, null, 2)+"</pre>");  
 
           addToConsole("Order Id : "+ res.id);
           
@@ -100,7 +100,7 @@ function renderPPButton(isChange) {
           // Optionally display the transaction details to the buyer
           addToConsole("Authorized by Buyer");
           addToConsole("Authorized Info ");  
-          addToConsole("<pre style='height:200px'>"+JSON.stringify(data, null, 2)+"</pre>");  
+          addToConsole("<pre style='height:170px'>"+JSON.stringify(data, null, 2)+"</pre>");  
 
           console.log(data.orderID, data.payerID);
           // Capture the funds from the transaction
@@ -161,7 +161,7 @@ function renderPPButton(isChange) {
                 alert("Payment Authorized. Capture the Order once you are ready")
                 addToConsole("Payment Authorized. Capture the Order once you are ready");
             }
-            addToConsole("<pre style='height:200px'>"+JSON.stringify(details, null, 2)+"</pre>");  
+            addToConsole("<pre style='height:320px'>"+JSON.stringify(details, null, 2)+"</pre>");  
         }).finally(() => {
           $.LoadingOverlay("hide");
         });
