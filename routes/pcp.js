@@ -396,12 +396,6 @@ module.exports = function(router) {
     res.render("pcp/pcp", {config : obj});
   });
 
-  router.get(['/','/pcp'], function(req, res, next) {
-    var obj = {
-      COUNTRY, LANG, LOCALES, CURRENCY, LOCALE_COUNTRY
-    }
-    res.render("pcp/pcp", {config : obj});
-  });
 
   router.post("/pcp-create-order", async function(req,res,next) {
     try {

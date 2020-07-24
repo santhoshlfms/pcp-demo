@@ -193,7 +193,7 @@
         </div>
 
 
-        <div class="row">
+<!--        <div class="row">
           <div class="col-md-10">
             <h5>Locale - Language</h5>
             <select name="lang" class="form-control input-sm control-sm" style="color:#319DD4">
@@ -218,6 +218,26 @@
             </select>
           </div>
         </div>
+
+  -->
+        <div class="row">
+          <div class="col-md-10">
+            <h5>Locale</h5>
+            <select name="locale" class="form-control input-sm control-sm" style="color:#319DD4">
+              <% Object.entries(config.LOCALES).forEach(function([country, langs]){ 
+                  langs.forEach(function(lang) { %>
+                    <option value="<%= lang %>_<%= country%>">
+                      <%= lang %>_<%= country%>
+                    </option>
+               <%   })
+                %>
+              
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+
 
         <div class="row">
           <div class="col-md-10">

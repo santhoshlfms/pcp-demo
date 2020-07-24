@@ -108,9 +108,12 @@ function getCreateOrderPayload() {
 }
 
 function getScriptQueryParam() {
-  var country = $("[name=country]").val();
+  // var country = $("[name=country]").val();
+  // var lang = $("[name=lang]").val();
+
   var buyercountry = $("[name=buyercountry]").val();
-  var lang = $("[name=lang]").val();
+  
+  var locale = $("[name=locale]").val();
 
   var env = $("[name=environment]").val();
   var clientId = $("[name=clientId]").val();
@@ -130,9 +133,11 @@ function getScriptQueryParam() {
     env,
     clientId,
     clientSecret,
-    country,
     buyercountry,
-    lang,
+    
+    // country,
+    // lang,
+    locale,
     merchantId,
     customerId,
     currency,

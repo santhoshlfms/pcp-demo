@@ -23,9 +23,11 @@ async function loadPPAndHostedJS(type) {
       env,
       clientId,
       clientSecret,
-      country,
       buyercountry,
-      lang,
+      
+      // country,
+      // lang,
+      locale,
       merchantId,
       customerId,
       currency,
@@ -106,11 +108,14 @@ async function loadPPAndHostedJS(type) {
     }
 
     if (setLocale == "true") {
-      file += `&locale=${lang + "_" + country}`;
+      file += `&locale=${locale}`;
     }
 
-    if (env == "sandbox" && setBuyerCountry == "true") {
-      file += `&buyer-country=${buyercountry}`;
+    if (setBuyerCountry == "true") {
+      if(env == "sandbox")
+        file += `&buyer-country=${buyercountry}`;
+      else 
+      alert("Buyer Country cannot be used in Live");
     }
 
     var jsElm = document.createElement("script");
