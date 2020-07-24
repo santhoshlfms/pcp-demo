@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../pcpheader",{page_name:"pcp",section_name:'buttonvariations'}) %>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+  <style>
+    .flex {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60vh;
+      flex-flow: row wrap;
+    }
+    .panel {
+      width: 40%;
+      min-width: 300px;
+    }
+
+    .margin {
+      margin: 2em;
+    }
+  </style>
+
+</head>
+
+<body>
+
+
+  <div class="container flex">
+
+      <!-- Standalone container-->
+      <div class="margin panel panel-primary">
+
+        <div class="panel-heading">
+
+          <p>Standalone Buttons</p>
+
+        </div>
+
+        <div class="panel-body">
+
+          <p>Render PayPal and Alternative Payment Method buttons on different parts of the checkout page
+          </p>
+
+          <p> Demo <a href="/standalone">here</a></p>
+
+
+          Click <a href="https://developer.paypal.com/docs/checkout/integration-features/standalone-buttons/"
+            target="_blank">here</a> for reference
+
+        </div>
+      </div>
+
+
+      <!-- Marks container-->
+      <div class="margin panel panel-primary">
+
+          <div class="panel-heading">
+
+            <p>Mark Buttons</p>
+
+          </div>
+
+          <div class="panel-body">
+
+            <p>Show different funding sources based on the buyer selection on the checkout page using mark buttons</p>
+
+            <p> Demo <a href="/pp-marks">here</a></p>
+
+            Click <a href="https://developer.paypal.com/docs/checkout/integration-features/mark-flow/"
+              target="_blank">here</a> for reference
+
+          </div>
+
+        </div>
+
+       <!-- BA container-->
+      <div class="margin panel panel-primary">
+
+          <div class="panel-heading">
+
+            <p>BA Flow </p>
+
+          </div>
+
+          <div class="panel-body">
+
+            <p>Different way to handle BA flow with JS SDK</p>
+
+            <p> Demo <a href="/ba-flow">here</a></p>
+            
+          </div>
+
+        </div>
+      </div>
+
+  </div>
+
+
+</body>
+
+</html>

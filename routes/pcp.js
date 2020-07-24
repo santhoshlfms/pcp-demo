@@ -1,7 +1,7 @@
 const request = require("request");
 const jwt = require('jsonwebtoken');
 
-const { COUNTRY , LOCALES, CURRENCY, LANG } = require("./constants");
+const { COUNTRY , LOCALES, CURRENCY, LANG, LOCALE_COUNTRY } = require("./constants");
 const getConfig = require("./pcpConfig").getConfig;
 
 function getAuthAssertion(apiConfiguration) {
@@ -388,9 +388,17 @@ function getClientToken(accessToken, apiConfiguration) {
 
 module.exports = function(router) {
 
+
   router.get(['/','/pcp'], function(req, res, next) {
     var obj = {
-      COUNTRY, LANG, LOCALES, CURRENCY
+      COUNTRY, LANG, LOCALES, CURRENCY, LOCALE_COUNTRY
+    }
+    res.render("pcp/pcp", {config : obj});
+  });
+
+  router.get(['/','/pcp'], function(req, res, next) {
+    var obj = {
+      COUNTRY, LANG, LOCALES, CURRENCY, LOCALE_COUNTRY
     }
     res.render("pcp/pcp", {config : obj});
   });

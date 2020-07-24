@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../pcpheader",{page_name:"pcp",section_name:'pp-marks'}) %>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PP Marks Button</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <script src="/buttonvariations/address-mark.js"></script>
+  <script src="/buttonvariations/hosted-mark.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
+  </script>
+
+  <style>
+    .flex {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-flow: row wrap;
+    }
+
+    .margin {
+      margin: 2em;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+  </style>
+
+  <style>
+    .form-check {
+      font-size: 2em;
+    }
+
+    .bootstrap-basic {
+      background: white;
+    }
+
+    .panel-body {
+      width: 90%;
+
+    }
+
+    .helper-text {
+      color: #8A6D3B;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+    }
+
+    /* Braintree Hosted Fields styling classes*/
+    .braintree-hosted-fields-focused {
+      border: 1px solid #0275d8;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    }
+
+    .braintree-hosted-fields-focused.focused-invalid {
+      border: 1px solid red;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px red;
+    } 
+
+    #hosted-container {
+      display:none;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container margin">
+
+    <h3 class="flex">PP Mark Buttons</h3>
+
+    <p class="flex">Show different funding source based on the buyer selection on the checkout page
+    </p>
+
+    <p class="flex bold">Click on each of the funding source below</p>
+
+    <div class="row flex margin" id="markcontainer"> </div>
+
+    <div class="row flex margin" id="btncontainer"> 
+
+      <div id="hosted-container" class="col-md-6">
+        <div class="panel panel-primary bootstrap-basic" id="left">
+            <div class="panel-heading">
+                <h3 class="panel-title">Enter Card Details</h3>
+            </div>
+            <form class="panel-body" id="my-sample-form">
+                <div class="row">
+                    <div class="form-group col-sm-8">
+                        <label class="control-label">Card Number</label>
+                        <!--  Hosted Fields div container -->
+                        <div class="form-control" id="card-number"></div>
+                        <span class="helper-text"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-8">
+                        <label class="control-label">Expiration Date</label>
+                        <!--  Hosted Fields div container -->
+                        <div class="form-control" id="expiration-date"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-8">
+                        <label class="control-label">Security Code</label>
+                        <!--  Hosted Fields div container -->
+                        <div class="form-control" id="cvv"></div>
+                    </div>
+                </div>
+                <button value="submit" id="submit" class="btn btn-success btn-sm">Pay with <span
+                        id="card-type">Card</span></button>
+                <div id="payments-sdk__contingency-lightbox"></div>
+            </form>
+  
+            
+        </div>
+        </div>
+  
+
+    </div>
+
+    
+
+  </div>
+
+
+  <script>
+    // Load PayPal script dynamically
+    (async function () {
+      try {
+
+        // loader - for demo
+        setTimeout(() => {
+          if ($ && $.LoadingOverlay)
+            $.LoadingOverlay("show");
+        }, 500);
+
+        // fallback if loader gets stuck - just for demo
+        setTimeout(() => {
+          if ($ && $.LoadingOverlay)
+            $.LoadingOverlay("hide");
+        }, 12000);
+
+        // get client token from server and use it while loading paypal script
+        let clientTokenRespJson = await fetch("https://pcp-ucc-sample.herokuapp.com/get-client-token", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        })
+        let clientTokenResp = await clientTokenRespJson.json();
+
+        if (!clientTokenResp.status || !clientTokenResp.clientToken) {
+          alert(
+            "Some Error Occured in loading Hosted fields. Check the configuration"
+          );
+          return;
+        }
+
+        let clientToken = clientTokenResp.clientToken;
+        let clientId = "AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG";
+        let file = `https://www.paypal.com/sdk/js?client-id=${clientId}&components=buttons,funding-eligibility,marks,hosted-fields&buyer-country=DE&currency=USD&commit=true`;
+
+        let jsElm = document.createElement("script");
+        jsElm.type = "application/javascript";
+        jsElm.src = file;
+        jsElm.id = "ppscript";
+
+        jsElm.dataset["clientToken"] = clientToken;
+
+        document.body.appendChild(jsElm);
+
+        jsElm.onload = function () {
+          loadPpButtons();
+          loadHostedButtons();
+          if ($ && $.LoadingOverlay)
+            $.LoadingOverlay("hide");
+        };
+      } catch (error) {
+        if ($ && $.LoadingOverlay)
+          $.LoadingOverlay("hide");
+        alert("some error occurred");
+        console.log(error);
+      }
+    })();
+  </script>
+
+
+  <script>
+    function loadPpButtons() {
+      var i = 0;
+      var shippingObj = getInlineGuestShippingDetails("DE");
+
+      if (shippingObj) {
+        var shippingAddress = {
+          address_line_1: shippingObj.line1,
+          address_line_2: shippingObj.line2,
+          admin_area_2: shippingObj.city,
+          admin_area_1: shippingObj.state,
+          postal_code: shippingObj.postal_code,
+          country_code: "DE",
+        };
+        var phoneNo = shippingObj.phone;
+
+        var billingAddress = {
+          address_line_1: shippingObj.line1,
+          address_line_2: shippingObj.line2,
+          admin_area_2: shippingObj.city,
+          admin_area_1: shippingObj.state,
+          postal_code: shippingObj.postal_code,
+          country_code: "DE",
+        };
+      }
+
+      paypal.getFundingSources().forEach(function (fundingSource) {
+
+        var mark = paypal.Marks({
+          fundingSource: fundingSource
+        });
+
+        // Check if the mark is eligible
+        if (mark.isEligible()) {
+
+          var div = document.createElement("div");
+          div.id = "markDisplay-" + fundingSource;
+          div.style.margin = "20px"
+          div.innerHTML = `
+                    <div id="paypal-button-container${i}" 
+                    style="cursor:pointer"
+                    onclick="renderButton('${fundingSource}')"
+                    > </div>
+                `;
+
+          document.getElementById("markcontainer").append(div);
+          mark.render('#paypal-button-container' + i);
+          i++;
+
+        }
+      });
+
+      var div = document.createElement("div");
+          div.id = "markDisplay-hosted";
+          div.style.margin = "20px"
+          div.innerHTML = `
+                    <button class="btn btn-sm btn-primary"
+                    style="cursor:pointer"
+                    onclick="renderButton('hosted')"
+                    >Hosted Button</button>
+                `;
+
+          document.getElementById("markcontainer").append(div);
+          i++;
+
+
+
+      paypal.getFundingSources().forEach(function (fundingSource) {
+
+        // Initialize the buttons
+        var button = paypal.Buttons({
+          fundingSource: fundingSource,
+          createOrder: function (data, actions) {
+            $.LoadingOverlay("show", {
+              image: "",
+              text: "Creating Order...",
+              textClass: "loadingText"                                
+            });
+            return actions.order.create({
+              "intent": "CAPTURE",
+              "payer": {
+                "name": {
+                  "given_name": "Arvindan",
+                  "surname": "TA",
+                },
+                "address": billingAddress,
+                //email_address: "customer@domain.com",
+                "phone": {
+                  "phone_type": "MOBILE",
+                  "phone_number": {
+                    "national_number": phoneNo,
+                  },
+                },
+              },
+              "purchase_units": [{
+                "amount": {
+                  "currency_code": "USD",
+                  "value": "3.00",
+                  "breakdown": {
+                    "item_total": {
+                      "currency_code": "USD",
+                      "value": "2.00"
+                    },
+                    "tax_total": {
+                      "currency_code": "USD",
+                      "value": "1.00"
+                    }
+                  }
+                },
+                shipping: {
+                  address: shippingAddress,
+                },
+              }]
+            }).finally(() =>{
+              $.LoadingOverlay("hide")
+            })
+          },
+          onApprove: function (data, actions) {
+            console.log(data);
+            $.LoadingOverlay("show", {
+              image: "",
+              text: "Capturing Order...",
+              textClass: "loadingText"                                
+            });
+            return actions.order.capture().then(function (details) {
+              $.LoadingOverlay("hide")
+              alert('Transaction completed by ' + details.payer.name
+                .given_name);
+            });
+          },
+          onCancel: function () {
+            $.LoadingOverlay("hide")
+            alert("Buyer cancelled the payment")
+          },
+          onError: function () {
+            $.LoadingOverlay("hide")
+            alert("some error occurred");
+          }
+
+        });
+
+
+        if (button.isEligible()) {
+
+
+          div = document.createElement("div");
+          div.id = "btnDisplay-" + fundingSource;
+          div.className = "col-md-4 col-xs-10 col-sm-10 col-lg-4";
+          div.innerHTML = `
+                    <div id="paypal-button-container${i}" 
+                    > </div>
+                `;
+
+          document.getElementById("btncontainer").append(div);
+          button.render('#paypal-button-container' + i);
+          i++;
+        }
+      });
+
+      renderButton("paypal")
+    }
+
+    function renderButton(source) {
+      //hosted-container
+      document.querySelectorAll("[id*=btnDisplay]").forEach((elem) => elem.style.display = 'none')
+      document.querySelectorAll("[id*=markDisplay]").forEach((elem) => {
+        elem.style.opacity = 0.5;
+        elem.style.transform = "scale(1,1)"
+      });
+
+      if(source === "hosted") {
+        let elem = document.querySelector("[id*=hosted-container]");
+        elem.style.display = 'block';
+      } else {
+        let elem = document.querySelector("[id*=hosted-container]");   
+        elem.style.display = 'none';
+        document.getElementById("btnDisplay-" + source).style.display = 'block';
+      }
+
+        document.getElementById("markDisplay-" + source).style.opacity = 1;
+        document.getElementById("markDisplay-" + source).style.transform = "scale(1.5,1.5)";
+      
+
+    }
+
+ 
+  </script>
+</body>
+
+</html>

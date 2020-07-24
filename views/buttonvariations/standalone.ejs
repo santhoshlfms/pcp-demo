@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("../pcpheader",{page_name:"pcp",section_name:'standalone'}) %>
+  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PP Standalone Buttons</title>
+    <script
+    src="https://www.paypal.com/sdk/js?client-id=sb&components=buttons,funding-eligibility&buyer-country=DE&currency=USD&commit=true">
+  </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="/buttonvariations/address-mark.js"></script>
+    <style>
+        .flex {
+            display: flex;
+            justify-content: center;
+            /*align-items: center;*/
+            flex-flow: row wrap;
+        }
+
+        .margin {
+            margin: 2em;
+        }
+
+        .buttons {
+            width: 250px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container margin">
+       
+        <h3 class="flex">PP Standalone Buttons</h3>
+
+        <p class="flex">Render the PayPal and Alternative Payment Method buttons on different parts of the checkout page
+        </p>
+
+        <div class="flex margin" id="container"> </div>
+
+    </div>
+
+    <script>
+        var i = 0;
+
+        var shippingObj = getInlineGuestShippingDetails("DE");
+
+        if (shippingObj) {
+            var shippingAddress = {
+                address_line_1: shippingObj.line1,
+                address_line_2: shippingObj.line2,
+                admin_area_2: shippingObj.city,
+                admin_area_1: shippingObj.state,
+                postal_code: shippingObj.postal_code,
+                country_code: "DE",
+            };
+            var phoneNo = shippingObj.phone;
+
+            var billingAddress = {
+                address_line_1: shippingObj.line1,
+                address_line_2: shippingObj.line2,
+                admin_area_2: shippingObj.city,
+                admin_area_1: shippingObj.state,
+                postal_code: shippingObj.postal_code,
+                country_code: "DE",
+            };
+        }
+
+        paypal.getFundingSources().forEach(function (fundingSource) {
+
+            // Initialize the buttons
+            var button = paypal.Buttons({
+                fundingSource: fundingSource,
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        "intent": "CAPTURE",
+                        "payer": {
+                            "name": {
+                                "given_name": "Arvindan",
+                                "surname": "TA",
+                            },
+                            "address": billingAddress,
+                            //email_address: "customer@domain.com",
+                            "phone": {
+                                "phone_type": "MOBILE",
+                                "phone_number": {
+                                    "national_number": phoneNo,
+                                },
+                            },
+                        },
+                        "purchase_units": [{
+                            "amount": {
+                                "currency_code": "USD",
+                                "value": "3.00",
+                                "breakdown": {
+                                    "item_total": {
+                                        "currency_code": "USD",
+                                        "value": "2.00"
+                                    },
+                                    "tax_total": {
+                                        "currency_code": "USD",
+                                        "value": "1.00"
+                                    }
+                                }
+                            },
+                            shipping: {
+                                address: shippingAddress,
+                            },
+                        }]
+                    });
+                },
+                onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                        alert('Transaction completed by ' + details.payer.name
+                            .given_name);
+                    });
+                },
+                onCancel: function () {
+                    alert("Buyer cancelled the payment")
+                },
+                onError: function () {
+                    alert("some error occurred");
+                }
+
+            });
+
+            if (button.isEligible()) {
+                let div = document.createElement("div");
+                div.className = "buttons";
+                div.style.margin = "20px"
+                div.innerHTML = `
+                    <h4>${fundingSource.toUpperCase()} </h4>
+                    <div id="paypal-button-container${i}" > </div>
+                `;
+
+                document.getElementById("container").append(div);
+                button.render('#paypal-button-container' + i);
+                i++;
+            }
+        })
+    </script>
+</body>
+
+</html>

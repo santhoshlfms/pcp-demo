@@ -129,6 +129,9 @@
           text-align: left;
         }
       }
+      .loadingText {
+        font-size: 20px !important;
+      }
       </style>
   </head>
 
@@ -140,7 +143,23 @@
           src="/images/GPSLogo.png">
           </a>
       
-      <a href="/pcp" <% if (page_name == 'pcp') { %>class="active" <% } %> >PayPal </a>
+      
+
+      
+      <div <% if (page_name == 'pcp') { %>class=" dropdown12 active" <% } else { %> class="dropdown12"   <%} %>>
+        <button class="dropbtn">PayPal 
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown12-content">
+          <a href="/pcp" <% if (page_name == 'pcp') { %>class="active" <% } %> >PayPal </a>
+          <a href="/buttonvariations/" <% if (page_name == 'pcp' && section_name=="buttonvariations") { %>class="active" <% } %> >Button Variations </a>
+          <a href="/standalone/" <% if (page_name == 'pcp' && section_name=="standalone") { %>class="active" <% } %> >Standalone Buttons </a>
+          <a href="/pp-marks/" <% if (page_name == 'pcp' && section_name=="pp-marks") { %>class="active" <% } %> >Mark Buttons </a>
+          <a href="/ba-flow" <% if (page_name == 'pcp' && section_name=="ba-flow") { %>class="active" <% } %> >BA-Flow </a>
+
+        </div>
+      </div> 
+      
 
       <div <% if (page_name == 'hw') { %>class=" dropdown12 active" <% } else { %> class="dropdown12"   <%} %>>
         <button class="dropbtn">Hyperwallet 

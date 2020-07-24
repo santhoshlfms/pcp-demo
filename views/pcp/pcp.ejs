@@ -65,9 +65,11 @@
       height: 30px;
       font-size: 11px;
     }
+
     .row {
       margin-bottom: 10px;
     }
+
     .loadingText {
       font-size: 20px !important;
     }
@@ -101,7 +103,9 @@
         <div class="row">
           <div class="col-md-10">
             <h5>Environment </h5>
-            <select name="environment" class="form-control input-sm" style="color:#319DD4">
+            <select name="environment" class="form-control input-sm" style="color:#319DD4" 
+            onChange="handleEnvChange()"
+            >
               <option value="sandbox" selected>Sandbox</option>
               <option value="production">Live</option>
             </select>
@@ -114,8 +118,8 @@
             <input type="text" class="form-control input-sm" placeholder="Enter Client Id" style="color:black"
               name="clientId" value="AY45oF49HRPTBl1qN7H0MTxZH15hET_UQpNLpnZKTQd8ES8zNs-56lVDFMXEQy-YKeULewg2Dz7eELTR">
           </div>
-          
-        <!--  AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG -->
+
+          <!--  AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG -->
 
         </div>
 
@@ -127,7 +131,7 @@
               value="EKOR9TSQWTc0YapubBV4y-hn7A-TpwATT4_otaEs90XlwY1qEkyO7SHRQp786AcG12PrNN0x6Gyf67Xi">
           </div>
         </div>
-        
+
         <!-- EFRHK9CFJKH8X1P1CmpG_sGk-S5ScH3Rg-2vGJsYNu9E2mKW4JYca5mdbEl0ccPBbdHQ0DAGus5WcToy -->
 
         <div class="row">
@@ -135,7 +139,7 @@
             <h5>Is Partner ?</h5>
             <select name="isPartner" id="isPartner" class="form-control input-sm control-sm" style="color:black">
               <option value="Yes" selected>Yes</option>
-              <option value="No" >No</option>
+              <option value="No">No</option>
             </select>
           </div>
         </div>
@@ -182,7 +186,7 @@
 
         <div class="row">
           <div class="col-md-10">
-            <h5>Customer Id (Required for Vaulting) </h5>
+            <h5>Customer ID (Required for Vaulting) </h5>
             <input type="text" class="form-control input-sm" placeholder="Enter Customer Id" style="color:black"
               name="customerId" value="CUSTOMER_ID_123456">
           </div>
@@ -206,9 +210,9 @@
           <div class="col-md-10">
             <h5>Locale - Country</h5>
             <select name="country" class="form-control input-sm control-sm" style="color:#319DD4">
-              <% Object.keys(config.COUNTRY).forEach(function(key){ %>
-              <option value="<%= config.COUNTRY[key] %>">
-                <%- config.COUNTRY[key] %>
+              <% Object.keys(config.LOCALE_COUNTRY).forEach(function(key){ %>
+              <option value="<%= config.LOCALE_COUNTRY[key] %>">
+                <%- config.LOCALE_COUNTRY[key] %>
               </option>
               <% }); %>
             </select>
@@ -346,8 +350,7 @@
           <div class="col-md-10">
             <h5>Layout</h5>
             <select name="layout" id="layout" class="form-control input-sm control-sm" style="color:#319DD4"
-            onchange="renderPPButton(true)"
-            >
+              onchange="renderPPButton(true)">
               <option value="vertical" selected>Vertical</option>
               <option value="horizontal">Horizontal</option>
             </select>
@@ -359,8 +362,7 @@
           <div class="col-md-10">
             <h5>Color</h5>
             <select name="color" id="color" class="form-control input-sm control-sm" style="color:#319DD4"
-            onchange="renderPPButton(true)"
-            >
+              onchange="renderPPButton(true)">
               <option value="gold" selected>Gold</option>
               <option value="blue">Blue</option>
               <option value="silver">Silver</option>
@@ -374,8 +376,7 @@
           <div class="col-md-10">
             <h5>Shape</h5>
             <select name="shape" id="shape" class="form-control input-sm control-sm" style="color:#319DD4"
-            onchange="renderPPButton(true)"
-            >
+              onchange="renderPPButton(true)">
               <option value="rect" selected>Rectangle</option>
               <option value="pill">Pill</option>
             </select>
@@ -384,10 +385,9 @@
 
         <div class="row">
           <div class="col-md-10">
-            <h5>Label </h5>
+            <h5>Label</h5>
             <select name="label" id="label" class="form-control control-sm input-sm" style="color:#319DD4"
-            onchange="renderPPButton(true)"
-            >
+              onchange="renderPPButton(true)">
               <option value="paypal" selected>PayPal</option>
               <option value="checkout">Checkout</option>
               <option value="pay">Pay</option>
@@ -395,15 +395,14 @@
               <option value="installment">Installment</option>
             </select>
           </div>
-        </div> 
+        </div>
 
 
         <div class="row">
           <div class="col-md-10">
             <h5>Tagline ?</h5>
             <select name="tagline" id="tagline" class="form-control input-sm control-sm" style="color:#319DD4"
-            onchange="renderPPButton(true)"
-            >
+              onchange="renderPPButton(true)">
               <option value="true">Yes</option>
               <option value="false" selected>No</option>
             </select>
@@ -459,6 +458,37 @@
   <script>
     loadPPAndHostedJS('buttons');
   </script>
+
+  <script>
+    function handleEnvChange() {
+
+      var env = $("[name=environment]").val();
+      if (env == "production") {
+        $("[name=clientId]").val('');
+        $("[name=clientSecret]").val('');
+        $("[name=merchantId]").val();
+        $("[name=customerId]").val();
+
+        $("[name=set-locale][data-value=false]").attr("checked", true)
+        $("[name=set-buyercountry][data-value=false]").attr("checked", true)
+
+        
+      } else {
+        $("[name=clientId]").val('AY45oF49HRPTBl1qN7H0MTxZH15hET_UQpNLpnZKTQd8ES8zNs-56lVDFMXEQy-YKeULewg2Dz7eELTR');
+        $("[name=clientSecret]").val(
+        'EKOR9TSQWTc0YapubBV4y-hn7A-TpwATT4_otaEs90XlwY1qEkyO7SHRQp786AcG12PrNN0x6Gyf67Xi');
+        
+        $("[name=set-locale][data-value=true]").attr("checked", true)
+        $("[name=set-buyercountry][data-value=true]").attr("checked", true)
+
+        $("[name=merchantId]").val('8MMADDZZQHWLQ');
+        $("[name=customerId]").val('CUSTOMER_ID_123456');
+      }
+
+    }
+  </script>
+
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 
   <%- include("../footer") %>

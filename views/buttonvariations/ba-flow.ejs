@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include("../pcpheader",{page_name:"pcp",section_name:'ba-flow'}) %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BA-Flow</title>
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG&components=buttons&buyer-country=DE&currency=USD&commit=true">
+    </script>
+    <script src="/buttonvariations/address-mark.js"></script>
+    <style>
+        .flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-flow: row wrap;
+        }
+
+        .margin {
+            margin: 1em;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container margin">
+
+        <div class="flex">
+            <p>Please choose one of the Flow For PayPal payment method</p>
+        </div>
+        <div class="flex margin">
+            <label><input name="flowType" type="radio" value="OneTime">One Time</label>
+            <label><input name="flowType" type="radio" value="BA" checked> BA</label>
+        </div>
+
+        <div class="flex" id="paypal-button-container"> </div>
+    </div>
+    <script>
+        let source = "";
+        let flowType = "BA";
+        var shippingObj = getInlineGuestShippingDetails("DE");
+
+        var host = "https://pcp-ucc-sample.herokuapp.com"
+        //var host = "http://localhost:3000"
+
+        if (shippingObj) {
+            var shippingAddress = {
+                address_line_1: shippingObj.line1,
+                address_line_2: shippingObj.line2,
+                admin_area_2: shippingObj.city,
+                admin_area_1: shippingObj.state,
+                postal_code: shippingObj.postal_code,
+                country_code: "DE",
+
+            };
+            var phoneNo = shippingObj.phone;
+
+            var billingAddress = {
+                address_line_1: shippingObj.line1,
+                address_line_2: shippingObj.line2,
+                admin_area_2: shippingObj.city,
+                admin_area_1: shippingObj.state,
+                postal_code: shippingObj.postal_code,
+                country_code: "DE",
+            };
+        }
+
+        paypal.Buttons({
+                onInit: function () {
+                    document.querySelectorAll('[name=flowType]').forEach(e => e.addEventListener('click',
+                        function (
+                            event) {
+                            flowType = event.target.value
+                        }))
+                },
+                onClick: function (data) {
+                    source = data.fundingSource;
+                },
+                createOrder: function (data, actions) {
+                    console.log(source + " - " + flowType);
+                    if (flowType === "BA" && (source === "paypal")) {
+                        $.LoadingOverlay("show", {
+                            image: "",
+                            text: "Creating BA token...",
+                            textClass: "loadingText"                                
+                        });
+                        
+                        //EC token for BA flow
+                        return fetch(host +
+                                "/create-agreement-token-create-payment", {
+                                    method: "POST",
+                                    headers: {
+                                        Accept: "application/json",
+                                        "Content-Type": "application/json"
+                                    }
+                                })
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log("EC token received");
+                                console.log(JSON.stringify(data));
+                                var approval_url = data['links']['1']['href'];
+                                var token = approval_url.substr(-20);
+                                return token;
+                            })
+                            .catch(err => console.log("Error " + err))
+                            .finally(() => {
+                                $.LoadingOverlay("hide")
+                            })
+                    } else {
+                        // orders v2;
+                        $.LoadingOverlay("show", {
+                            image: "",
+                            text: "Creating Order...",
+                            textClass: "loadingText"                                
+                        });
+                            
+                        return fetch(host + "/create-order", {
+                                method: "POST",
+                                headers: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    amount: "3.00",
+                                    payload: {
+                                        "intent": "CAPTURE",
+                                        "payer": {
+                                            "name": {
+                                                "given_name": "Arvindan",
+                                                "surname": "TA",
+                                            },
+                                            "address": billingAddress,
+                                            //email_address: "customer@domain.com",
+                                            "phone": {
+                                                "phone_type": "MOBILE",
+                                                "phone_number": {
+                                                    "national_number": phoneNo,
+                                                },
+                                            },
+                                        },
+                                        "purchase_units": [{
+                                            "amount": {
+                                                "currency_code": "USD",
+                                                "value": "3.00",
+                                                "breakdown": {
+                                                    "item_total": {
+                                                        "currency_code": "USD",
+                                                        "value": "2.00"
+                                                    },
+                                                    "tax_total": {
+                                                        "currency_code": "USD",
+                                                        "value": "1.00"
+                                                    }
+                                                }
+                                            },
+                                            shipping: {
+                                                address: shippingAddress,
+                                                name: {
+                                                    full_name :"Arvindan TA"
+                                                }
+                                            },
+                                        }]
+                                    }
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if (!res.id)
+                                    console.log(JSON.stringify(res, null, 4));
+                                else
+                                    console.log("Order Id : " + res.id);
+                                return res;
+                            })
+                            .then(d => d.id)
+                            .finally(() => {
+                                $.LoadingOverlay("hide")
+                            })
+                    }
+                },
+                onApprove: function (data, actions) {
+                    console.log(source + " - " + flowType);
+                    console.log("Approve callback");
+                    console.log(data);
+
+                    if (flowType === "BA" && (source === "paypal")) {
+                        $.LoadingOverlay("show", {
+                            image: "",
+                            text: "Creating Agreement...",
+                            textClass: "loadingText"                                
+                        });
+                        
+                        //pass token for BA flow
+                        return fetch(host + "/create-agreement-execute-payment", {
+                                method: "POST",
+                                headers: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    token: data.billingToken,
+                                    paymentId: data.paymentID,
+                                    payerId: data.payerID
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log("BA created");
+                                console.log(JSON.stringify(data));
+
+                                alert("Agreement Created " + data.id);
+                            })
+                            .catch(err => console.log("Error " + err))
+                            .finally(() => {
+                                $.LoadingOverlay("hide")
+                            })
+                    } else {
+
+                        $.LoadingOverlay("show", {
+                            image: "",
+                            text: "Capturing Order...",
+                            textClass: "loadingText"                                
+                        });
+                        
+                        return fetch(host + "/capture-order?id=" + data.orderID, {
+                                method: "POST",
+                                headers: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/json"
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if (!res.id) {
+                                    console.log(JSON.stringify(res, null, 4));
+                                }
+                                return res;
+                            })
+                            .then(details => {
+                                console.log("Order Captured");
+                                console.log(JSON.stringify(details));
+                                alert('Transaction completed by ' + details.payer.name
+                                    .given_name);
+                            })
+                            .finally(() => {
+                                $.LoadingOverlay("hide")
+                            })
+                    }
+                },
+                onCancel: function () {
+                    alert("Buyer cancelled the payment")
+                },
+                onError: function () {
+                    $.LoadingOverlay("hide")
+                    alert("some error occurred");
+                }
+            })
+            .render('#paypal-button-container');
+    </script>
+
+</body>
+
+</html>
