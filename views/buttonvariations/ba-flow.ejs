@@ -9,6 +9,9 @@
         src="https://www.paypal.com/sdk/js?client-id=AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG&components=buttons&buyer-country=DE&currency=USD&commit=true">
     </script>
     <script src="/buttonvariations/address-mark.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"> </script>
+  
     <style>
         .flex {
             display: flex;
@@ -133,7 +136,7 @@
                                                 "surname": "TA",
                                             },
                                             "address": billingAddress,
-                                            //email_address: "customer@domain.com",
+                                            email_address: "spp1@paypal.com",
                                             "phone": {
                                                 "phone_type": "MOBILE",
                                                 "phone_number": {
@@ -158,9 +161,9 @@
                                             },
                                             shipping: {
                                                 address: shippingAddress,
-                                                name: {
+                                                /*name: {
                                                     full_name :"Arvindan TA"
-                                                }
+                                                }*/
                                             },
                                         }]
                                     }
