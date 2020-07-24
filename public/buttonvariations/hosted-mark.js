@@ -161,7 +161,7 @@ function loadHostedButtons() {
                 textClass: "loadingText"                                
               });
           
-              return fetch("http://localhost:3000/capture-order?id=" + payload.orderId, {
+              return fetch("https://pcp-ucc-sample.herokuapp.com/capture-order?id=" + payload.orderId, {
                   method: "POST",
                   headers: {
                   Accept: "application/json",
