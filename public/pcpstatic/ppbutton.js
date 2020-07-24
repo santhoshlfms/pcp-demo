@@ -99,8 +99,8 @@ function renderPPButton(isChange) {
         // .then(function(details) {
           // Optionally display the transaction details to the buyer
           addToConsole("Authorized by Buyer");
-          addToConsole("Authorized Info ");  
-          addToConsole("<pre style='height:170px'>"+JSON.stringify(data, null, 2)+"</pre>");  
+          addToConsole("Info ");  
+          addToConsole("<pre style='height:160px'>"+JSON.stringify(data, null, 2)+"</pre>");  
 
           console.log(data.orderID, data.payerID);
           // Capture the funds from the transaction

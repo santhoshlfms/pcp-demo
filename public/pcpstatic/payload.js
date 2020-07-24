@@ -48,10 +48,10 @@ function getCreateOrderPayload() {
   var orderObj = {
     intent: intent.toUpperCase(),
     payer: {
-      name: {
-        "given_name": "Arvindan",
-        "surname": "TA",
-      },
+      // name: {
+      //   "given_name": "Arvindan",
+      //   "surname": "TA",
+      // },
 
       address: billingAddress,
       email_address: "spp1@paypal.com",
@@ -80,9 +80,9 @@ function getCreateOrderPayload() {
         },
         shipping: {
           address: shippingAddress,
-          name: {
-            full_name :"Arvindan TA"
-          }
+          // name: {
+          //   full_name :"Arvindan TA"
+          // }
         },
       },
     ]
