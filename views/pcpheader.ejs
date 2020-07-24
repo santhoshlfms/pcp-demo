@@ -63,6 +63,7 @@
       .dropdown12:hover {
 
         display: block !important;
+        z-index: 150;
       }
       
       
@@ -92,6 +93,7 @@
       .dropdown12-content a:hover {
         background-color: #ddd;
         color: black;
+        z-index: 150;
       }
       
       .dropdown12:hover .dropdown12-content {
@@ -132,6 +134,10 @@
       .loadingText {
         font-size: 20px !important;
       }
+      body {
+        margin: 0;
+        padding: 0;
+      }
       </style>
   </head>
 
@@ -151,11 +157,11 @@
           <i class="fa fa-caret-down"></i>
         </button>
         <div class="dropdown12-content">
-          <a href="/pcp" <% if (page_name == 'pcp') { %>class="active" <% } %> >PayPal </a>
+          <a href="/pcp/" <% if (page_name == 'pcp' && section_name=="home") { %>class="active" <% } %> > Playground </a>
           <a href="/buttonvariations/" <% if (page_name == 'pcp' && section_name=="buttonvariations") { %>class="active" <% } %> >Button Variations </a>
           <a href="/standalone/" <% if (page_name == 'pcp' && section_name=="standalone") { %>class="active" <% } %> >Standalone Buttons </a>
           <a href="/pp-marks/" <% if (page_name == 'pcp' && section_name=="pp-marks") { %>class="active" <% } %> >Mark Buttons </a>
-          <a href="/ba-flow" <% if (page_name == 'pcp' && section_name=="ba-flow") { %>class="active" <% } %> >BA-Flow </a>
+          <a href="/ba-flow/" <% if (page_name == 'pcp' && section_name=="ba-flow") { %>class="active" <% } %> >BA-Flow </a>
 
         </div>
       </div> 
