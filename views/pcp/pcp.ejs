@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <style>
+ <style>
     ::-webkit-scrollbar-track {
       -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
       background-color: #F5F5F5;
@@ -83,7 +83,7 @@
   <script src="/pcpstatic/ppbutton.js"></script>
   <script src="/pcpstatic/hosted.js"></script>
   <script src="/pcpstatic/scriptloader.js"></script>
-
+  
 </head>
 
 <body>
@@ -103,9 +103,7 @@
         <div class="row">
           <div class="col-md-10">
             <h5>Environment </h5>
-            <select name="environment" class="form-control input-sm" style="color:#319DD4" 
-            onChange="handleEnvChange()"
-            >
+            <select name="environment" class="form-control input-sm" style="color:#319DD4" onChange="handleEnvChange()">
               <option value="sandbox" selected>Sandbox</option>
               <option value="production">Live</option>
             </select>
@@ -116,7 +114,7 @@
           <div class="col-md-10">
             <h5>Client ID </h5>
             <input type="text" class="form-control input-sm" placeholder="Enter Client Id" style="color:black"
-              name="clientId" value="AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG">
+              name="clientId" value="AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh">
           </div>
 
           <!--  AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG -->
@@ -128,7 +126,7 @@
             <h5>Client Secret </h5>
             <input type="text" class="form-control input-sm" placeholder="Enter Client Secret" style="color:black"
               name="clientSecret"
-              value="EFRHK9CFJKH8X1P1CmpG_sGk-S5ScH3Rg-2vGJsYNu9E2mKW4JYca5mdbEl0ccPBbdHQ0DAGus5WcToy">
+              value="EMbNnp1QyetdAdQeWlT1gRbQiQQJ_MnPaLhD2HVMwTjpl3ImYnQcw_6_NOcPCYHiWNQ8gig3E2CDtvg0">
           </div>
         </div>
 
@@ -137,9 +135,21 @@
         <div class="row">
           <div class="col-md-10">
             <h5>Is Partner ?</h5>
-            <select name="isPartner" id="isPartner" class="form-control input-sm control-sm" style="color:black">
-              <option value="Yes">Yes</option>
-              <option value="No" selected>No</option>
+            <select name="isPartner" id="isPartner" class="form-control input-sm control-sm" style="color:black"
+              onchange="partnerChange()">
+              <option value="Yes" selected>Yes</option>
+              <option value="No" >No</option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="row" id="mspContainer">
+          <div class="col-md-10">
+            <h5>Is MSP ? (Applicable only for Partner Flow)</h5>
+            <select name="isMSP" id="isMSP" class="form-control input-sm control-sm" style="color:black">
+              <option value="Yes" selected>Yes</option>
+              <option value="No" >No</option>
             </select>
           </div>
         </div>
@@ -147,11 +157,15 @@
 
         <div class="row">
           <div class="col-md-10">
-            <h5>Merchant ID (Required for Partner Integration)</h5>
+            <h5>Merchant ID (Required for Partner Flow)
+              <br/>(Comma Separated values for MSP)<br/>
+            </h5>
             <input type="text" class="form-control input-sm" placeholder="Enter Merchant Id" style="color:black"
-              name="merchantId" value="Z62HFDE3WU3VJ">
+              name="merchantId" value="3M5SFHD87UCNA,Z8CBBYH86KX3C">
           </div>
         </div>
+        <!-- 3M5SFHD87UCNA,Z8CBBYH86KX3C -->
+        
         <!-- Z62HFDE3WU3VJ -->
 
         <div class="row">
@@ -193,7 +207,7 @@
         </div>
 
 
-<!--        <div class="row">
+        <!--        <div class="row">
           <div class="col-md-10">
             <h5>Locale - Language</h5>
             <select name="lang" class="form-control input-sm control-sm" style="color:#319DD4">
@@ -226,12 +240,12 @@
             <select name="locale" class="form-control input-sm control-sm" style="color:#319DD4">
               <% Object.entries(config.LOCALES).forEach(function([country, langs]){ 
                   langs.forEach(function(lang) { %>
-                    <option value="<%= lang %>_<%= country%>">
-                      <%= lang %>_<%= country%>
-                    </option>
-               <%   })
+              <option value="<%= lang %>_<%= country%>">
+                <%= lang %>_<%= country%>
+              </option>
+              <%   })
                 %>
-              
+
               <% }); %>
             </select>
           </div>
@@ -492,23 +506,30 @@
         $("[name=set-locale][data-value=false]").attr("checked", true)
         $("[name=set-buyercountry][data-value=false]").attr("checked", true)
 
-        
+
       } else {
-        $("[name=clientId]").val('AY45oF49HRPTBl1qN7H0MTxZH15hET_UQpNLpnZKTQd8ES8zNs-56lVDFMXEQy-YKeULewg2Dz7eELTR');
+        $("[name=clientId]").val('AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh');
         $("[name=clientSecret]").val(
-        'EKOR9TSQWTc0YapubBV4y-hn7A-TpwATT4_otaEs90XlwY1qEkyO7SHRQp786AcG12PrNN0x6Gyf67Xi');
-        
+          'EMbNnp1QyetdAdQeWlT1gRbQiQQJ_MnPaLhD2HVMwTjpl3ImYnQcw_6_NOcPCYHiWNQ8gig3E2CDtvg0');
+
         $("[name=set-locale][data-value=true]").attr("checked", true)
         $("[name=set-buyercountry][data-value=true]").attr("checked", true)
 
-        $("[name=merchantId]").val('8MMADDZZQHWLQ');
+        $("[name=merchantId]").val('3M5SFHD87UCNA');
         $("[name=customerId]").val('CUSTOMER_ID_123456');
       }
 
     }
+
+    function partnerChange() {
+      var isPartner = $("#isPartner").val() === "Yes";
+      if (!isPartner) {
+        $("#isMSP").val("No")
+      }
+    }
   </script>
 
-
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
 
   <%- include("../footer") %>

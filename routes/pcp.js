@@ -38,7 +38,8 @@ function getAccessToken(apiConfiguration) {
           return resolve({
             accessToken:'',
             status: false,
-            error:error 
+            error:error,
+            statusCode: response.statusCode 
           });
         }
         else{
@@ -49,13 +50,16 @@ function getAccessToken(apiConfiguration) {
               return resolve({
                 accessToken,
                 status: true,
-                error: null
+                error: null,
+                statusCode: response.statusCode
+
               });
             } else {
               return resolve({
                 accessToken :"",
                 status: false,
-                error: JSON.parse(body)
+                error: JSON.parse(body),
+                statusCode: response.statusCode
               });
             }
           } catch(err) {
@@ -63,7 +67,8 @@ function getAccessToken(apiConfiguration) {
             return resolve({
               accessToken:'',
               status: false,
-              error: err
+              error: err,
+              statusCode: response.statusCode
             });
           }
         }
@@ -84,8 +89,9 @@ function getOrder(accessToken, apiConfiguration) {
       }
     
       console.log("Is Partner "+ apiConfiguration.isPartner)
+      console.log("Is MSP "+ apiConfiguration.isMSP)
     
-      if(apiConfiguration.isPartner) {
+      if(apiConfiguration.isPartner && !apiConfiguration.isMSP) {
         options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
       }
 
@@ -93,9 +99,10 @@ function getOrder(accessToken, apiConfiguration) {
           if (err) {
               console.error(err);
               return resolve({
-                getOrderResp: null,
+                getOrderResp: err,
                 status : false,
-                error: err
+                error: err,
+                statusCode: response.statusCode
               })
           }
           console.log("*** GET Order Response ***");
@@ -104,15 +111,17 @@ function getOrder(accessToken, apiConfiguration) {
           return resolve({
             getOrderResp,
             status: true,
-            error: null
+            error: null,
+            statusCode: response.statusCode
           })
         });
     } catch(err) {
       console.log("Some Error occurred in calling get orders api "+ JSON.stringify(err));
       return resolve({
-        getOrderResp: null,
+        getOrderResp: err,
         status: false,
-        error: err
+        error: err,
+        statusCode: response.statusCode
       })
     }
   });
@@ -132,8 +141,9 @@ function createOrder(accessToken, apiConfiguration) {
       }
 
       console.log("Is Partner "+ apiConfiguration.isPartner)
+      console.log("Is MSP "+ apiConfiguration.isMSP)
     
-      if(apiConfiguration.isPartner) {
+      if(apiConfiguration.isPartner && !apiConfiguration.isMSP) {
         options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
       }
 
@@ -141,9 +151,10 @@ function createOrder(accessToken, apiConfiguration) {
           if (err) {
               console.error(err);
               return resolve({
-                orderResp: null,
+                orderResp: err,
                 status : false,
-                error: err
+                error: err,
+                statusCode: response.statusCode
               })
           }
           console.log("*** Create Order Response ***");
@@ -183,8 +194,8 @@ function createOrder(accessToken, apiConfiguration) {
           //   },
           //   json: true
           // };
-
-          // if(apiConfiguration.isPartner) {
+    
+          // if(apiConfiguration.isPartner && !apiConfiguration.isMSP) {
           //   stcOptions.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
           // }
 
@@ -210,16 +221,18 @@ function createOrder(accessToken, apiConfiguration) {
           return resolve({
             orderResp,
             status: true,
-            error: null
+            error: null,
+            statusCode: response.statusCode
           })
 
       });
     } catch(err) {
       console.log("Some Error occurred in calling create orders api "+ JSON.stringify(err));
       return resolve({
-        orderResp: null,
+        orderResp: err,
         status: false,
-        error: err
+        error: err,
+        statusCode: response.statusCode
       })
     }
   });
@@ -238,8 +251,9 @@ function captureOrder(accessToken, apiConfiguration) {
       }
       
       console.log("Is Partner "+ apiConfiguration.isPartner)
+      console.log("Is MSP "+ apiConfiguration.isMSP)
     
-      if(apiConfiguration.isPartner) {
+      if(apiConfiguration.isPartner && !apiConfiguration.isMSP) {
         options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
       }
 
@@ -247,9 +261,10 @@ function captureOrder(accessToken, apiConfiguration) {
           if (err) {
               console.error(err);
               return resolve({
-                captureOrderResp: null,
+                captureOrderResp: err,
                 status : false,
-                error: err
+                error: err,
+                statusCode: response.statusCode
               })
           }
           console.log("*** Capture Order Response ***");
@@ -258,15 +273,17 @@ function captureOrder(accessToken, apiConfiguration) {
           return resolve({
             captureOrderResp,
             status: true,
-            error: null
+            error: null,
+            statusCode: response.statusCode
           })
         });
     } catch(err) {
       console.log("Some Error occurred in calling capture orders api "+ JSON.stringify(err));
       return resolve({
-        captureOrderResp: null,
+        captureOrderResp: err,
         status: false,
-        error: err
+        error: err,
+        statusCode: response.statusCode
       })
     }
   });
@@ -286,8 +303,9 @@ function authOrder(accessToken, apiConfiguration) {
       }
       
       console.log("Is Partner "+ apiConfiguration.isPartner)
+      console.log("Is MSP "+ apiConfiguration.isMSP)
     
-      if(apiConfiguration.isPartner) {;
+      if(apiConfiguration.isPartner && !apiConfiguration.isMSP) {
         options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
       }
 
@@ -295,9 +313,10 @@ function authOrder(accessToken, apiConfiguration) {
           if (err) {
               console.error(err);
               return resolve({
-                authOrderResp: null,
+                authOrderResp: err,
                 status : false,
-                error: err
+                error: err,
+                statusCode: response.statusCode
               })
           }
           console.log("*** Auth Order Response ***");
@@ -306,15 +325,17 @@ function authOrder(accessToken, apiConfiguration) {
           return resolve({
             authOrderResp,
             status: true,
-            error: null
+            error: null,
+            statusCode: response.statusCode
           })
         });
     } catch(err) {
       console.log("Some Error occurred in calling auth orders api "+ JSON.stringify(err));
       return resolve({
-        authOrderResp: null,
+        authOrderResp: err,
         status: false,
-        error: err
+        error: err,
+        statusCode: response.statusCode
       })
     }
   });
@@ -334,7 +355,9 @@ function getClientToken(accessToken, apiConfiguration) {
     }
     console.log("Is Partner "+ apiConfiguration.isPartner);
     
-    if(apiConfiguration.isPartner) {
+    console.log("Is MSP "+ apiConfiguration.isMSP)
+    
+    if(apiConfiguration.isPartner && !apiConfiguration.isMSP) {
       options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
     }
 
@@ -352,7 +375,8 @@ function getClientToken(accessToken, apiConfiguration) {
         return resolve({
           clientToken:'',
           status: false,
-          error:error 
+          error:error, 
+          statusCode: response.statusCode
         });
       }
       else{
@@ -364,13 +388,15 @@ function getClientToken(accessToken, apiConfiguration) {
             return resolve({
               clientToken: clientTokenResp.client_token,
               status: true,
-              error: null
+              error: null,
+              statusCode: response.statusCode
             });
           } else {
             return resolve({
               clientToken :"",
               status: false,
-              error: body
+              error: body,
+              statusCode: response.statusCode
             });
           }
         } catch(err) {
@@ -378,7 +404,8 @@ function getClientToken(accessToken, apiConfiguration) {
           return resolve({
             clientToken:'',
             status: false,
-            error: err
+            error: err,
+            statusCode: response.statusCode
           });
         }
       }
@@ -419,10 +446,10 @@ module.exports = function(router) {
 
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
-      if(!accessTokenResp.status) {
+      if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
         console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
         res.status
-        return res.status(401).json(accessTokenResp.error);
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
 
       let accessToken = accessTokenResp.accessToken;
@@ -431,9 +458,9 @@ module.exports = function(router) {
 
       let createOrderResp = await createOrder(accessToken, apiConfiguration);
 
-      if(!createOrderResp.status) {
+      if(!createOrderResp.status || createOrderResp.statusCode > 201) {
         console.log("Error in Create Order call "+ createOrderResp.error);
-        return res.status(500).json(createOrderResp.error);
+        return res.status(createOrderResp.statusCode).json(createOrderResp.orderResp);
       }
       return res.json({
         ...createOrderResp.orderResp
@@ -468,18 +495,18 @@ module.exports = function(router) {
 
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
-      if(!accessTokenResp.status) {
+      if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
          console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
-        return res.status(401).json(accessTokenResp.error);
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
 
       let accessToken = accessTokenResp.accessToken;
 
       let getOrderResponse = await getOrder(accessToken, apiConfiguration);
 
-      if(!getOrderResponse.status) {
+      if(!getOrderResponse.status || getOrderResponse.statusCode > 201) {
         console.log("Error in get Order call "+ JSON.stringify(getOrderResponse.error));
-        return res.status(500).json(getOrderResponse.error);
+        return res.status(getOrderResponse.statusCode).json(getOrderResponse.getOrderResp);
       }
       return res.json({
         ...getOrderResponse.getOrderResp
@@ -514,18 +541,18 @@ module.exports = function(router) {
 
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
-      if(!accessTokenResp.status) {
+      if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
          console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
-        return res.status(401).json(accessTokenResp.error);
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
 
       let accessToken = accessTokenResp.accessToken;
 
       let captureOrderResponse = await captureOrder(accessToken, apiConfiguration);
 
-      if(!captureOrderResponse.status) {
+      if(!captureOrderResponse.status || captureOrderResponse.statusCode > 201) {
         console.log("Error in Capture Order call "+ JSON.stringify(captureOrderResponse.error));
-        return res.status(500).json(captureOrderResponse.error);
+        return res.status(captureOrderResponse.statusCode).json(captureOrderResponse.captureOrderResp);
       }
       return res.json({
         ...captureOrderResponse.captureOrderResp
@@ -559,18 +586,18 @@ module.exports = function(router) {
 
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
-      if(!accessTokenResp.status) {
+      if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
         console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
-        return res.status(401).json(accessTokenResp.error);
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
 
       let accessToken = accessTokenResp.accessToken;
 
       let authOrderResponse = await authOrder(accessToken, apiConfiguration);
 
-      if(!authOrderResponse.status) {
+      if(!authOrderResponse.status || authOrderResponse.statusCode > 201) {
         console.log("Error in Auth Order call "+ JSON.stringify(authOrderResponse.error));
-        return res.status(500).json(authOrderResponse.error);
+        return res.status(authOrderResponse.statusCode).json(authOrderResponse.authOrderResp);
       }
       return res.json({
         ...authOrderResponse.authOrderResp
@@ -607,18 +634,18 @@ module.exports = function(router) {
 
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
-      if(!accessTokenResp.status) {
+      if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
          console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
-        return res.status(401).json(accessTokenResp.error);
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
 
       let accessToken = accessTokenResp.accessToken;
 
       let getClientTokenResponse = await getClientToken(accessToken, apiConfiguration);
 
-      if(!getClientTokenResponse.status) {
+      if(!getClientTokenResponse.status || getClientTokenResponse.statusCode > 201) {
         console.log("Error in getting client token call "+ JSON.stringify(getClientTokenResponse.error));
-        return res.status(500).json(getClientTokenResponse.error);
+        return res.status(getClientTokenResponse.statusCode).json(getClientTokenResponse);
       }
       console.log("Returning back the Client token response ");
       return res.json({

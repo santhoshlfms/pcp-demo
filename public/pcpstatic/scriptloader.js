@@ -35,7 +35,8 @@ async function loadPPAndHostedJS(type) {
       setBuyerCountry,
       intent,
       isPartner,
-      isVaulting
+      isVaulting,
+      isMSP
     } = getScriptQueryParam();
 
     $("#paypal-button").empty();
@@ -56,6 +57,21 @@ async function loadPPAndHostedJS(type) {
       return;
     }
 
+    if (isMSP && !isPartner) {
+      alert("MSP is applicable only for Partner");
+      return;
+    }
+
+    if (isMSP && !merchantId) {
+      alert("Enter Merchant Id");
+      return;
+    }
+
+    if (isMSP && merchantId && merchantId.split(",").length < 2) {
+      alert("Enter Multiple Merchant Ids for MSP");
+      return;
+    }
+
     $.LoadingOverlay("show");
     
     let components = type;
@@ -68,43 +84,47 @@ async function loadPPAndHostedJS(type) {
     let shouldFetchClientToken =
       isVaulting || components.indexOf("hosted-fields") > -1;
 
-    if (shouldFetchClientToken) {
-      let clientTokenRespJson = await fetch("/pcp-get-client-token", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          envObj
-        })
-      });
+     if (shouldFetchClientToken) {
+       let clientTokenRespJson = await fetch("/pcp-get-client-token", {
+         method: "POST",
+         headers: {
+           Accept: "application/json",
+           "Content-Type": "application/json"
+         },
+         body: JSON.stringify({
+           envObj
+         })
+       });
 
-      let clientTokenResp = await clientTokenRespJson.json();
+       let clientTokenResp = await clientTokenRespJson.json();
 
-      console.log(clientTokenResp);
-      if (!clientTokenResp.status || !clientTokenResp.clientToken) {
-        alert(
-          "Some Error Occured in loading Hosted fields. Check the configuration"
-        );
-        addToConsole(
-          "Some Error Occured in loading Hosted fields. Check the configuration",
-          "error"
-        );
-        addToConsole(JSON.stringify(clientTokenResp.error));
-        $.LoadingOverlay("hide");
-        return;
-      }
+       console.log(clientTokenResp);
+       if (!clientTokenResp.status || !clientTokenResp.clientToken) {
+         alert(
+           "Some Error Occured in loading Hosted fields. Check the configuration"
+         );
+         addToConsole(
+           "Some Error Occured in loading Hosted fields. Check the configuration",
+           "error"
+         );
+         addToConsole(JSON.stringify(clientTokenResp.error));
+         $.LoadingOverlay("hide");
+         return;
+       }
 
-      clientToken = clientTokenResp.clientToken;
-    }
+       clientToken = clientTokenResp.clientToken;
+     }
 
     var file = `https://www.paypal.com/sdk/js?client-id=${clientId}&commit=true&components=${components}&debug=false&currency=${currency}`;
 
     file += `&intent=${intent}`;
 
-    if (isPartner && merchantId && merchantId.length > 0) {
-      file += `&merchant-id=${merchantId}`;
+    if (isPartner) {
+      if(isMSP) {
+        file += `&merchant-id=*`;
+      } else {
+        file += `&merchant-id=${merchantId}`;
+      }
     }
 
     if (setLocale == "true") {
