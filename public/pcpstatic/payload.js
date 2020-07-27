@@ -140,20 +140,30 @@ function getCreateOrderPayload() {
       alert("Merchant ID is missing");
       return;
     }
+
     console.log("Merchant IDs ", merchantIDs);
+
+    let totalAmt = +amount;
+    let unitsLength = merchantIDs.length;
+
+    const breakIntoParts = (num, parts) => Array.from({length: parts}, (_,i) => 0|(i < num%parts ? num/parts+1 : num/parts))
+
+    let purchaseUnitsAmount = breakIntoParts(totalAmt, unitsLength);
+
     let purchaseUnits = merchantIDs.map(getPurchaseUnit);
+
     orderObj.purchase_units.push(...purchaseUnits);
 
-    function getPurchaseUnit (merchantID) {
+    function getPurchaseUnit (merchantID, index) {
       var unitObj = {
         "reference_id": "PU-"+ merchantID + "-"+Math.random()*100000,
         amount: {
-          value: amount.toString(),
+          value: purchaseUnitsAmount[index].toString(),
           currency_code: currency,
           breakdown: {
             item_total: {
               currency_code: currency,
-              value: amount.toString(),
+              value: purchaseUnitsAmount[index].toString(),
             },
             tax_total: {
               currency_code: currency,
@@ -189,6 +199,7 @@ function getCreateOrderPayload() {
       }
       return unitObj;
     };
+  
   }
   var envObj = getEnvObj();
 
