@@ -102,7 +102,8 @@ function getOrder(accessToken, apiConfiguration) {
                 getOrderResp: err,
                 status : false,
                 error: err,
-                statusCode: response.statusCode
+                statusCode: response.statusCode,
+                headers: response.headers
               })
           }
           console.log("*** GET Order Response ***");
@@ -112,7 +113,8 @@ function getOrder(accessToken, apiConfiguration) {
             getOrderResp,
             status: true,
             error: null,
-            statusCode: response.statusCode
+            statusCode: response.statusCode,
+            headers: response.headers
           })
         });
     } catch(err) {
@@ -121,7 +123,8 @@ function getOrder(accessToken, apiConfiguration) {
         getOrderResp: err,
         status: false,
         error: err,
-        statusCode: response.statusCode
+        statusCode: response.statusCode,
+        headers: response.headers
       })
     }
   });
@@ -154,7 +157,8 @@ function createOrder(accessToken, apiConfiguration) {
                 orderResp: err,
                 status : false,
                 error: err,
-                statusCode: response.statusCode
+                statusCode: response.statusCode,
+                headers: response.headers
               })
           }
           console.log("*** Create Order Response ***");
@@ -222,7 +226,8 @@ function createOrder(accessToken, apiConfiguration) {
             orderResp,
             status: true,
             error: null,
-            statusCode: response.statusCode
+            statusCode: response.statusCode,
+            headers: response.headers
           })
 
       });
@@ -232,7 +237,8 @@ function createOrder(accessToken, apiConfiguration) {
         orderResp: err,
         status: false,
         error: err,
-        statusCode: response.statusCode
+        statusCode: response.statusCode,
+        headers: response.headers
       })
     }
   });
@@ -264,7 +270,8 @@ function captureOrder(accessToken, apiConfiguration) {
                 captureOrderResp: err,
                 status : false,
                 error: err,
-                statusCode: response.statusCode
+                statusCode: response.statusCode,
+                headers: response.headers
               })
           }
           console.log("*** Capture Order Response ***");
@@ -274,7 +281,8 @@ function captureOrder(accessToken, apiConfiguration) {
             captureOrderResp,
             status: true,
             error: null,
-            statusCode: response.statusCode
+            statusCode: response.statusCode,
+            headers: response.headers
           })
         });
     } catch(err) {
@@ -283,7 +291,8 @@ function captureOrder(accessToken, apiConfiguration) {
         captureOrderResp: err,
         status: false,
         error: err,
-        statusCode: response.statusCode
+        statusCode: response.statusCode,
+        headers: response.headers
       })
     }
   });
@@ -316,7 +325,8 @@ function authOrder(accessToken, apiConfiguration) {
                 authOrderResp: err,
                 status : false,
                 error: err,
-                statusCode: response.statusCode
+                statusCode: response.statusCode,
+                headers: response.headers
               })
           }
           console.log("*** Auth Order Response ***");
@@ -326,7 +336,8 @@ function authOrder(accessToken, apiConfiguration) {
             authOrderResp,
             status: true,
             error: null,
-            statusCode: response.statusCode
+            statusCode: response.statusCode,
+            headers: response.headers
           })
         });
     } catch(err) {
@@ -335,7 +346,8 @@ function authOrder(accessToken, apiConfiguration) {
         authOrderResp: err,
         status: false,
         error: err,
-        statusCode: response.statusCode
+        statusCode: response.statusCode,
+        headers: response.headers
       })
     }
   });
@@ -369,6 +381,8 @@ function getClientToken(accessToken, apiConfiguration) {
       }
     }
     
+    console.log("CUSTOMER_ID ", apiConfiguration.CUSTOMER_ID);
+
     request(options, function (error, response, body) {
       if (error) {
         console.log("Error in getting client token from api "+ JSON.stringify(error));
@@ -376,7 +390,8 @@ function getClientToken(accessToken, apiConfiguration) {
           clientToken:'',
           status: false,
           error:error, 
-          statusCode: response.statusCode
+          statusCode: response.statusCode,
+          headers: response.headers
         });
       }
       else{
@@ -389,14 +404,16 @@ function getClientToken(accessToken, apiConfiguration) {
               clientToken: clientTokenResp.client_token,
               status: true,
               error: null,
-              statusCode: response.statusCode
+              statusCode: response.statusCode,
+              headers: response.headers
             });
           } else {
             return resolve({
               clientToken :"",
               status: false,
               error: body,
-              statusCode: response.statusCode
+              statusCode: response.statusCode,
+              headers: response.headers
             });
           }
         } catch(err) {
@@ -405,7 +422,8 @@ function getClientToken(accessToken, apiConfiguration) {
             clientToken:'',
             status: false,
             error: err,
-            statusCode: response.statusCode
+            statusCode: response.statusCode,
+            headers: response.headers
           });
         }
       }
@@ -463,7 +481,8 @@ module.exports = function(router) {
         return res.status(createOrderResp.statusCode).json(createOrderResp.orderResp);
       }
       return res.json({
-        ...createOrderResp.orderResp
+        ...createOrderResp.orderResp,
+        ...createOrderResp.headers
       }) 
 
     } catch(err) {
@@ -509,7 +528,8 @@ module.exports = function(router) {
         return res.status(getOrderResponse.statusCode).json(getOrderResponse.getOrderResp);
       }
       return res.json({
-        ...getOrderResponse.getOrderResp
+        ...getOrderResponse.getOrderResp,
+        ...getOrderResponse.headers
       }) 
 
     } catch(err) {
@@ -555,7 +575,8 @@ module.exports = function(router) {
         return res.status(captureOrderResponse.statusCode).json(captureOrderResponse.captureOrderResp);
       }
       return res.json({
-        ...captureOrderResponse.captureOrderResp
+        ...captureOrderResponse.captureOrderResp,
+        ...captureOrderResponse.headers
       }) 
 
     } catch(err) {
@@ -600,7 +621,8 @@ module.exports = function(router) {
         return res.status(authOrderResponse.statusCode).json(authOrderResponse.authOrderResp);
       }
       return res.json({
-        ...authOrderResponse.authOrderResp
+        ...authOrderResponse.authOrderResp,
+        ...authOrderResponse.headers
       }) 
 
     } catch(err) {

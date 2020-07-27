@@ -37,7 +37,7 @@ function loadHostedButtons() {
       fields: {
         number: {
           selector: "#card-number",
-          placeholder: "4111 1111 1111 1111"
+          placeholder: "5555 5555 5555 4444"
         },
         cvv: {
           selector: "#cvv",
