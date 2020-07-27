@@ -54,6 +54,9 @@ function getCreateOrderPayload() {
     merchantId = merchantId.split(",")[0];
     orderObj = {
       intent: intent.toUpperCase(),
+      application_context :{
+        shipping_preference: "SET_PROVIDED_ADDRESS"
+      },
       payer: {
         // name: {
         //   "given_name": "Arvindan",
