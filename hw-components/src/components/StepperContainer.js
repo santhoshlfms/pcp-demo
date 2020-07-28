@@ -70,7 +70,7 @@ function StepperContainer(props) {
   const { updateStatus, resetStatus } = props;
 
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(5);
+  const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
 
   const updateAppData = useCallback(
