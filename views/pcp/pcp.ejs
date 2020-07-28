@@ -74,6 +74,17 @@
     .loadingText {
       font-size: 20px !important;
     }
+
+    h5{
+      font-weight: bold;
+    }
+
+    span.info {
+
+      font-weight: lighter;
+      line-height: 1.5em;
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
   </script>
@@ -148,7 +159,7 @@
 
         <div class="row" id="mspContainer">
           <div class="col-md-10">
-            <h5>Is MSP ? (Applicable only for Partner Flow)</h5>
+            <h5>Is Multi Seller Purchase (MSP) ? (Applicable only for Partner Flow)</h5>
             <select name="isMSP" id="isMSP" class="form-control input-sm control-sm" style="color:black">
               <option value="Yes" >Yes</option>
               <option value="No" selected>No</option>
@@ -160,8 +171,11 @@
         <div class="row">
           <div class="col-md-10">
             <h5>Merchant ID (Applicable and Required only for Partner Flow)
-              <br/>(Comma Separated values for MSP)<br/>
-            </h5>
+              <span class="info"><br/>(Comma Separated values for MSP)<br/>
+              (Picks the first value from below for Single Seller Purchase)<br/>
+            </span>
+          </h5>
+            
             <input type="text" class="form-control input-sm" placeholder="Enter Merchant Id" style="color:black"
               name="merchantId" value="3M5SFHD87UCNA,Z8CBBYH86KX3C">
           </div>
@@ -203,8 +217,10 @@
         <div class="row">
           <div class="col-md-10">
             <h5>Customer ID (Required for Vaulting)
-              <br/>
-              Please use a unique buyer for each unique Customer ID per merchant 
+              
+              <span class="info"><br/>
+                Please use a unique buyer for each unique Customer ID per merchant 
+              </span>
             </h5>
             <input type="text" class="form-control input-sm" placeholder="Enter Customer Id" style="color:black"
               name="customerId" value="CUSTOMER_123">
@@ -319,7 +335,11 @@
 
         <div class="row">
           <div class="col-md-10">
-            <h5>Vaulting Enabled ?</h5>
+            <h5>Vaulting Enabled ?
+              <span class="info"><br/>
+              Click on save button again, once you vault a card to see the vaulted card
+            </span>
+            </h5>
             <select name="vaultingEnabled" id="vaultingEnabled" class="form-control input-sm control-sm"
               style="color:black">
               <option value="Yes">Yes</option>
@@ -506,8 +526,7 @@
         $("[name=clientId]").val('');
         $("[name=clientSecret]").val('');
         $("[name=merchantId]").val();
-        $("[name=customerId]").val();
-
+        
         $("[name=set-locale][data-value=false]").attr("checked", true)
         $("[name=set-buyercountry][data-value=false]").attr("checked", true)
 
@@ -520,8 +539,7 @@
         $("[name=set-locale][data-value=true]").attr("checked", true)
         $("[name=set-buyercountry][data-value=true]").attr("checked", true)
 
-        $("[name=merchantId]").val('3M5SFHD87UCNA');
-        $("[name=customerId]").val('CUSTOMER_ID_123456');
+        $("[name=merchantId]").val('3M5SFHD87UCNA,Z8CBBYH86KX3C');
       }
 
     }
