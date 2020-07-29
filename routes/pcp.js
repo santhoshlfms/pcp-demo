@@ -454,11 +454,13 @@ module.exports = function(router) {
       
       let { envObj, orderObj} = req.body;
 
+      let defaultConfig = getConfig(envObj.env);
+
       let apiConfiguration = {
-        ...getConfig(envObj.env),
+        ...defaultConfig,
         ...envObj,
-        CLIENT_ID: envObj.clientId,
-        SECRET: envObj.clientSecret,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET,
         MERCHANTID: envObj.merchantId,
       }
 
@@ -500,14 +502,16 @@ module.exports = function(router) {
       }
       console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj))
           
-      let { envObj} = req.body;
+      let { envObj } = req.body;
       let orderId = req.query.id;
 
+      let defaultConfig = getConfig(envObj.env);
+
       let apiConfiguration = {
-        ...getConfig(envObj.env),
+        ...defaultConfig,
         ...envObj,
-        CLIENT_ID: envObj.clientId,
-        SECRET: envObj.clientSecret,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET,
         MERCHANTID: envObj.merchantId,
         orderId
       }
@@ -550,11 +554,13 @@ module.exports = function(router) {
       let { envObj} = req.body;
       let orderId = req.query.id;
 
+      let defaultConfig = getConfig(envObj.env);
+
       let apiConfiguration = {
-        ...getConfig(envObj.env),
+        ...defaultConfig,
         ...envObj,
-        CLIENT_ID: envObj.clientId,
-        SECRET: envObj.clientSecret,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET,
         MERCHANTID: envObj.merchantId,
         orderId
       }
@@ -596,11 +602,13 @@ module.exports = function(router) {
       let { envObj} = req.body;
       let orderId = req.query.id;
 
+      let defaultConfig = getConfig(envObj.env);
+
       let apiConfiguration = {
-        ...getConfig(envObj.env),
+        ...defaultConfig,
         ...envObj,
-        CLIENT_ID: envObj.clientId,
-        SECRET: envObj.clientSecret,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET,
         MERCHANTID: envObj.merchantId,
         orderId
       }
@@ -643,17 +651,19 @@ module.exports = function(router) {
       console.log("ENV OBJ *** " + JSON.stringify(req.body.envObj))
             
       let { envObj} = req.body;
-    
+
+      let defaultConfig = getConfig(envObj.env);
+
       let apiConfiguration = {
-        ...getConfig(envObj.env),
+        ...defaultConfig,
         ...envObj,
-        CLIENT_ID: envObj.clientId,
-        SECRET: envObj.clientSecret,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET,
         MERCHANTID: envObj.merchantId,
         CUSTOMER_ID: envObj.customerId,
         isVaulting: envObj.isVaulting,
       }
-
+    
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
       if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {

@@ -1,5 +1,7 @@
 var timerId = null;
 
+var CLIENT_ID = "AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh";
+
 async function loadPPAndHostedJS(type) {
   var isLoaded = false;
 
@@ -177,6 +179,20 @@ async function loadPPAndHostedJS(type) {
 
 function save() {
   $("#plgStatus").empty();
+
+
+  let {
+    clientId,
+    clientSecret,
+  } = getScriptQueryParam();
+
+  if(clientId !== CLIENT_ID) {
+    if(!clientSecret || clientSecret.trim().length === 0) {
+      alert(" Looks like you have changed the Client Id . Please Enter Client Secret");
+      return;
+    }
+    return;
+  }
 
   var components = $("[name=components]:checked")
     .map(function() {

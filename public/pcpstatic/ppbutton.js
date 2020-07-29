@@ -40,6 +40,11 @@ function renderPPButton(isChange) {
         });
        
         addToConsole("Creating Order");
+
+        addToConsole("Create Order Request");
+
+        addToConsole("<pre style='height:320px'>"+JSON.stringify(orderObj, null, 2)+"</pre>");  
+        
         return fetch("/pcp-create-order", {
           method: "POST",
           headers: {

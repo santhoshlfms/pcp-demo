@@ -75,14 +75,14 @@
       font-size: 20px !important;
     }
 
-    h5{
+    h5 {
       font-weight: bold;
+      font-size: 14px;
     }
 
     span.info {
-
-      font-weight: lighter;
-      line-height: 1.5em;
+      font-weight: normal;
+      line-height: 2em;
       font-size: 12px;
     }
 
@@ -110,14 +110,13 @@
           </u></h4>
 
         <button class="btn btn-md" style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white"
-          onclick="save()">
-          Save
+          onclick="save()">Save
         </button>
 
         <div class="row">
           <div class="col-md-10">
             <h5>Environment </h5>
-            <select name="environment" class="form-control input-sm" style="color:#319DD4" onChange="handleEnvChange()">
+            <select name="environment" class="form-control input-sm" style="color:#319DD4">
               <option value="sandbox" selected>Sandbox</option>
             </select>
           </div>
@@ -125,26 +124,35 @@
 
         <div class="row">
           <div class="col-md-10">
-            <h5>Client ID </h5>
+            <h5>Client ID 
+              <span class="info">
+                <br/>
+                - If you change this value, please enter Client Secret 
+              </span>
+
+            </h5>
             <input type="text" class="form-control input-sm" placeholder="Enter Client Id" style="color:black"
+
+            onchange="handleClientIDChange()"
+
               name="clientId" value="AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh">
           </div>
-
-          <!--  AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG 
-          -->
 
         </div>
 
         <div class="row">
           <div class="col-md-10">
-            <h5>Client Secret </h5>
+            <h5>Client Secret
+              <span class="info">
+                <br/>
+                - If you change the Client ID, please enter this value 
+              </span>
+            </h5>
             <input type="password" class="form-control input-sm" placeholder="Enter Client Secret" style="color:black"
-              name="clientSecret"
-              value="EMbNnp1QyetdAdQeWlT1gRbQiQQJ_MnPaLhD2HVMwTjpl3ImYnQcw_6_NOcPCYHiWNQ8gig3E2CDtvg0">
+              name="clientSecret" disabled
+              value="">
           </div>
         </div>
-
-        <!-- EFRHK9CFJKH8X1P1CmpG_sGk-S5ScH3Rg-2vGJsYNu9E2mKW4JYca5mdbEl0ccPBbdHQ0DAGus5WcToy -->
 
         <div class="row">
           <div class="col-md-10">
@@ -160,7 +168,7 @@
 
         <div class="row" id="mspContainer">
           <div class="col-md-10">
-            <h5>Is Multi Seller Purchase (MSP) ? (Applicable only for Partner Flow)</h5>
+            <h5>Is Multi Seller Purchase (MSP) ? - Applicable only for Partner Flow </h5>
             <select name="isMSP" id="isMSP" class="form-control input-sm control-sm" style="color:black">
               <option value="Yes" >Yes</option>
               <option value="No" selected>No</option>
@@ -172,8 +180,11 @@
         <div class="row">
           <div class="col-md-10">
             <h5>Merchant ID (Applicable and Required only for Partner Flow)
-              <span class="info"><br/>(Comma Separated values for MSP)<br/>
-              (Picks the first value from below for Single Seller Purchase)<br/>
+              <span class="info"><br/>
+                - Ensure that the Merchants are onboarded using Partner Client ID 
+                <br/>
+                - Comma Separated values for Multi Seller Purchase <br/>
+              - Picks the first value from below for Single Seller Purchase <br/>
             </span>
           </h5>
             
@@ -182,8 +193,6 @@
           </div>
         </div>
         <!-- 3M5SFHD87UCNA,Z8CBBYH86KX3C -->
-        
-        <!-- Z62HFDE3WU3VJ -->
 
         <div class="row">
           <div class="col-md-10">
@@ -220,9 +229,9 @@
             <h5>Customer ID (Required for Vaulting)
               
               <span class="info"><br/>
-                Please use a unique buyer for each unique Customer ID per merchant 
+                - Please use a unique buyer for each unique Customer ID per merchant  
                 <br/>
-                Use this same ID, when the buyer visits the site again to show the vaulted cards
+                - Use this same ID, when the buyer visits the site again to show the vaulted cards 
               </span>
             </h5>
             <input type="text" class="form-control input-sm" placeholder="Enter Customer Id" style="color:black"
@@ -230,34 +239,6 @@
           </div>
         </div>
 
-
-        <!--        <div class="row">
-          <div class="col-md-10">
-            <h5>Locale - Language</h5>
-            <select name="lang" class="form-control input-sm control-sm" style="color:#319DD4">
-              <% Object.keys(config.LANG).forEach(function(key){ %>
-              <option value="<%= config.LANG[key] %>">
-                <%= config.LANG[key] %>
-              </option>
-              <% }); %>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-10">
-            <h5>Locale - Country</h5>
-            <select name="country" class="form-control input-sm control-sm" style="color:#319DD4">
-              <% Object.keys(config.LOCALE_COUNTRY).forEach(function(key){ %>
-              <option value="<%= config.LOCALE_COUNTRY[key] %>">
-                <%- config.LOCALE_COUNTRY[key] %>
-              </option>
-              <% }); %>
-            </select>
-          </div>
-        </div>
-
-  -->
         <div class="row">
           <div class="col-md-10">
             <h5>Locale</h5>
@@ -340,7 +321,7 @@
           <div class="col-md-10">
             <h5>Vaulting Enabled ?
               <span class="info"><br/>
-              Click on the save button again once you vault a card, to see the vaulted card
+              - Click on the save button again once you vault a card, to see the vaulted card 
             </span>
             </h5>
             <select name="vaultingEnabled" id="vaultingEnabled" class="form-control input-sm control-sm"
@@ -479,12 +460,6 @@
       </div>
       <div class="col-md-6 col-sm-12 col-xs-12">
 
-        <!-- <div id="loader-wrapper">
-                <div id="loader"></div>
-                <div class="loader-section section-left"></div>
-                <div class="loader-section section-right"></div>
-              </div> -->
-
         <div id="paypal-button" style="margin-top:10%;display:none"></div>
         <div id="paypal-error-container" style="display:none;color:red;font-weight:bold"></div>
         <br />
@@ -536,8 +511,7 @@
 
       } else {
         $("[name=clientId]").val('AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh');
-        $("[name=clientSecret]").val(
-          'EMbNnp1QyetdAdQeWlT1gRbQiQQJ_MnPaLhD2HVMwTjpl3ImYnQcw_6_NOcPCYHiWNQ8gig3E2CDtvg0');
+        $("[name=clientSecret]").val('');
 
         $("[name=set-locale][data-value=true]").attr("checked", true)
         $("[name=set-buyercountry][data-value=true]").attr("checked", true)
@@ -552,6 +526,15 @@
       if (!isPartner) {
         $("#isMSP").val("No")
       }
+    }
+
+    function handleClientIDChange() {
+      let clientID = $("[name=clientId").val().trim();
+      if(clientID === CLIENT_ID) {
+        $("[name=clientSecret").attr("disabled", true);
+        return;
+      }
+      $("[name=clientSecret").attr("disabled", false);
     }
 
    var customerId = chance.string({ length: 10, casing: 'upper', alpha: true, numeric: true });
