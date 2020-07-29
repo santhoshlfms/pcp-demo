@@ -147,9 +147,9 @@ async function loadPPAndHostedJS(type) {
 
     if (shouldFetchClientToken) jsElm.dataset["clientToken"] = clientToken;
 
-     if(isPartner) {
-       jsElm.dataset["merchantId"] = merchantId;
-     }
+    if(isPartner) {
+      jsElm.dataset["merchantId"] = merchantId;
+    }
 
     document.body.appendChild(jsElm);
 

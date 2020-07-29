@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <%- include("../pcpheader",{page_name:"pcp",section_name:'home'}) %>
-
 <head>
   <link rel="stylesheet" href="/stylesheets/style.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -466,14 +465,17 @@
 
         <div id="hostedButton" style="display:none">
           <div id="hcontainer">
-
           </div>
         </div>
 
         <div id="consoleWindow" class="panel panel-primary" style="width:100%;background-color:black">
 
+          <%- include("./sourcecode") %>
+
           <div class="panel-heading">
-            <p>Playground Status</p>
+            <div>Playground Status
+            <button type="button" class="btn btn-warning btn-sm openBtn" style="float:right;margin-bottom:10px" id="viewSC">View Source Code</button>
+          </div>
           </div>
 
           <div class="panel-body" style="margin:0px;margin-bottom:10px;width:100%;overflow-y:auto;">
@@ -482,9 +484,6 @@
           </div>
 
         </div>
-
-
-        <!-- <button class="btn btn-primary btn-md openBtn">View Source Code</button> -->
 
       </div>
 
@@ -540,13 +539,23 @@
    var customerId = chance.string({ length: 10, casing: 'upper', alpha: true, numeric: true });
 
    $("[name=customerId").val(customerId);
-  
 
+   
+   $(document).ready(function() {
+        
+    $('.openBtn').on('click',function(){
+        $('.modal-body').load('/pcpstatic/pcp.html',function(){
+            $('#myModal').modal({show:true});
+        });
+    });
+
+  })
   </script>
 
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ext-beautify.js" type="text/javascript" charset="utf-8"></script
   <%- include("../footer") %>
 
 </body>
