@@ -85,7 +85,31 @@
       font-size: 12px;
     }
 
+    .options {
+      background: #ddd;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      
+    }
+    .options > * {
+      width: 100%;
+    }
+
+    #statusContainer {
+      padding-top: 0%;
+    }
+
+    @media screen and (min-width: 768px){
+      #statusContainer {
+        padding-top: 8%;
+      }
+    }
   </style>
+  
   <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
@@ -102,7 +126,6 @@
 <body>
   <div class="container">
     <div class="row">
-
       <div class="col-md-6">
         <h4><u>
             <center><mark>Customize the PayPal experience and click on Save</mark> </center>
@@ -111,9 +134,11 @@
         <button class="btn btn-md" style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white"
           onclick="save()">Save
         </button>
+        <br/>
 
+        <div class = "options">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Environment </h5>
             <select name="environment" class="form-control input-sm" style="color:#319DD4">
               <option value="sandbox" selected>Sandbox</option>
@@ -122,7 +147,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Client ID 
               <span class="info">
                 <br/>
@@ -140,7 +165,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Client Secret
               <span class="info">
                 <br/>
@@ -154,7 +179,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Is Partner ?</h5>
             <select name="isPartner" id="isPartner" class="form-control input-sm control-sm" style="color:black"
               onchange="partnerChange()">
@@ -166,8 +191,8 @@
 
 
         <div class="row" id="mspContainer">
-          <div class="col-md-10">
-            <h5>Is Multi Seller Purchase (MSP) ? - Applicable only for Partner Flow </h5>
+          <div class="col-md-10 col-md-offset-1">
+            <h5>Is Multi Seller Purchase (MSP) ? Applicable only for Partner Flow </h5>
             <select name="isMSP" id="isMSP" class="form-control input-sm control-sm" style="color:black">
               <option value="Yes" >Yes</option>
               <option value="No" selected>No</option>
@@ -177,7 +202,7 @@
 
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Merchant ID (Applicable and Required only for Partner Flow)
               <span class="info"><br/>
                 - Ensure that the Merchants are onboarded using Partner Client ID 
@@ -194,7 +219,7 @@
         <!-- 3M5SFHD87UCNA,Z8CBBYH86KX3C -->
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Intent</h5>
             <div class="segmented-control" style="width: 100%; color: #f7ae40">
               <input type="radio" name="intent" id="intent-capture" data-value="capture" checked>
@@ -207,7 +232,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Components</h5>
 
             <div class="segmented-control" style="width: 100%;color:#8D74C0">
@@ -224,7 +249,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Customer ID (Required for Vaulting)
               
               <span class="info"><br/>
@@ -239,7 +264,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Locale</h5>
             <select name="locale" class="form-control input-sm control-sm" style="color:#319DD4">
               <% Object.entries(config.LOCALES).forEach(function([country, langs]){ 
@@ -258,7 +283,7 @@
 
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Buyer Country</h5>
             <select name="buyercountry" class="form-control input-sm control-sm" style="color:#319DD4">
               <% Object.keys(config.COUNTRY).forEach(function(key){ %>
@@ -273,14 +298,14 @@
 
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Amount </h5>
             <input type="number" value="5.00" name="amount" class="form-control input-sm control-sm" />
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Currency</h5>
 
             <select name="currency" class="form-control input-sm control-sm" style="color:#319DD4">
@@ -294,7 +319,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Hosted Fields Template</h5>
             <select name="hostedFieldsType" id="hostedFieldsType" class="form-control input-sm control-sm"
               style="color:black">
@@ -307,7 +332,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>3DS Enabled ?</h5>
             <select name="3dsEnabled" id="3dsEnabled" class="form-control input-sm control-sm" style="color:black">
               <option value="Yes">Yes</option>
@@ -317,7 +342,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Vaulting Enabled ?
               <span class="info"><br/>
               - Click on the save button again once you vault a card, to see the vaulted card 
@@ -332,7 +357,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Prefill Shipping Address ?</h5>
             <div class="segmented-control" style="width: 100%; color: #f7ae40">
               <input type="radio" name="prefill-shipping-address" id="prefill-shipping-address-true" data-value="true"
@@ -347,7 +372,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Prefill Billing Address ?</h5>
             <div class="segmented-control" style="width: 100%; color: #f7ae40">
               <input type="radio" name="prefill-billing-address" id="prefill-billing-address-true" data-value="true"
@@ -361,7 +386,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Set Locale ?</h5>
             <div class="segmented-control" style="width: 100%; color: #5FBAAC">
               <input type="radio" name="set-locale" id="set-locale-true" data-value="true" checked>
@@ -375,7 +400,7 @@
 
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Set Buyer-Country ?</h5>
             <div class="segmented-control" style="width: 100%; color: #8D74C0">
               <input type="radio" name="set-buyercountry" id="set-buyercountry-true" data-value="true" checked>
@@ -389,7 +414,7 @@
 
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Layout</h5>
             <select name="layout" id="layout" class="form-control input-sm control-sm" style="color:#319DD4"
               onchange="renderPPButton(true)">
@@ -401,7 +426,7 @@
 
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Color</h5>
             <select name="color" id="color" class="form-control input-sm control-sm" style="color:#319DD4"
               onchange="renderPPButton(true)">
@@ -415,7 +440,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Shape</h5>
             <select name="shape" id="shape" class="form-control input-sm control-sm" style="color:#319DD4"
               onchange="renderPPButton(true)">
@@ -426,7 +451,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Label</h5>
             <select name="label" id="label" class="form-control control-sm input-sm" style="color:#319DD4"
               onchange="renderPPButton(true)">
@@ -441,7 +466,7 @@
 
 
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-10 col-md-offset-1">
             <h5>Tagline ?</h5>
             <select name="tagline" id="tagline" class="form-control input-sm control-sm" style="color:#319DD4"
               onchange="renderPPButton(true)">
@@ -450,6 +475,9 @@
             </select>
           </div>
         </div>
+
+      </div>
+
         <br/>
 
           <button class="btn btn-md" style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white"
@@ -460,9 +488,9 @@
 
 
       </div>
-      <div class="col-md-6 col-sm-12 col-xs-12">
-
-        <div id="paypal-button" style="margin-top:10%;display:none"></div>
+      <div class="col-md-6 col-sm-12 col-xs-12" id="statusContainer">
+        
+        <div id="paypal-button" style="display:none"></div>
         <div id="paypal-error-container" style="display:none;color:red;font-weight:bold"></div>
         <br />
 
