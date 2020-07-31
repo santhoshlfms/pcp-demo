@@ -19,6 +19,14 @@ function getCreateOrderPayload() {
 
   var isMSP = $("[name=isMSP]").val() === "Yes";
 
+  var isVaulting = $("[name=vaultingEnabled]").val() === "Yes";
+
+  var components = $("[name=components]:checked")
+  .map(function() {
+    return this.value;
+  })
+  .get();
+
   var shippingObj = getInlineGuestShippingDetails(country);
 
   let shippingAddress = {};
@@ -103,9 +111,19 @@ function getCreateOrderPayload() {
 
     if (isShippingPrefillAddressUsed === "false") {
       delete orderObj.purchase_units[0].shipping;
-    } else {
+    }
+    
+    if(isShippingPrefillAddressUsed === "true") {
       orderObj.application_context = {
         shipping_preference: "SET_PROVIDED_ADDRESS"
+      }
+    }
+    
+    if(isVaulting && isShippingPrefillAddressUsed === "false"
+    && components.includes("hosted-fields")
+    ) {
+      orderObj.application_context = {
+        shipping_preference: "NO_SHIPPING"
       }
     }
 
@@ -142,6 +160,14 @@ function getCreateOrderPayload() {
     if(isShippingPrefillAddressUsed === "true") {
       orderObj.application_context = {
         shipping_preference: "SET_PROVIDED_ADDRESS"
+      }
+    }
+    
+    if(isVaulting && isShippingPrefillAddressUsed === "false"
+    && components.includes("hosted-fields")
+    ) {
+      orderObj.application_context = {
+        shipping_preference: "NO_SHIPPING"
       }
     }
  
