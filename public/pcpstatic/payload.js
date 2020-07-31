@@ -54,9 +54,6 @@ function getCreateOrderPayload() {
     merchantId = merchantId.split(",")[0];
     orderObj = {
       intent: intent.toUpperCase(),
-      application_context :{
-        shipping_preference: "SET_PROVIDED_ADDRESS"
-      },
       payer: {
         // name: {
         //   "given_name": "Arvindan",
@@ -106,6 +103,10 @@ function getCreateOrderPayload() {
 
     if (isShippingPrefillAddressUsed === "false") {
       delete orderObj.purchase_units[0].shipping;
+    } else {
+      orderObj.application_context = {
+        shipping_preference: "SET_PROVIDED_ADDRESS"
+      }
     }
 
     if (isBiillingPrefillAddressUsed === "false") {
@@ -138,6 +139,12 @@ function getCreateOrderPayload() {
       delete orderObj.payer.address;
     }
 
+    if(isShippingPrefillAddressUsed === "true") {
+      orderObj.application_context = {
+        shipping_preference: "SET_PROVIDED_ADDRESS"
+      }
+    }
+ 
     let merchantIDs = merchantId.split(",");
     if (!merchantIDs || merchantIDs.length === 0) {
       alert("Merchant ID is missing");

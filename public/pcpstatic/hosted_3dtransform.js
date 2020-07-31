@@ -8,15 +8,18 @@ function loadHostedButtons() {
       fields: {
         number: {
           selector: "#cc-num",
-          placeholder: "Credit Card Number"
+          placeholder: "Credit Card Number",
+          prefill: "4484480677446750"
         },
         cvv: {
           selector: "#cc-cvv",
-          placeholder: "CVV"
+          placeholder: "CVV",
+          prefill: "667"
         },
         expirationDate: {
           selector: "#cc-expiration-date",
-          placeholder: "MM/YYYY"
+          placeholder: "MM/YYYY",
+          prefill: "01/2021"
         }
       },
       styles: {

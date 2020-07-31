@@ -121,10 +121,14 @@ function loadHostedButtons() {
       },
       fields: {
         number: {
-          selector: "#card-number"
+          selector: "#card-number",
+          placeholder: "4484 3806 7744 6750",
+          prefill: "4484480677446750"
         },
         cvv: {
-          selector: "#cvv"
+          selector: "#cvv",
+          placeholder: "667",
+          prefill: "667"
         },
         expirationDate: {
           selector: "#expiration-date",

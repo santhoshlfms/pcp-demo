@@ -16,13 +16,13 @@ function loadHostedButtons() {
       fields: {
         number: {
           selector: "#card-number",
-          placeholder: "5555 5555 5555 4444",
-          prefill: "5555555555554444"
+          placeholder: "4484 3806 7744 6750",
+          prefill: "4484480677446750"
         },
         cvv: {
           selector: "#cvv",
-          placeholder: "123",
-          prefill: "123"
+          placeholder: "667",
+          prefill: "667"
         },
         expirationDate: {
           selector: "#expiration-date",
