@@ -49,6 +49,7 @@ var config = {
 		"CREATE_ORDER_URL":"https://api.paypal.com/v2/checkout/orders",
 		"GET_ORDER_URL": "https://api.paypal.com/v2/checkout/orders/",
 		"CAPTURE_ORDER_URL":"https://api.paypal.com/v2/checkout/orders/",
+		"AUTH_ORDER_URL":"https://api.paypal.com/v2/checkout/orders/",
 		"STC":"https://api.paypal.com/v1/risk/transaction-contexts/",
 		"CUSTOMER_ID": "",
 		"ACCESS_TOKEN_URL":"https://api.paypal.com/v1/oauth2/token",
