@@ -94,7 +94,7 @@ function getCreateOrderPayload() {
             },
           },
           shipping: {
-            address: shippingAddress,
+             address: shippingAddress,
             // name: {
             //   full_name :"Arvindan TA"
             // }
@@ -110,7 +110,7 @@ function getCreateOrderPayload() {
     }
 
     if (isShippingPrefillAddressUsed === "false") {
-      delete orderObj.purchase_units[0].shipping;
+      delete orderObj.purchase_units[0].shipping.address;
     }
     
     if(isShippingPrefillAddressUsed === "true") {
@@ -231,7 +231,7 @@ function getCreateOrderPayload() {
       };
 
       if (isShippingPrefillAddressUsed === "false") {
-        delete unitObj.shipping;
+        delete unitObj.shipping.address;
       }
       return unitObj;
     };

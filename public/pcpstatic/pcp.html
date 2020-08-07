@@ -160,7 +160,13 @@
                 "               alert('Payment Successful') \r\n":
                 "               alert('Payment Authorized. Capture the Order once you are ready') \r\n";
             resp +="           })\r\n"+
-                "        }\r\n" +
+                "        },\r\n" +
+                "        onCancel: function(data) { \r\n"+
+                "         // Show a cancel page or return to cart page \r\n" +
+                "        },\r\n"+
+                "        onError: function(err) { \r\n"+
+                "         // Show an error page here, when an error occurs \r\n" +
+                "        },\r\n"+
                 "    }).render('#paypal-button-container');\r\n" ;
             }
 
