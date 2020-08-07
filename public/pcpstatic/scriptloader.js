@@ -136,8 +136,10 @@ async function loadPPAndHostedJS(type) {
     if (setBuyerCountry == "true") {
       if(env == "sandbox")
         file += `&buyer-country=${buyercountry}`;
-      else 
-      alert("Buyer Country cannot be used in Live");
+      else  {
+        alert("Buyer Country cannot be used in Live");
+        return;
+      }
     }
 
     var jsElm = document.createElement("script");
@@ -191,7 +193,6 @@ function save() {
       alert(" Looks like you have changed the Client Id . Please Enter Client Secret");
       return;
     }
-    return;
   }
 
   var components = $("[name=components]:checked")
