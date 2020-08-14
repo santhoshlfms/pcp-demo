@@ -129,6 +129,7 @@ function getCreateOrderPayload() {
 
     if (isBiillingPrefillAddressUsed === "false") {
       delete orderObj.payer.address;
+      delete orderObj.payer.phone
     }
   }
 
@@ -155,6 +156,7 @@ function getCreateOrderPayload() {
     };
     if (isBiillingPrefillAddressUsed === "false") {
       delete orderObj.payer.address;
+      delete orderObj.payer.phone;
     }
 
     if(isShippingPrefillAddressUsed === "true") {
