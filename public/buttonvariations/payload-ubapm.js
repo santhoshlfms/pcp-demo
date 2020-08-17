@@ -82,7 +82,6 @@ function getCreateOrderPayload() {
     ],
   };
 
-  
   if (addressPreference === "NO_SHIPPING") {
     delete orderObj.purchase_units[0].shipping.address;
     delete orderObj.payer.address;
@@ -104,6 +103,31 @@ function getCreateOrderPayload() {
   var envObj = getEnvObj();
 
   return { envObj, orderObj };
+}
+
+function getConfirmPaymentSourceObj() {
+  let {
+    buyercountry,
+    apm,
+  } = getScriptQueryParam();
+
+
+  var hosturl = "https://pp-product-demo.herokuapp.com"
+  //var hosturl = "http://localhost:3500"
+
+  var confirmPaymentSourceObj = {
+    payment_source: {
+      [apm]: {
+        country_code: buyercountry,
+        name: "Arvindan T A"
+      },
+    },
+    application_context: {
+      return_url: hosturl + "/unbranded-apms/return",
+      cancel_url: hosturl + "/unbranded-apms/cancel",
+    },
+  };
+  return { confirmPaymentSourceObj };
 }
 
 function getScriptQueryParam() {

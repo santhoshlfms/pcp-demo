@@ -431,6 +431,77 @@ function getClientToken(accessToken, apiConfiguration) {
   });
 }
 
+function confirmPaymentSource(accessToken, apiConfiguration) {
+  return new Promise((resolve,reject) => {
+    try {    
+
+      var options = {
+        headers: {
+          'content-type': "application/json",
+          'authorization': "Bearer "+accessToken,
+        },
+        json: true
+      }
+
+      console.log("Is Partner "+ apiConfiguration.isPartner)
+      console.log("Is MSP "+ apiConfiguration.isMSP)
+    
+      if(apiConfiguration.isPartner && !apiConfiguration.isMSP) {
+        options.headers['PayPal-Auth-Assertion'] = getAuthAssertion(apiConfiguration);
+      }
+
+      let payload = apiConfiguration.payload;
+
+      console.log(" Payload Confirm Order ", JSON.stringify(payload));
+
+      options.body = payload;
+
+      request.post(apiConfiguration.CONFIRM_PAYMENT_SOURCE + apiConfiguration.orderId + "/confirm-payment-source/",
+
+        options, function (err, response, body) {
+          if (err) {
+              console.error(err);
+              return resolve({
+                orderResp: err,
+                status : false,
+                error: err,
+                statusCode: response.statusCode,
+                headers: response.headers
+              })
+          }
+          
+          console.log("*** Confirm Payment Source Response ***");
+          
+          console.log(JSON.stringify(body));
+          
+          let orderResp = body;
+
+          console.log ("Order ID is :"+orderResp.id);
+
+          return resolve({
+            orderResp,
+            status: true,
+            error: null,
+            statusCode: response.statusCode,
+            headers: response.headers
+          })
+
+      });
+    } catch(err) {
+      console.log("Some Error occurred in calling confirm payment source api "+ JSON.stringify(err));
+      return resolve({
+        orderResp: err,
+        status: false,
+        error: err,
+        statusCode: 500,
+        headers: {}
+      })
+    }
+  });
+}
+
+
+
 module.exports = function(router) {
 
 
@@ -480,7 +551,7 @@ module.exports = function(router) {
 
       if(!createOrderResp.status || createOrderResp.statusCode > 201) {
         console.log("Error in Create Order call "+ createOrderResp.error);
-        return res.status(createOrderResp.statusCode).json(createOrderResp.orderResp);
+        return res.status(createOrderResp.statusCode).json(createOrderResp);
       }
       return res.json({
         ...createOrderResp.orderResp,
@@ -529,7 +600,7 @@ module.exports = function(router) {
 
       if(!getOrderResponse.status || getOrderResponse.statusCode > 201) {
         console.log("Error in get Order call "+ JSON.stringify(getOrderResponse.error));
-        return res.status(getOrderResponse.statusCode).json(getOrderResponse.getOrderResp);
+        return res.status(getOrderResponse.statusCode).json(getOrderResponse);
       }
       return res.json({
         ...getOrderResponse.getOrderResp,
@@ -578,7 +649,7 @@ module.exports = function(router) {
 
       if(!captureOrderResponse.status || captureOrderResponse.statusCode > 201) {
         console.log("Error in Capture Order call "+ JSON.stringify(captureOrderResponse.error));
-        return res.status(captureOrderResponse.statusCode).json(captureOrderResponse.captureOrderResp);
+        return res.status(captureOrderResponse.statusCode).json(captureOrderResponse);
       }
       return res.json({
         ...captureOrderResponse.captureOrderResp,
@@ -626,7 +697,7 @@ module.exports = function(router) {
 
       if(!authOrderResponse.status || authOrderResponse.statusCode > 201) {
         console.log("Error in Auth Order call "+ JSON.stringify(authOrderResponse.error));
-        return res.status(authOrderResponse.statusCode).json(authOrderResponse.authOrderResp);
+        return res.status(authOrderResponse.statusCode).json(authOrderResponse);
       }
       return res.json({
         ...authOrderResponse.authOrderResp,
@@ -690,5 +761,57 @@ module.exports = function(router) {
     }
   
   })
-}
 
+  router.post("/pcp-confirm-payment-source", async function(req,res,next) {
+    try {
+      console.log("*** Confirm Payment Source ***");
+
+      if(!req.body.envObj || !req.body.confirmPaymentSourceObj) {
+        return res.status(400);
+      }
+      console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj))
+      console.log(" Confirm Payment Source OBJ *** " + JSON.stringify(req.body.confirmPaymentSourceObj))
+      
+      let { envObj, confirmPaymentSourceObj, orderId } = req.body;
+
+      let defaultConfig = getConfig(envObj.env);
+
+      let apiConfiguration = {
+        ...defaultConfig,
+        ...envObj,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET,
+        MERCHANTID: envObj.merchantId,
+        orderId
+      }
+
+      let accessTokenResp = await getAccessToken(apiConfiguration);
+
+      if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
+        console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
+        res.status
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
+      } 
+
+      let accessToken = accessTokenResp.accessToken;
+
+      apiConfiguration.payload = confirmPaymentSourceObj;
+
+      let confirmPaymentSourceResp = await confirmPaymentSource(accessToken, apiConfiguration);
+
+      if(!confirmPaymentSourceResp.statusCode || confirmPaymentSourceResp.statusCode > 201) {
+        console.log("Error in Confirm Payment Source call "+ confirmPaymentSourceResp.orderResp);
+        return res.status(confirmPaymentSourceResp.statusCode).json(confirmPaymentSourceResp);
+      }
+      return res.json({
+        ...confirmPaymentSourceResp.orderResp,
+        ...confirmPaymentSourceResp.headers
+      }) 
+
+    } catch(err) {
+      console.log("Error occurred in making Confirm Payment Source call ", err);
+      res.status(500).json(err);
+    }
+  });
+
+}

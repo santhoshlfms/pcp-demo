@@ -35,4 +35,8 @@ module.exports = function (router) {
     };
     res.render("buttonvariations/unbranded-apms", { config: obj });
   });
+
+  router.get(["/unbranded-apms/return", "/unbranded-apms/cancel"], function (req, res, next) {
+    res.render("buttonvariations/return");
+  });
 };

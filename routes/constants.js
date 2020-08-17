@@ -439,6 +439,7 @@ const LOCALE_COUNTRY = {
 };
 
 const APM = {
+  "SOFORT":"sofort",
   "ALIPAY":"alipay",
   "BANCONTACT": "bancontact",
   "BLIK": "blik",
@@ -449,7 +450,6 @@ const APM = {
   "P24":"p24",
   "PAYU": "payu",
   "POLI":"poli",
-  "SOFORT":"sofort",
   "TRUSTLY": "trustly",
   "TRUSTPAY": "trustpay",
   "VERKKOPANKKI":"verkkopankki",
