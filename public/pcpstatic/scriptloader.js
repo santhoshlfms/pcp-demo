@@ -16,7 +16,7 @@ async function loadPPAndHostedJS(type) {
       );
       alert("Some error has occurred . Please check your configurations ");
     }
-  }, 15000);
+  }, 18000);
 
   try {
     var elem = document.getElementById("ppscript");

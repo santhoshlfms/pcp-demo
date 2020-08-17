@@ -438,6 +438,25 @@ const LOCALE_COUNTRY = {
   ZW: 'ZW'
 };
 
+const APM = {
+  "ALIPAY":"alipay",
+  "BANCONTACT": "bancontact",
+  "BLIK": "blik",
+  "EPS": "eps",
+  "GIROPAY":"giropay",
+  "IDEAL":"ideal",
+  "MYBANK":"mybank",
+  "P24":"p24",
+  "PAYU": "payu",
+  "POLI":"poli",
+  "SOFORT":"sofort",
+  "TRUSTLY": "trustly",
+  "TRUSTPAY": "trustpay",
+  "VERKKOPANKKI":"verkkopankki",
+  "WECHATPAY":"wechatpay"
+}
+
+exports.APM = APM;
 
 exports.COUNTRY = COUNTRY;
 

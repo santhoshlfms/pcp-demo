@@ -1,34 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
-    <%- include("../pcpheader",{page_name:"pcp",section_name:'unbranded-apms'}) %>
+<%- include("../pcpheader",{page_name:"pcp",section_name:'unbranded-apms'}) %>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unbranded APMS</title>
-    <script src="/buttonvariations/address-mark.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"> </script>
-  
+    <title>UnBranded APMS</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <style>
-        .flex {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-flow: row wrap;
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #F5F5F5;
         }
 
-        .margin {
-            margin: 1em;
+        ::-webkit-scrollbar {
+            width: 10px;
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: grey;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: grey;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        .alert {
+            margin-bottom: 1px;
+            height: 30px;
+            line-height: 30px;
+            padding: 0px 15px;
+            font-weight: bold;
+        }
+
+        .modal-dialog {
+            width: 600px;
+            height: 580px !important;
+        }
+
+        .modal-content {
+            /* 60% of window height */
+            height: 60%;
+        }
+
+        #prettyprintHead {
+            opacity: 0;
+            position: absolute;
+            z-index: -9999;
+            pointer-events: none;
+        }
+
+        .segmented-control {
+            height: 30px;
+            font-size: 11px;
+        }
+
+        .row {
+            margin-bottom: 10px;
+        }
+
+        .loadingText {
+            font-size: 20px !important;
+        }
+
+        h5 {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        span.info {
+            font-weight: normal;
+            line-height: 2em;
+            font-size: 12px;
+        }
+
+        .options {
+            background: #ddd;
+            display: flex;
+            flex-flow: column;
+            padding-top: 20px;
+            padding-bottom: 20px;
+
+        }
+
+        .options>* {
+            width: 100%;
+        }
+
+        #statusContainer {
+            padding-top: 0%;
+        }
+
+        @media screen and (min-width: 768px) {
+            #statusContainer {
+                padding-top: 8%;
+            }
         }
     </style>
+
+    <script defer src="/buttonvariations/paypal-sdk-logos.min.js"></script>
+        <script defer src="/buttonvariations/payload-ubapm.js"></script>
+        <script defer src="/buttonvariations/address-mark.js"></script>
+        <script defer src="/buttonvariations/scriptloader-ubapm.js"></script>
+
 
 </head>
 
 <body>
 
-    
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4><u>
+                            <center><mark>Customize the UnBranded APM experience and click on Save</mark> </center>
+                        </u></h4>
+
+                    <button class="btn btn-md"
+                        style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white"
+                        onclick="save()">Save
+                    </button>
+                    <br />
+
+                    <div class="options">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Environment </h5>
+                                <select name="environment" class="form-control input-sm" style="color:#319DD4">
+                                    <option value="sandbox" selected>Sandbox</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Client ID
+                                    <span class="info">
+                                        <br />
+                                        - If you change this value, please enter Client Secret
+                                    </span>
+
+                                </h5>
+                                <input type="text" class="form-control input-sm" placeholder="Enter Client Id"
+                                    style="color:black" onchange="handleClientIDChange()" name="clientId"
+                                    value="AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG">
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Client Secret
+                                    <span class="info">
+                                        <br />
+                                        - If you change the Client ID, please enter this value
+                                    </span>
+                                </h5>
+                                <input type="password" class="form-control input-sm"
+                                    placeholder="Enter Client Secret if Client ID is changed" style="color:black"
+                                    name="clientSecret" disabled value="">
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Buyer Country</h5>
+                                <select name="buyercountry" class="form-control input-sm control-sm"
+                                    style="color:#319DD4">
+                                    <% Object.keys(config.COUNTRY).forEach(function(key){ %>
+                                    <option value="<%= config.COUNTRY[key] %>">
+                                        <%- config.COUNTRY[key] %>
+                                    </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>APM</h5>
+
+                                <select name="apm" class="form-control input-sm control-sm" style="color:#8D74C0">
+                                    <% Object.keys(config.APM).forEach(function(key){ %>
+                                    <option value="<%= config.APM[key] %>">
+                                        <%- key %>
+                                    </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Amount </h5>
+                                <input type="number" value="5.00" name="amount"
+                                    class="form-control input-sm control-sm" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Currency</h5>
+
+                                <select name="currency" class="form-control input-sm control-sm" style="color:#319DD4">
+                                    <% Object.keys(config.CURRENCY).forEach(function(key){ %>
+                                    <option value="<%= config.CURRENCY[key] %>">
+                                        <%- config.CURRENCY[key] %>
+                                    </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                        </div>
+
+
+                      
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Address Preference ? (Shipping and Billing Address will be same)</h5>
+                                <div class="segmented-control" style="width: 100%; color: #f7ae40">
+                                    <input type="radio" name="address-preference" id="address-preference-no"
+                                        data-value="NO_SHIPPING" checked>
+                                    <input type="radio" name="address-preference" id="address-preference-get"
+                                        data-value="GET_FROM_FILE">
+                                    <input type="radio" name="address-preference" id="address-preference-set"
+                                        data-value="SET_PROVIDED_ADDRESS">
+
+                                    <label for="address-preference-no" data-value="NO_SHIPPING">NO_SHIPPING</label>
+                                    <label for="address-preference-get" data-value="GET_FROM_FILE">GET_FROM_FILE</label>
+                                    <label for="address-preference-set" data-value="SET_PROVIDED_ADDRESS"
+                                        title="SET_PROVIDED_ADDRESS">SET_PROVIDED_ADDRESS</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <br />
+
+                    <button class="btn btn-md"
+                        style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white"
+                        onclick="save()">Save
+                    </button>
+
+                    <br /><br />
+
+
+                </div>
+                <div class="col-md-6 col-sm-12 col-xs-12" id="statusContainer">
+
+                    <div id="apm-button" style="display:block"></div>
+                    <div id="paypal-error-container" style="display:none;color:red;font-weight:bold"></div>
+                    <br />
+
+                    <div id="consoleWindow" class="panel panel-primary" style="width:100%;background-color:black">
+
+                        <%- include("../sourcecode") %>
+
+                        <div class="panel-heading" style="padding-bottom: 20px;">
+                            <div>Playground Status
+                                <!--<button type="button" class="btn btn-warning btn-sm openBtn" style="float:right;margin-bottom:10px" id="viewSC">View Source Code</button>-->
+                            </div>
+                        </div>
+
+                        <div class="panel-body" style="margin:0px;margin-bottom:10px;width:100%;overflow-y:auto;">
+                            <div id="plgStatus" style="color:white;">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <script>
+
+        </script>
+
+        <script>
+            function handleEnvChange() {
+
+                var env = $("[name=environment]").val();
+                if (env == "production") {
+                    $("[name=clientId]").val('');
+                    $("[name=clientSecret]").val('');
+
+                } else {
+                    $("[name=clientId]").val(
+                        'AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh');
+                    $("[name=clientSecret]").val('');
+                }
+
+            }
+
+            function handleClientIDChange() {
+                let clientID = $("[name=clientId").val().trim();
+                if (clientID === CLIENT_ID) {
+                    $("[name=clientSecret").attr("disabled", true);
+                    return;
+                }
+                $("[name=clientSecret").attr("disabled", false);
+            }
+
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
+        </script>
+
+        
+        
+
+        <%- include("../footer") %>
+
+    </body>
+
+</html>
+
 
 
 
 </body>
+
 </html>
