@@ -1,5 +1,4 @@
 function loadHostedButtons() {
-  addToConsole("Rendering Hosted Fields...");
   try {
     var form = document.querySelector("#cardForm");
 
@@ -136,225 +135,247 @@ function loadHostedButtons() {
           prefill: "01/2021",
         },
       },
-    }).then(function (hf) {
-      addToConsole("Hosted Fields rendered successfully");
-      $("#submit").removeAttr("disabled");
+    })
+      .then(function (hf) {
+        addToConsole("Hosted Fields is enabled");
+        addToConsole("Hosted Fields rendered successfully");
+        $("#submit").removeAttr("disabled");
 
-      hf.on("validityChange", function (event) {
-        var field = event.fields[event.emittedBy];
+        hf.on("validityChange", function (event) {
+          var field = event.fields[event.emittedBy];
 
-        if (field.isValid) {
-          // Show Next button if inputs are valid
-          showNext();
+          if (field.isValid) {
+            // Show Next button if inputs are valid
+            showNext();
 
-          // Update message to reflect success
-          $(".field-message").text("Nice! Let's move on…");
-        } else if (!field.isPotentiallyValid) {
-          // Hide next button
-          $(".form-controls__next").addClass("form-controls--hidden");
-          // Change the top message based on the input error
-          switch ($(field.container).attr("id")) {
-            case "card-number":
-              $(".field-message").text(
-                "Please check if you typed the correct card number."
-              );
-              break;
-            case "expiration-date":
-              $(".field-message").text("Please check your expiration date.");
-              break;
-            case "cvv":
-              $(".field-message").text("Please check your security code.");
-              break;
-          }
-        } else {
-          switch ($(field.container).attr("id")) {
-            case "card-number":
-              $(".field-message").text("Let's add your card number.");
-              break;
-            case "expiration-date":
-              $(".field-message").text("When will your card expire?");
-              break;
-            case "cvv":
-              $(".field-message").text("This is on the back of your card.");
-              break;
-          }
-        }
-      });
-
-      hf.on("focus", function (event) {
-        var field = event.fields[event.emittedBy];
-
-        $(field.container)
-          .prev(".hosted-field--label")
-          .addClass("hosted-field--label--moved");
-        $(field.container).parent().addClass("field-container--active");
-      });
-
-      hf.on("blur", function (event) {
-        var field = event.fields[event.emittedBy];
-
-        $(field.container)
-          .prev(".hosted-field--label")
-          .removeClass("hosted-field--label--moved");
-        $(field.container).parent().removeClass("field-container--active");
-      });
-
-      hf.on("empty", function (event) {
-        var field = event.fields[event.emittedBy];
-
-        $(field.container)
-          .prev(".hosted-field--label")
-          .removeClass("not-empty");
-      });
-
-      hf.on("notEmpty", function (event) {
-        var field = event.fields[event.emittedBy];
-
-        $(field.container).prev(".hosted-field--label").addClass("not-empty");
-      });
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        addToConsole("Submitting card form to SDK...");
-        var is3dsEnabled = $("#3dsEnabled").val() == "Yes";
-        var contingencies = [];
-        if (is3dsEnabled) contingencies.push("3D_SECURE");
-
-        const envObj = getEnvObj();
-        const intent = $("[name=intent]:checked").attr("data-value");
-
-        hf.submit({
-          contingencies: contingencies,
-          vault: envObj.isVaulting,
-        })
-          .then(function (payload) {
-            addToConsole("Payload " + JSON.stringify(payload, null, "\t"));
-            if (payload.nonce) {
-              addToConsole("Tokenized (Nonce): " + payload.nonce);
+            // Update message to reflect success
+            $(".field-message").text("Nice! Let's move on…");
+          } else if (!field.isPotentiallyValid) {
+            // Hide next button
+            $(".form-controls__next").addClass("form-controls--hidden");
+            // Change the top message based on the input error
+            switch ($(field.container).attr("id")) {
+              case "card-number":
+                $(".field-message").text(
+                  "Please check if you typed the correct card number."
+                );
+                break;
+              case "expiration-date":
+                $(".field-message").text("Please check your expiration date.");
+                break;
+              case "cvv":
+                $(".field-message").text("Please check your security code.");
+                break;
             }
-            addToConsole("LiabilityShifted " + payload.liabilityShifted);
-
-            $.LoadingOverlay("show", {
-              image: "",
-              text: intent === "capture" ? "Capturing Order..." : "Authorizing Order...",
-              textClass: "loadingText",
-            });
-
-            // Capture/ Authorize the funds from the transaction
-            if (intent == "authorize") {
-              return fetch("/pcp-auth-order?id=" + payload.orderId, {
-                method: "POST",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  envObj,
-                }),
-              })
-                .then((res) => res.json())
-                .then((res) => {
-                  if (!res.id) {
-                    addToConsole(JSON.stringify(res, null, 4));
-                  }
-                  return res;
-                })
-                .catch((err) => {
-                  addToConsole(JSON.stringify(err, null, 4), "error");
-                });
-            } else {
-              return fetch("/pcp-capture-order?id=" + payload.orderId, {
-                method: "POST",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  envObj,
-                }),
-              })
-                .then((res) => res.json())
-                .then((res) => {
-                  if (!res.id) {
-                    addToConsole(JSON.stringify(res, null, 4), "error");
-                    return "Error";
-                  }
-                  return res;
-                })
-                .catch((err) => {
-                  addToConsole(JSON.stringify(err, null, 4), "error");
-                });
+          } else {
+            switch ($(field.container).attr("id")) {
+              case "card-number":
+                $(".field-message").text("Let's add your card number.");
+                break;
+              case "expiration-date":
+                $(".field-message").text("When will your card expire?");
+                break;
+              case "cvv":
+                $(".field-message").text("This is on the back of your card.");
+                break;
             }
+          }
+        });
+
+        hf.on("focus", function (event) {
+          var field = event.fields[event.emittedBy];
+
+          $(field.container)
+            .prev(".hosted-field--label")
+            .addClass("hosted-field--label--moved");
+          $(field.container).parent().addClass("field-container--active");
+        });
+
+        hf.on("blur", function (event) {
+          var field = event.fields[event.emittedBy];
+
+          $(field.container)
+            .prev(".hosted-field--label")
+            .removeClass("hosted-field--label--moved");
+          $(field.container).parent().removeClass("field-container--active");
+        });
+
+        hf.on("empty", function (event) {
+          var field = event.fields[event.emittedBy];
+
+          $(field.container)
+            .prev(".hosted-field--label")
+            .removeClass("not-empty");
+        });
+
+        hf.on("notEmpty", function (event) {
+          var field = event.fields[event.emittedBy];
+
+          $(field.container).prev(".hosted-field--label").addClass("not-empty");
+        });
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          addToConsole("Submitting card form to SDK...");
+          var is3dsEnabled = $("#3dsEnabled").val() == "Yes";
+          var contingencies = [];
+          if (is3dsEnabled) contingencies.push("3D_SECURE");
+
+          const envObj = getEnvObj();
+          const intent = $("[name=intent]:checked").attr("data-value");
+
+          hf.submit({
+            contingencies: contingencies,
+            vault: envObj.isVaulting,
           })
-          .then(function (details) {
-            $.LoadingOverlay("hide");
-            if (details === "Error") {
-              alert("Some Error Occurred");
-              throw new Error("Some Error Occurred");
-              return;
-            }
-            // Show a success message to your buyer
-            if (intent == "capture") {
-              alert("Payment Successful");
-              addToConsole("Payment successful");
-              addToConsole("Capture Order Response");
-            } else {
-              alert("Payment Authorized. Capture the Order once you are ready");
-              addToConsole(
-                "Payment Authorized. Capture the Order once you are ready"
-              );
-              addToConsole("Auth Order Response");
-            }
-            addToConsole(
-              "<pre style='height:320px'>" +
-                JSON.stringify(details, null, 2) +
-                "</pre>"
-            );
+            .then(function (payload) {
+              addToConsole("Payload " + JSON.stringify(payload, null, "\t"));
+              if (payload.nonce) {
+                addToConsole("Tokenized (Nonce): " + payload.nonce);
+              }
+              addToConsole("LiabilityShifted " + payload.liabilityShifted);
 
-            setTimeout(() => {
               $.LoadingOverlay("show", {
                 image: "",
-                text: "GET Order...",
+                text:
+                  intent === "capture"
+                    ? "Capturing Order..."
+                    : "Authorizing Order...",
                 textClass: "loadingText",
               });
-            },300)
-            
-            // Get the transaction details
-            addToConsole("GET ORDER DETAILS ");
-            return fetch("/pcp-get-order?id=" + details.id, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                envObj,
-              }),
+
+              // Capture/ Authorize the funds from the transaction
+              if (intent == "authorize") {
+                return fetch("/pcp-auth-order?id=" + payload.orderId, {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    envObj,
+                  }),
+                })
+                  .then((res) => res.json())
+                  .then((res) => {
+                    if (!res.id) {
+                      addToConsole(
+                        "<pre style='max-height:320px'>" +
+                          JSON.stringify(res, null, 2) +
+                          "</pre>",
+                        "error"
+                      );
+                    }
+                    return res;
+                  })
+                  .catch((err) => {
+                    addToConsole(JSON.stringify(err, null, 4), "error");
+                  });
+              } else {
+                return fetch("/pcp-capture-order?id=" + payload.orderId, {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    envObj,
+                  }),
+                })
+                  .then((res) => res.json())
+                  .then((res) => {
+                    if (!res.id) {
+                      addToConsole(JSON.stringify(res, null, 4), "error");
+                      return "Error";
+                    }
+                    return res;
+                  })
+                  .catch((err) => {
+                    addToConsole(JSON.stringify(err, null, 4), "error");
+                  });
+              }
+            })
+            .then(function (details) {
+              $.LoadingOverlay("hide");
+              if (details === "Error") {
+                alert("Some Error Occurred");
+                throw new Error("Some Error Occurred");
+                return;
+              }
+              // Show a success message to your buyer
+              if (intent == "capture") {
+                alert("Payment Successful");
+                addToConsole("Payment successful");
+                addToConsole("Capture Order Response");
+              } else {
+                alert(
+                  "Payment Authorized. Capture the Order once you are ready"
+                );
+                addToConsole(
+                  "Payment Authorized. Capture the Order once you are ready"
+                );
+                addToConsole("Auth Order Response");
+              }
+              addToConsole(
+                "<pre style='max-height:320px'>" +
+                  JSON.stringify(details, null, 2) +
+                  "</pre>"
+              );
+
+              setTimeout(() => {
+                $.LoadingOverlay("show", {
+                  image: "",
+                  text: "GET Order...",
+                  textClass: "loadingText",
+                });
+              }, 300);
+
+              // Get the transaction details
+              addToConsole("GET ORDER DETAILS ");
+              return fetch("/pcp-get-order?id=" + details.id, {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  envObj,
+                }),
+              });
+            })
+            .then((res) => res.json())
+            .then((res) => {
+              if (!res.id) {
+                addToConsole(
+                  "<pre style='max-height:320px'>" +
+                    JSON.stringify(res, null, 2) +
+                    "</pre>",
+                  "error"
+                );
+              }
+              return res;
+            })
+            .then(function (details) {
+              addToConsole(
+                "<pre style='max-height:320px'>" +
+                  JSON.stringify(details, null, 2) +
+                  "</pre>"
+              );
+            })
+            .catch((err) => {
+              addToConsole(JSON.stringify(err, null, 4), "error");
+            })
+            .finally(() => {
+              $.LoadingOverlay("hide");
             });
-          })
-          .then((res) => res.json())
-          .then((res) => {
-            if (!res.id) {
-              addToConsole(JSON.stringify(res, null, 4));
-            }
-            return res;
-          })
-          .then(function (details) {
-            
-            addToConsole(
-              "<pre style='height:320px'>" +
-                JSON.stringify(details, null, 2) +
-                "</pre>"
-            );
-          })
-          .catch((err) => {
-            addToConsole(JSON.stringify(err, null, 4), "error");
-          })
-          .finally(() => {
-            $.LoadingOverlay("hide");
-          });
+        });
+      })
+      .catch(function (err) {
+        $.LoadingOverlay("hide");
+        addToConsole(err.message, "error");
+        $("#hcontainer").empty();
+        $("#hostedButton").hide();
       });
-    });
   } catch (e) {
     $.LoadingOverlay("hide");
     addToConsole("Error" + JSON.stringify(e), "error");

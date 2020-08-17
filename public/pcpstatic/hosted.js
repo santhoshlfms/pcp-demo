@@ -1,8 +1,6 @@
 function renderHostedButton() {
 
     if (paypal.HostedFields.isEligible() === true) {
-        addToConsole("Hosted Fields is enabled");
-
         var type = $("#hostedFieldsType").val();
         var src = 'bootstrap_pcp.ejs'
         switch(type) {
@@ -26,7 +24,6 @@ function renderHostedButton() {
         $.get("../"+src + ".ejs", function (data) {
             $("#hcontainer").empty();
             $("#hcontainer").append(data);
-            $("#hostedButtonElem").show();
             $("#hostedButton").show();
             loadHostedButtons();
         });
@@ -51,7 +48,7 @@ function createOrderHosted() {
 
     addToConsole("Create Order Request");
 
-    addToConsole("<pre style='height:320px'>"+JSON.stringify(orderObj, null, 2)+"</pre>");  
+    addToConsole("<pre style='max-height:320px'>"+JSON.stringify(orderObj, null, 2)+"</pre>");  
    
     
     return fetch("/pcp-create-order", {
@@ -68,7 +65,10 @@ function createOrderHosted() {
     .then(res => res.json())
     .then(res => {
         if(!res.id)
-        addToConsole(JSON.stringify(res, null, 4));
+        addToConsole(
+            "<pre style='max-height:320px'>" +
+              JSON.stringify(res, null, 2) +
+              "</pre>", "error");
         else
         addToConsole("Order Id : "+ res.id)
         return res;

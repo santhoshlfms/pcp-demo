@@ -538,7 +538,7 @@ module.exports = function(router) {
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
       if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
-        console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
+        console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp));
         res.status
         return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
@@ -550,8 +550,8 @@ module.exports = function(router) {
       let createOrderResp = await createOrder(accessToken, apiConfiguration);
 
       if(!createOrderResp.status || createOrderResp.statusCode > 201) {
-        console.log("Error in Create Order call "+ createOrderResp.error);
-        return res.status(createOrderResp.statusCode).json(createOrderResp);
+        console.log("Error in Create Order call "+ createOrderResp);
+        return res.status(createOrderResp.statusCode).json({...createOrderResp});
       }
       return res.json({
         ...createOrderResp.orderResp,
@@ -590,7 +590,7 @@ module.exports = function(router) {
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
       if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
-         console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
+         console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp));
         return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
 
@@ -599,8 +599,8 @@ module.exports = function(router) {
       let getOrderResponse = await getOrder(accessToken, apiConfiguration);
 
       if(!getOrderResponse.status || getOrderResponse.statusCode > 201) {
-        console.log("Error in get Order call "+ JSON.stringify(getOrderResponse.error));
-        return res.status(getOrderResponse.statusCode).json(getOrderResponse);
+        console.log("Error in get Order call "+ JSON.stringify(getOrderResponse));
+        return res.status(getOrderResponse.statusCode).json({...getOrderResponse});
       }
       return res.json({
         ...getOrderResponse.getOrderResp,
@@ -639,7 +639,7 @@ module.exports = function(router) {
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
       if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
-         console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
+         console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp));
         return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
 
@@ -648,8 +648,8 @@ module.exports = function(router) {
       let captureOrderResponse = await captureOrder(accessToken, apiConfiguration);
 
       if(!captureOrderResponse.status || captureOrderResponse.statusCode > 201) {
-        console.log("Error in Capture Order call "+ JSON.stringify(captureOrderResponse.error));
-        return res.status(captureOrderResponse.statusCode).json(captureOrderResponse);
+        console.log("Error in Capture Order call "+ JSON.stringify(captureOrderResponse));
+        return res.status(captureOrderResponse.statusCode).json({...captureOrderResponse});
       }
       return res.json({
         ...captureOrderResponse.captureOrderResp,
@@ -687,7 +687,7 @@ module.exports = function(router) {
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
       if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
-        console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
+        console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp));
         return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
 
@@ -696,8 +696,8 @@ module.exports = function(router) {
       let authOrderResponse = await authOrder(accessToken, apiConfiguration);
 
       if(!authOrderResponse.status || authOrderResponse.statusCode > 201) {
-        console.log("Error in Auth Order call "+ JSON.stringify(authOrderResponse.error));
-        return res.status(authOrderResponse.statusCode).json(authOrderResponse);
+        console.log("Error in Auth Order call "+ JSON.stringify(authOrderResponse));
+        return res.status(authOrderResponse.statusCode).json({...authOrderResponse});
       }
       return res.json({
         ...authOrderResponse.authOrderResp,
@@ -738,8 +738,8 @@ module.exports = function(router) {
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
       if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
-         console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
-        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
+         console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp));
+        return res.status(accessTokenResp.statusCode).json({...accessTokenResp});
       } 
 
       let accessToken = accessTokenResp.accessToken;
@@ -747,8 +747,8 @@ module.exports = function(router) {
       let getClientTokenResponse = await getClientToken(accessToken, apiConfiguration);
 
       if(!getClientTokenResponse.status || getClientTokenResponse.statusCode > 201) {
-        console.log("Error in getting client token call "+ JSON.stringify(getClientTokenResponse.error));
-        return res.status(getClientTokenResponse.statusCode).json(getClientTokenResponse);
+        console.log("Error in getting client token call "+ JSON.stringify(getClientTokenResponse));
+        return res.status(getClientTokenResponse.statusCode).json({...getClientTokenResponse});
       }
       console.log("Returning back the Client token response ");
       return res.json({
@@ -788,7 +788,7 @@ module.exports = function(router) {
       let accessTokenResp = await getAccessToken(apiConfiguration);
 
       if(!accessTokenResp.status || accessTokenResp.statusCode > 201) {
-        console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp.error));
+        console.log("Error in getting Access Token "+ JSON.stringify(accessTokenResp));
         res.status
         return res.status(accessTokenResp.statusCode).json(accessTokenResp);
       } 
@@ -801,7 +801,7 @@ module.exports = function(router) {
 
       if(!confirmPaymentSourceResp.statusCode || confirmPaymentSourceResp.statusCode > 201) {
         console.log("Error in Confirm Payment Source call "+ confirmPaymentSourceResp.orderResp);
-        return res.status(confirmPaymentSourceResp.statusCode).json(confirmPaymentSourceResp);
+        return res.status(confirmPaymentSourceResp.statusCode).json({...confirmPaymentSourceResp});
       }
       return res.json({
         ...confirmPaymentSourceResp.orderResp,
