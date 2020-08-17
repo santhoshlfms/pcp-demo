@@ -129,6 +129,7 @@ function loadHostedButtons() {
 
             if (details === "Error") {
               alert("Some Error Occurred");
+              throw new Error("Some Error Occurred");
               return;
             }
             // Show a success message to your buyer
@@ -186,6 +187,7 @@ function loadHostedButtons() {
           })
           .catch((err) => {
             addToConsole(JSON.stringify(err, null, 4), "error");
+            $.LoadingOverlay("hide");
           })
           .finally(() => {
             $.LoadingOverlay("hide");

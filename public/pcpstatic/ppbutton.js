@@ -161,6 +161,7 @@ function renderPPButton(isChange) {
             $.LoadingOverlay("hide");
             if (details === "Error") {
               alert("Some Error Occurred");
+              throw new Error("Some Error Occurred");
               return;
             }
             return details;
@@ -219,7 +220,8 @@ function renderPPButton(isChange) {
                 JSON.stringify(details, null, 2) +
                 "</pre>"
             );
-          }).catch(err => {
+          })
+          .catch(err => {
             $.LoadingOverlay("hide");
           })
           .finally(() => {

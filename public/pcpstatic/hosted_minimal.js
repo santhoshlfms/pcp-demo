@@ -290,6 +290,7 @@ function loadHostedButtons() {
             $.LoadingOverlay("hide");
             if (details === "Error") {
               alert("Some Error Occurred");
+              throw new Error("Some Error Occurred");
               return;
             }
             // Show a success message to your buyer

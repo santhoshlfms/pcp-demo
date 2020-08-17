@@ -16,4 +16,8 @@ module.exports = function (router) {
     router.get(["/ba-flow"], function (req, res, next) {
         res.render("buttonvariations/ba-flow");
     });
+
+    router.get(["/unbranded-apms"], function (req, res, next) {
+      res.render("buttonvariations/unbranded-apms");
+  });
 }  
