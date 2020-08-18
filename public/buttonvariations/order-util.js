@@ -21,8 +21,8 @@ const LOGO_MAP = {
     "https://www.paypalobjects.com/images/checkout/latinum/Altpay_logo_verkkopankki.svg",
 };
 
-let type = "POLL";
-// type = "WEBHOOK"
+//let type = "POLL";
+let type = "WEBHOOK"
 
 async function delay(ms) {
   return new Promise((res) => {
@@ -38,13 +38,11 @@ async function pollOrderStatus(orderId, attempts = 1) {
     return;
   }
 
-  let snapshot = await firebase
-    .database()
-    .ref("/" + orderId)
-    .once("value");
-  let value = snapshot?.val();
+  let orderStatusRespObj = await fetch("/orderStatus?orderId="+ orderId);
 
-  handleStatus(value?.status, attempts, orderId, "", false);
+  let status = orderStatusRespObj?.status;
+
+  handleStatus(status, attempts, orderId, "", false);
 }
 
 async function pollPPGetOrder(orderId, attempts = 1) {

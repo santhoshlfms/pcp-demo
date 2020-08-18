@@ -15,42 +15,14 @@
         font-size: 1.5em;
     }
 </style>
-
-<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-database.js"></script>
-
-<script>
-    var firebaseConfig = {
-        apiKey: "AIzaSyDf1LIlRi-BZxhxYwYbkeL5ytvCwgfAUlU",
-        authDomain: "unbranded-apms.firebaseapp.com",
-        databaseURL: "https://unbranded-apms.firebaseio.com",
-        projectId: "unbranded-apms",
-        storageBucket: "unbranded-apms.appspot.com",
-        messagingSenderId: "395450305306",
-        appId: "1:395450305306:web:125e8d1d280dde0b32baa3"
-    };
-    firebase.initializeApp(firebaseConfig);
-</script>
-
-<script>
-    var orderId = "<%= orderId %>"
-    var status = "<%= status %>"
-
-    firebase.database().ref("/" + orderId).set({
-            orderId,
-            status
-        })
-        .then(a => console.log(a))
-        .then(() => window.close())
-        .catch(() => window.close())
-        .finally(() => window.close())
-</script>
-
 <body>
 
     <div class="flex">
         <p>Please close the window if it does not close by itself.</p>
     </div>
+    <script>
+        window.close();
+    </script>
 </body>
 
 </html>

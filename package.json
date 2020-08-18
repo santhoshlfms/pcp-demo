@@ -16,6 +16,7 @@
     "https": "^1.0.0",
     "hyperwallet-sdk": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
+    "lowdb": "^1.0.0",
     "morgan": "~1.9.0",
     "request": "^2.88.0",
     "serve-favicon": "~2.4.5"

@@ -7,6 +7,15 @@ const {
   APM,
 } = require("./constants");
 
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+
+const adapter = new FileSync('orders.json');
+const db = low(adapter);
+
+db.defaults({ orders: [] })
+  .write();
+
 module.exports = function (router) {
   router.get(["/buttonvariations"], function (req, res, next) {
     res.render("buttonvariations/index");
@@ -42,6 +51,14 @@ module.exports = function (router) {
 
     console.log("order id ", orderId);
 
+    const result = db.get('orders')
+      .push({  orderId: orderId,
+        status: "RETURNED"
+      })
+      .write()
+
+    console.log(result)
+
     setTimeout(() => {
       res.render("buttonvariations/return-apm", {
         orderId: orderId,
@@ -55,6 +72,16 @@ module.exports = function (router) {
     let orderId = req.query.token;
 
     console.log("order id ", orderId);
+
+    const result = db.get('orders')
+    .push({  orderId: orderId,
+      status: "CANCELLED"
+    })
+    .write()
+
+    console.log(result)
+
+
     setTimeout(() => {
       res.render("buttonvariations/cancel-apm", {
         orderId: orderId,
@@ -68,19 +95,36 @@ module.exports = function (router) {
 
     let body = req.body;
 
-    console.log("webhook body ", body);
+    console.log("Incoming Webhook");
+
+    console.log("**** webhook body **** ", body);
     console.log(body.eventType);
     console.log(body.resource.id);
     console.log(body.resource.status);
 
-  
+    
     if(body.eventType === "CHECKOUT.ORDER.APPROVED") {
-      return res.status(200).render("buttonvariations/return-apm", {
-        orderId: body.resource.id,
+      res.status(200);
+      
+      const result = db.get('orders')
+      .push({  orderId: body.resource.id,
         status: body.resource.status
-      });
+      })
+      .write()
+
+      console.log(result)
     }
-    res.status(200).end();
+  });
+
+  router.get("/orderStatus", async function(req,res,next) {
+    
+    console.log("GET ORDER STATUS FOR "+ req.query.orderId);
+    const order = db
+    .get('orders')
+    .find({ orderId: req.query.orderId })
+    .value();
+    
+    res.json({...order})
   });
 
 };
