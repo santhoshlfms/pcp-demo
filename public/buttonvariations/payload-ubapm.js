@@ -112,8 +112,8 @@ function getConfirmPaymentSourceObj() {
   } = getScriptQueryParam();
 
 
-  //var hosturl = "https://pp-product-demo.herokuapp.com"
-  var hosturl = "http://localhost:3500"
+  var hosturl = "https://pp-product-demo.herokuapp.com"
+  //var hosturl = "http://localhost:3500"
 
   var confirmPaymentSourceObj = {
     payment_source: {
