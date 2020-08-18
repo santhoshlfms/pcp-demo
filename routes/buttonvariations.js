@@ -93,8 +93,8 @@ module.exports = function (router) {
     console.log(body.event_type);
     console.log(body.resource.id);
     console.log(body.resource.status);
-    res.end(200);
-    
+    res.end();
+
     if (body.event_type === "CHECKOUT.ORDER.APPROVED") {
       
 
