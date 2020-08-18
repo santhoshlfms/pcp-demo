@@ -32,6 +32,9 @@ async function delay(ms) {
 
 async function pollOrderStatus(orderId, attempts = 1) {
   try {
+    
+    console.log("Webhook order status attempt "+ attempts);
+
     if (attempts > 6) {
       addToConsole("PayPal Order Status is not updated", "error");
       $.LoadingOverlay("hide");
@@ -55,6 +58,9 @@ async function pollOrderStatus(orderId, attempts = 1) {
 
 async function pollPPGetOrder(orderId, attempts = 1) {
   try {
+    
+    console.log("pollPPGetOrder status attempt "+ attempts);
+
     let { envObj } = getCreateOrderPayload();
 
     if (attempts > 7) {
@@ -147,7 +153,7 @@ async function handleStatus(
 async function captureOrder(orderId) {
   let { envObj } = getCreateOrderPayload();
 
-  await delay(1000);
+  await delay(500);
   $.LoadingOverlay("show", {
     image: "",
     text: "Capture Order...",

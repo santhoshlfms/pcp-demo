@@ -239,7 +239,7 @@ function pollPopUp(orderId) {
 
   } else {
     // keep polling until the child window closes
-    setTimeout(() => pollPopUp(orderId), 4000);
+    setTimeout(() => pollPopUp(orderId), 3000);
   }
 }
 
