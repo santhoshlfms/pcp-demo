@@ -118,6 +118,7 @@ async function handleStatus(
       $.LoadingOverlay("hide");
       break;
     case "CANCELLED":
+    case "REVERSED":
       addToConsole("Order CANCELLED");
       alert("Order CANCELLED");
       $.LoadingOverlay("hide");
