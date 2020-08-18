@@ -40,7 +40,9 @@ async function pollOrderStatus(orderId, attempts = 1) {
 
   let orderStatusRespObj = await fetch("/orderStatus?orderId="+ orderId);
 
-  let status = orderStatusRespObj?.status;
+  let orderStatusResp = await orderStatusRespObj.json();
+
+  let status = orderStatusResp?.status;
 
   handleStatus(status, attempts, orderId, "", false);
 }
