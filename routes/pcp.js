@@ -39,7 +39,7 @@ function getAccessToken(apiConfiguration) {
             accessToken:'',
             status: false,
             error:error,
-            statusCode: response.statusCode 
+            statusCode: response.statusCode
           });
         }
         else{

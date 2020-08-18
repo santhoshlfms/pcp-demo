@@ -22,11 +22,6 @@ async function save() {
 
     $.LoadingOverlay("show");
 
-    // fallback if loader gets stuck - just for demo
-    setTimeout(() => {
-      $.LoadingOverlay("hide");
-    }, 12000);
-
     loadAPMButtons(apm);
 
     $.LoadingOverlay("hide");
@@ -212,11 +207,6 @@ async function handleApmClick(e) {
         "approvalWindow",
         "width=1200,height=600,resizable,scrollbars,status"
       );
-
-      window.addEventListener("message", function(msg) {
-        alert("from child ", msg.data)
-      })
-
       
       // Step 5
       // when child window closes , poll get order / local db from webhook to get status
@@ -234,7 +224,7 @@ async function handleApmClick(e) {
 
 function pollPopUp(orderId) {
   if (!childWindowRef || childWindowRef.closed) {
-    // On child window close, update modal on UI
+    // On child window close. Start polling for status
     addToConsole("Approval Closed");
     addToConsole("Verifying Approval Status");
 
@@ -245,7 +235,8 @@ function pollPopUp(orderId) {
       textClass: "loadingText",
     });
 
-    pollPPGetOrder(orderId, 0);
+    pollOrderStatus(orderId);
+
   } else {
     // keep polling until the child window closes
     setTimeout(() => pollPopUp(orderId), 4000);

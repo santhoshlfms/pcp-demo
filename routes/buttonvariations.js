@@ -4,7 +4,7 @@ const {
   CURRENCY,
   LANG,
   LOCALE_COUNTRY,
-  APM
+  APM,
 } = require("./constants");
 
 module.exports = function (router) {
@@ -31,12 +31,35 @@ module.exports = function (router) {
       LOCALES,
       CURRENCY,
       LOCALE_COUNTRY,
-      APM
+      APM,
     };
     res.render("buttonvariations/unbranded-apms", { config: obj });
   });
 
-  router.get(["/unbranded-apms/return", "/unbranded-apms/cancel"], function (req, res, next) {
-    res.render("buttonvariations/return");
+  router.get(["/unbranded-apms/return"], async function (req, res, next) {
+    
+    let orderId = req.query.token;
+
+    console.log("order id ", orderId);
+
+    setTimeout(() => {
+      res.render("buttonvariations/return-apm", {
+        orderId: orderId,
+        status: "RETURNED",
+      });
+    }, 300);
+  });
+
+  router.get(["/unbranded-apms/cancel"], async function (req, res, next) {
+
+    let orderId = req.query.token;
+
+    console.log("order id ", orderId);
+    setTimeout(() => {
+      res.render("buttonvariations/cancel-apm", {
+        orderId: orderId,
+        status: "CANCELLED",
+      });
+    }, 300);
   });
 };

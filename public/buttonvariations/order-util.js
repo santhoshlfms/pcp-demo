@@ -21,19 +21,39 @@ const LOGO_MAP = {
     "https://www.paypalobjects.com/images/checkout/latinum/Altpay_logo_verkkopankki.svg",
 };
 
+let type = "POLL";
+// type = "WEBHOOK"
+
 async function delay(ms) {
   return new Promise((res) => {
     setTimeout(() => res(), ms);
   });
 }
 
-async function pollPPGetOrder(orderId, attempts) {
+async function pollOrderStatus(orderId, attempts = 1) {
+  if (attempts > 15) {
+    addToConsole("PayPal Order Status is not updated", "error");
+    $.LoadingOverlay("hide");
+    alert("Some Error Occurred");
+    return;
+  }
+
+  let snapshot = await firebase
+    .database()
+    .ref("/" + orderId)
+    .once("value");
+  let value = snapshot?.val();
+
+  handleStatus(value?.status, attempts, orderId, "", false);
+}
+
+async function pollPPGetOrder(orderId, attempts = 1) {
   let { envObj } = getCreateOrderPayload();
 
   if (attempts > 7) {
     addToConsole("PayPal Order Status is not updated", "error");
     $.LoadingOverlay("hide");
-    alert("Some Error Occurred");
+    alert("Status not updated");
     return;
   }
 
@@ -57,36 +77,51 @@ async function pollPPGetOrder(orderId, attempts) {
     return;
   }
 
-  switch (getOrderResp.status) {
+  handleStatus(getOrderResp.status, attempts, orderId, getOrderResp, true);
+}
+
+async function handleStatus(status, attempts, orderId, orderResp, isPollPPOrder) {
+  console.log("status "+ status);
+  switch (status) {
     case "COMPLETED":
       addToConsole("Order Already Captured");
+      alert("Order Already Captured");
       $.LoadingOverlay("hide");
       break;
     case "VOIDED":
       addToConsole("Order Already VOIDED");
+      alert("Order Already VOIDED");
       $.LoadingOverlay("hide");
       break;
     case "CANCELLED":
       addToConsole("Order CANCELLED");
+      alert("Order CANCELLED");
       $.LoadingOverlay("hide");
       break;
     case "APPROVED":
       addToConsole("Order APPROVED");
-      addToConsole("GET Order Response");
-      addToConsole(
-        "<pre style='height:320px'>" +
-          JSON.stringify(getOrderResp, null, 2) +
-          "</pre>"
-      );
+      if (isPollPPOrder) {
+        addToConsole("GET Order Response");
+        addToConsole(
+          "<pre style='height:320px'>" +
+            JSON.stringify(orderResp, null, 2) +
+            "</pre>"
+        );
+      }
       $.LoadingOverlay("hide");
       // call capture Order
       captureOrder(orderId);
       break;
     case undefined:
+    case null:
     default:
-      setTimeout(function () {
-        pollPPGetOrder(orderId, attempts + 1);
-      }, 3000);
+      if (type === "POLL") {
+        setTimeout(function () {
+          pollPPGetOrder(orderId, attempts + 1);
+        }, 3000);
+      } else {
+        setTimeout(() => pollOrderStatus(orderId, attempts + 1), 4000);
+      }
       break;
   }
 }
