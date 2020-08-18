@@ -31,7 +31,7 @@ async function delay(ms) {
 }
 
 async function pollOrderStatus(orderId, attempts = 1) {
-  if (attempts > 15) {
+  if (attempts > 10) {
     addToConsole("PayPal Order Status is not updated", "error");
     $.LoadingOverlay("hide");
     alert("Some Error Occurred");
