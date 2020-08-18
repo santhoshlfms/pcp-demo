@@ -98,12 +98,12 @@ module.exports = function (router) {
     console.log("Incoming Webhook");
 
     console.log("**** webhook body **** ", body);
-    console.log(body.eventType);
+    console.log(body.event_type);
     console.log(body.resource.id);
     console.log(body.resource.status);
 
     
-    if(body.eventType === "CHECKOUT.ORDER.APPROVED") {
+    if(body.event_type === "CHECKOUT.ORDER.APPROVED") {
       res.status(200);
       
       const result = db.get('orders')
