@@ -7,14 +7,13 @@ const {
   APM,
 } = require("./constants");
 
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
 
-const adapter = new FileSync('orders.json');
+const adapter = new FileSync("orders.json");
 const db = low(adapter);
 
-db.defaults({ orders: [] })
-  .write();
+db.defaults({ orders: [] }).write();
 
 module.exports = function (router) {
   router.get(["/buttonvariations"], function (req, res, next) {
@@ -46,18 +45,16 @@ module.exports = function (router) {
   });
 
   router.get(["/unbranded-apms/return"], async function (req, res, next) {
-    
     let orderId = req.query.token;
 
     console.log("order id ", orderId);
 
-    const result = db.get('orders')
-      .push({  orderId: orderId,
-        status: "RETURNED"
-      })
-      .write()
+    const result = db
+      .get("orders")
+      .push({ orderId: orderId, status: "RETURNED" })
+      .write();
 
-    console.log(result)
+    console.log(result);
 
     setTimeout(() => {
       res.render("buttonvariations/return-apm", {
@@ -68,19 +65,16 @@ module.exports = function (router) {
   });
 
   router.get(["/unbranded-apms/cancel"], async function (req, res, next) {
-
     let orderId = req.query.token;
 
     console.log("order id ", orderId);
 
-    const result = db.get('orders')
-    .push({  orderId: orderId,
-      status: "CANCELLED"
-    })
-    .write()
+    const result = db
+      .get("orders")
+      .push({ orderId: orderId, status: "CANCELLED" })
+      .write();
 
-    console.log(result)
-
+    console.log(result);
 
     setTimeout(() => {
       res.render("buttonvariations/cancel-apm", {
@@ -90,9 +84,7 @@ module.exports = function (router) {
     }, 300);
   });
 
-
   router.post(["/unbranded-apms/webhooks"], async function (req, res, next) {
-
     let body = req.body;
 
     console.log("Incoming Webhook");
@@ -102,29 +94,23 @@ module.exports = function (router) {
     console.log(body.resource.id);
     console.log(body.resource.status);
 
-    
-    if(body.event_type === "CHECKOUT.ORDER.APPROVED") {
+    if (body.event_type === "CHECKOUT.ORDER.APPROVED") {
       res.status(200);
-      
-      const result = db.get('orders')
-      .push({  orderId: body.resource.id,
-        status: body.resource.status
-      })
-      .write()
 
-      console.log(result)
+      const result = db
+        .get("orders")
+        .find({ orderId: body.resource.id })
+        .assign({ orderId: body.resource.id, status: body.resource.status })
+        .write();
+
+      console.log(result);
     }
   });
 
-  router.get("/orderStatus", async function(req,res,next) {
-    
-    console.log("GET ORDER STATUS FOR "+ req.query.orderId);
-    const order = db
-    .get('orders')
-    .find({ orderId: req.query.orderId })
-    .value();
-    
-    res.json({...order})
-  });
+  router.get("/orderStatus", async function (req, res, next) {
+    console.log("GET ORDER STATUS FOR " + req.query.orderId);
+    const order = db.get("orders").find({ orderId: req.query.orderId }).value();
 
+    res.json({ ...order });
+  });
 };
