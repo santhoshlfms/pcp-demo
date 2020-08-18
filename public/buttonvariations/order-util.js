@@ -35,7 +35,7 @@ async function pollOrderStatus(orderId, attempts = 1) {
     
     console.log("Webhook order status attempt "+ attempts);
 
-    if (attempts > 6) {
+    if (attempts > 10) {
       addToConsole("PayPal Order Status is not updated", "error");
       $.LoadingOverlay("hide");
       alert("Some Error Occurred");
@@ -63,7 +63,7 @@ async function pollPPGetOrder(orderId, attempts = 1) {
 
     let { envObj } = getCreateOrderPayload();
 
-    if (attempts > 7) {
+    if (attempts > 10) {
       addToConsole("PayPal Order Status is not updated", "error");
       $.LoadingOverlay("hide");
       alert("Status not updated");
@@ -142,7 +142,7 @@ async function handleStatus(
       if (type === "POLL") {
         setTimeout(function () {
           pollPPGetOrder(orderId, attempts + 1);
-        }, 7000);
+        }, 8000);
       } else {
         setTimeout(() => pollOrderStatus(orderId, attempts + 1), 10000);
       }
