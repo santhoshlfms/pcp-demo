@@ -13,6 +13,20 @@ const FileSync = require("lowdb/adapters/FileSync");
 const adapter = new FileSync("orders.json");
 const db = low(adapter);
 
+db._.mixin({
+  upsert: function(collection, obj, key) {
+    key = key || 'id';
+    for (var i = 0; i < collection.length; i++) {
+      var el = collection[i];
+      if(el[key] === obj[key]){
+        collection[i] = obj;
+        return collection;
+      }
+    };
+    collection.push(obj);
+  }
+});
+
 db.defaults({ orders: [] }).write();
 
 module.exports = function (router) {
@@ -96,11 +110,15 @@ module.exports = function (router) {
     res.end();
 
     if (body.event_type === "CHECKOUT.ORDER.APPROVED") {
-      const result = db
-        .get("orders")
-        .find({ orderId: body.resource.id })
-        .assign({ orderId: body.resource.id, status: body.resource.status })
+      const result = db.get('orders')
+        .upsert({ orderId: body.resource.id, status: body.resource.status }, 'orderId')
         .write();
+      
+      // const result = db
+      //   .get("orders")
+      //   .find({ orderId: body.resource.id })
+      //   .assign({ orderId: body.resource.id, status: body.resource.status })
+      //   .write();
 
       console.log(result);
     }

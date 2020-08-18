@@ -144,7 +144,7 @@ async function handleStatus(
           pollPPGetOrder(orderId, attempts + 1);
         }, 8000);
       } else {
-        setTimeout(() => pollOrderStatus(orderId, attempts + 1), 10000);
+        setTimeout(() => pollOrderStatus(orderId, attempts + 1), 12000);
       }
       break;
   }
