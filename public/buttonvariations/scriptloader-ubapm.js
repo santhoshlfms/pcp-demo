@@ -213,7 +213,7 @@ async function handleApmClick(e) {
 
       // Parent window polls for child window to close
 
-      pollPopUp(orderId);
+      //pollPopUp(orderId);
     }
   } catch (error) {
     console.log(error);

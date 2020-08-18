@@ -62,4 +62,25 @@ module.exports = function (router) {
       });
     }, 300);
   });
+
+
+  router.post(["/unbranded-apms/webhooks"], async function (req, res, next) {
+
+    let body = req.body;
+
+    console.log("webhook body ", body);
+    console.log(body.eventType);
+    console.log(body.resource.id);
+    console.log(body.resource.status);
+
+  
+    if(body.eventType === "CHECKOUT.ORDER.APPROVED") {
+      return res.status(200).render("buttonvariations/return-apm", {
+        orderId: body.resource.id,
+        status: body.resource.status
+      });
+    }
+    res.status(200).end();
+  });
+
 };
