@@ -95,7 +95,7 @@ module.exports = function (router) {
     console.log(body.resource.status);
     res.end();
 
-    if (body.event_type === "CHECKOUT.ORDER.APPROVED") 
+    if (body.event_type === "CHECKOUT.ORDER.APPROVED") {
       const result = db
         .get("orders")
         .find({ orderId: body.resource.id })
