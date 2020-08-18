@@ -22,7 +22,7 @@ const LOGO_MAP = {
 };
 
 //let type = "POLL";
-let type = "WEBHOOK"
+let type = "WEBHOOK";
 
 async function delay(ms) {
   return new Promise((res) => {
@@ -31,57 +31,75 @@ async function delay(ms) {
 }
 
 async function pollOrderStatus(orderId, attempts = 1) {
-  if (attempts > 6) {
-    addToConsole("PayPal Order Status is not updated", "error");
+  try {
+    if (attempts > 6) {
+      addToConsole("PayPal Order Status is not updated", "error");
+      $.LoadingOverlay("hide");
+      alert("Some Error Occurred");
+      return;
+    }
+
+    let orderStatusRespObj = await fetch("/orderStatus?orderId=" + orderId);
+
+    let orderStatusResp = await orderStatusRespObj.json();
+
+    let status = orderStatusResp?.status;
+
+    handleStatus(status, attempts, orderId, "", false);
+  } catch (err) {
+    console.log(err);
     $.LoadingOverlay("hide");
     alert("Some Error Occurred");
-    return;
   }
-
-  let orderStatusRespObj = await fetch("/orderStatus?orderId="+ orderId);
-
-  let orderStatusResp = await orderStatusRespObj.json();
-
-  let status = orderStatusResp?.status;
-
-  handleStatus(status, attempts, orderId, "", false);
 }
 
 async function pollPPGetOrder(orderId, attempts = 1) {
-  let { envObj } = getCreateOrderPayload();
+  try {
+    let { envObj } = getCreateOrderPayload();
 
-  if (attempts > 7) {
-    addToConsole("PayPal Order Status is not updated", "error");
+    if (attempts > 7) {
+      addToConsole("PayPal Order Status is not updated", "error");
+      $.LoadingOverlay("hide");
+      alert("Status not updated");
+      return;
+    }
+
+    let getOrderRespObj = await fetch("/pcp-get-order?id=" + orderId, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        envObj,
+      }),
+    });
+
+    let getOrderResp = await getOrderRespObj.json();
+
+    if (getOrderResp.statusCode > 201) {
+      addToConsole(JSON.stringify(getOrderResp, null, 4), "error");
+      $.LoadingOverlay("hide");
+      alert("Error Occurred");
+      return;
+    }
+
+    handleStatus(getOrderResp.status, attempts, orderId, getOrderResp, true);
+  } catch (err) {
+    console.log(err);
     $.LoadingOverlay("hide");
-    alert("Status not updated");
-    return;
+    alert("Some Error Occurred");
   }
-
-  let getOrderRespObj = await fetch("/pcp-get-order?id=" + orderId, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      envObj,
-    }),
-  });
-
-  let getOrderResp = await getOrderRespObj.json();
-
-  if (getOrderResp.statusCode > 201) {
-    addToConsole(JSON.stringify(getOrderResp, null, 4), "error");
-    $.LoadingOverlay("hide");
-    alert("Error Occurred");
-    return;
-  }
-
-  handleStatus(getOrderResp.status, attempts, orderId, getOrderResp, true);
 }
 
-async function handleStatus(status, attempts, orderId, orderResp, isPollPPOrder) {
-  console.log("status "+ status);
+async function handleStatus(
+  status,
+  attempts,
+  orderId,
+  orderResp,
+  isPollPPOrder
+) {
+  console.log("status " + status);
   switch (status) {
     case "COMPLETED":
       addToConsole("Order Already Captured");
