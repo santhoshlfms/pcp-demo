@@ -33,7 +33,9 @@ async function delay(ms) {
 async function pollOrderStatus(orderId, attempts = 1) {
   try {
     
-    console.log("Webhook order status attempt "+ attempts);
+    console.log("Poll DB Order status attempt "+ attempts);
+
+    addToConsole("Poll DB Order status attempt "+ attempts);
 
     if (attempts > 10) {
       addToConsole("PayPal Order Status is not updated", "error");
@@ -51,6 +53,7 @@ async function pollOrderStatus(orderId, attempts = 1) {
     handleStatus(status, attempts, orderId, "", false);
   } catch (err) {
     console.log(err);
+    addToConsole("Some Error occurred", "error");
     $.LoadingOverlay("hide");
     alert("Some Error Occurred");
   }
@@ -59,7 +62,9 @@ async function pollOrderStatus(orderId, attempts = 1) {
 async function pollPPGetOrder(orderId, attempts = 1) {
   try {
     
-    console.log("pollPPGetOrder status attempt "+ attempts);
+    console.log("Poll PP Get Order status attempt : "+ attempts);
+
+    addToConsole("Poll PP Get Order status attempt : "+ attempts);
 
     let { envObj } = getCreateOrderPayload();
 
@@ -84,7 +89,10 @@ async function pollPPGetOrder(orderId, attempts = 1) {
     let getOrderResp = await getOrderRespObj.json();
 
     if (getOrderResp.statusCode > 201) {
-      addToConsole(JSON.stringify(getOrderResp, null, 4), "error");
+      addToConsole(
+        "<pre style='max-height:320px;color:red'>" +
+          JSON.stringify(getOrderResp, null, 2) +
+          "</pre>", "error");
       $.LoadingOverlay("hide");
       alert("Error Occurred");
       return;
@@ -93,6 +101,7 @@ async function pollPPGetOrder(orderId, attempts = 1) {
     handleStatus(getOrderResp.status, attempts, orderId, getOrderResp, true);
   } catch (err) {
     console.log(err);
+    addToConsole("Some Error occurred", "error");
     $.LoadingOverlay("hide");
     alert("Some Error Occurred");
   }
@@ -108,18 +117,18 @@ async function handleStatus(
   console.log("status " + status);
   switch (status) {
     case "COMPLETED":
-      addToConsole("Order Already Captured");
+      addToConsole("Order Already Captured", "error");
       alert("Order Already Captured");
       $.LoadingOverlay("hide");
       break;
     case "VOIDED":
-      addToConsole("Order Already VOIDED");
+      addToConsole("Order Already VOIDED", "error");
       alert("Order Already VOIDED");
       $.LoadingOverlay("hide");
       break;
     case "CANCELLED":
     case "REVERSED":
-      addToConsole("Order CANCELLED");
+      addToConsole("Order CANCELLED", "error");
       alert("Order CANCELLED");
       $.LoadingOverlay("hide");
       break;
@@ -128,7 +137,7 @@ async function handleStatus(
       if (isPollPPOrder) {
         addToConsole("GET Order Response");
         addToConsole(
-          "<pre style='height:320px'>" +
+          "<pre style='height:320px;color:green'>" +
             JSON.stringify(orderResp, null, 2) +
             "</pre>"
         );
@@ -179,14 +188,17 @@ async function captureOrder(orderId) {
   addToConsole("Capture Order Response");
 
   if (captureOrderResp.statusCode > 201) {
-    addToConsole(JSON.stringify(captureOrderResp, null, 4), "error");
+    addToConsole(
+      "<pre style='max-height:320px;color:red'>" +
+        JSON.stringify(captureOrderResp, null, 2) +
+        "</pre>", "error");
     $.LoadingOverlay("hide");
     alert("Error Occurred");
     return;
   }
 
   addToConsole(
-    "<pre style='height:320px'>" +
+    "<pre style='height:320px;color:green'>" +
       JSON.stringify(captureOrderResp, null, 2) +
       "</pre>"
   );

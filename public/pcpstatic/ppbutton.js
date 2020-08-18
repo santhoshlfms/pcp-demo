@@ -132,7 +132,7 @@ function renderPPButton(isChange) {
             .then((res) => {
               if (!res.id) {
                 addToConsole(
-                  "<pre style='max-height:320px'>" +
+                  "<pre style='max-height:320px;color:red'>" +
                     JSON.stringify(res, null, 2) +
                     "</pre>", "error");
     
@@ -155,7 +155,7 @@ function renderPPButton(isChange) {
           .then((res) => {
             if (!res.id) {
               addToConsole(
-                "<pre style='max-height:320px'>" +
+                "<pre style='max-height:320px;color:red'>" +
                   JSON.stringify(res, null, 2) +
                   "</pre>", "error");
   
@@ -218,7 +218,7 @@ function renderPPButton(isChange) {
           .then((res) => {
             if (!res.id) {
               addToConsole(
-                "<pre style='max-height:320px'>" +
+                "<pre style='max-height:320px;color:red'>" +
                   JSON.stringify(res, null, 2) +
                   "</pre>", "error");
             }

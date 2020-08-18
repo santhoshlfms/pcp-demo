@@ -96,7 +96,7 @@ async function handleApmClick(e) {
     addToConsole("Create Order Request");
 
     addToConsole(
-      "<pre style='height:320px'>" +
+      "<pre style='height:320px;color:green'>" +
         JSON.stringify(orderObj, null, 2) +
         "</pre>"
     );
@@ -118,14 +118,17 @@ async function handleApmClick(e) {
     addToConsole("Create order response");
 
     if (createOrderResp.statusCode > 201) {
-      addToConsole(JSON.stringify(createOrderResp, null, 4), "error");
+      addToConsole(
+        "<pre style='max-height:320px;color:red'>" +
+          JSON.stringify(createOrderResp, null, 2) +
+          "</pre>", "error");
       $.LoadingOverlay("hide");
       alert("Error Occurred");
       return;
     }
 
     addToConsole(
-      "<pre style='height:320px'>" +
+      "<pre style='height:320px;color:green'>" +
         JSON.stringify(createOrderResp, null, 2) +
         "</pre>"
     );
@@ -154,7 +157,7 @@ async function handleApmClick(e) {
     let { confirmPaymentSourceObj } = getConfirmPaymentSourceObj();
 
     addToConsole(
-      "<pre style='height:200px'>" +
+      "<pre style='height:230px;color:green'>" +
         JSON.stringify(confirmPaymentSourceObj, null, 2) +
         "</pre>"
     );
@@ -180,14 +183,17 @@ async function handleApmClick(e) {
     addToConsole("Confirm Payment Source response");
 
     if (confirmPaymentSourceResp.statusCode > 201) {
-      addToConsole(JSON.stringify(confirmPaymentSourceResp, null, 4), "error");
+      addToConsole(
+        "<pre style='max-height:320px;color:red'>" +
+          JSON.stringify(confirmPaymentSourceResp, null, 2) +
+          "</pre>", "error");
       $.LoadingOverlay("hide");
       alert("Error Occurred");
       return;
     }
 
     addToConsole(
-      "<pre style='height:320px'>" +
+      "<pre style='height:320px;color:green'>" +
         JSON.stringify(confirmPaymentSourceResp, null, 2) +
         "</pre>"
     );
