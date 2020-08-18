@@ -31,7 +31,7 @@ async function delay(ms) {
 }
 
 async function pollOrderStatus(orderId, attempts = 1) {
-  if (attempts > 10) {
+  if (attempts > 6) {
     addToConsole("PayPal Order Status is not updated", "error");
     $.LoadingOverlay("hide");
     alert("Some Error Occurred");
@@ -116,9 +116,9 @@ async function handleStatus(status, attempts, orderId, orderResp, isPollPPOrder)
       if (type === "POLL") {
         setTimeout(function () {
           pollPPGetOrder(orderId, attempts + 1);
-        }, 3000);
+        }, 7000);
       } else {
-        setTimeout(() => pollOrderStatus(orderId, attempts + 1), 4000);
+        setTimeout(() => pollOrderStatus(orderId, attempts + 1), 10000);
       }
       break;
   }
