@@ -20,10 +20,6 @@ const LOGO_MAP = {
   verkkopankki:
     "https://www.paypalobjects.com/images/checkout/latinum/Altpay_logo_verkkopankki.svg",
 };
-
-//let type = "POLL";
-let type = "WEBHOOK";
-
 async function delay(ms) {
   return new Promise((res) => {
     setTimeout(() => res(), ms);
@@ -149,7 +145,10 @@ async function handleStatus(
     case undefined:
     case null:
     default:
-      if (type === "POLL") {
+      let { pollingPreference } = getScriptQueryParam();
+      console.log("Poll Preference " + pollingPreference);
+
+      if (pollingPreference === "GET_ORDER") {
         setTimeout(function () {
           pollPPGetOrder(orderId, attempts + 1);
         }, 8000);

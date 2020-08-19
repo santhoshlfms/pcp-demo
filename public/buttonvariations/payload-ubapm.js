@@ -140,6 +140,9 @@ function getScriptQueryParam() {
   var addressPreference = $("[name=address-preference]:checked").attr(
     "data-value"
   );
+  var pollingPreference = $("[name=polling-preference]:checked").attr(
+    "data-value"
+  );
 
   return {
     env,
@@ -149,6 +152,7 @@ function getScriptQueryParam() {
     currency,
     apm,
     addressPreference,
+    pollingPreference
   };
 }
 
