@@ -237,7 +237,7 @@ function pollPopUp(orderId) {
     // on closing child window, poll order status using pp-getOrder
     $.LoadingOverlay("show", {
       image: "",
-      text: "Polling GET Order...",
+      text: "Polling Order Status...",
       textClass: "loadingText",
     });
 

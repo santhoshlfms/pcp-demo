@@ -33,10 +33,10 @@ async function pollOrderStatus(orderId, attempts = 1) {
 
     addToConsole("Poll DB Order status attempt "+ attempts);
 
-    if (attempts > 10) {
+    if (attempts > 7) {
       addToConsole("PayPal Order Status is not updated", "error");
       $.LoadingOverlay("hide");
-      alert("Some Error Occurred");
+      alert("Order not successful. Try again");
       return;
     }
 
@@ -64,10 +64,10 @@ async function pollPPGetOrder(orderId, attempts = 1) {
 
     let { envObj } = getCreateOrderPayload();
 
-    if (attempts > 10) {
+    if (attempts > 7) {
       addToConsole("PayPal Order Status is not updated", "error");
       $.LoadingOverlay("hide");
-      alert("Status not updated");
+      alert("Order not successful. Try again");
       return;
     }
 
@@ -151,7 +151,7 @@ async function handleStatus(
       if (pollingPreference === "GET_ORDER") {
         setTimeout(function () {
           pollPPGetOrder(orderId, attempts + 1);
-        }, 8000);
+        }, 9000);
       } else {
         setTimeout(() => pollOrderStatus(orderId, attempts + 1), 12000);
       }
