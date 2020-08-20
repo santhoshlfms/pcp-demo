@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../pcpheader",{page_name:"onboarding",section_name:'first-party'}) %>
+<link rel="stylesheet" href="/stylesheets/style.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<style>
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: grey;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: grey;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    .alert {
+        margin-bottom: 1px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0px 15px;
+        font-weight: bold;
+    }
+
+    #prettyprintHead {
+        opacity: 0;
+        position: absolute;
+        z-index: -9999;
+        pointer-events: none;
+    }
+
+    .segmented-control {
+        height: 30px;
+        font-size: 11px;
+    }
+
+    .row {
+        margin-bottom: 5px;
+    }
+
+    .loadingText {
+        font-size: 20px !important;
+    }
+
+    h5 {
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    span.info {
+        font-weight: normal;
+        line-height: 2em;
+        font-size: 12px;
+    }
+
+    .options {
+        background: #ddd;
+        display: flex;
+        flex-flow: column;
+        padding-top: 10px;
+        padding-bottom: 20px;
+
+    }
+
+    .options>* {
+        width: 100%;
+    }
+
+    #statusContainer {
+        padding-top: 0%;
+    }
+
+    @media screen and (min-width: 768px) {
+        #statusContainer {
+            padding-top: 8%;
+        }
+    }
+</style>
+
+<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script defer src="/onboarding/payload.js"></script>
+<script defer src="/onboarding/scriptloader.js"></script>
+
+</head>
+
+<body>
+
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4><u>
+                            <center><mark>Customize the First Party Onboarding Experience and click on Save</mark>
+                            </center>
+                        </u></h4>
+
+                    <button class="btn btn-md"
+                        style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white"
+                        onclick="save()">Save
+                    </button>
+                    <br />
+
+                    <div class="options">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Environment </h5>
+                                <select name="environment" class="form-control input-sm" style="color:#319DD4">
+                                    <option value="sandbox" selected>Sandbox</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Client ID
+                                    <span class="info">
+                                        <br />
+                                        - If you change this value, please enter Client Secret
+                                    </span>
+
+                                </h5>
+                                <input type="text" class="form-control input-sm" placeholder="Enter Client Id"
+                                    style="color:black" onchange="handleClientIDChange()" name="clientId"
+                                    value="AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh">
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <h5>Client Secret
+                                    <span class="info">
+                                        <br />
+                                        - If you change the Client ID, please enter this value
+                                    </span>
+                                </h5>
+                                <input type="password" class="form-control input-sm"
+                                    placeholder="Enter Client Secret if Client ID is changed" style="color:black"
+                                    name="clientSecret" disabled value="">
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <br />
+
+                    <button class="btn btn-md"
+                        style="display:flex;margin:auto;cursor:pointer;background-color:#319DD4;color:white"
+                        onclick="save()">Save
+                    </button>
+
+                    <br /><br />
+
+
+                </div>
+
+
+                <div class="col-md-6 col-sm-12 col-xs-12" id="statusContainer">
+
+
+                    <script>
+                       
+                        function test(param) {
+                            console.log("param ", param)
+                            alert("close");
+                        }
+
+                      </script>
+                   
+                   
+                 <!--     <a target="_blank" 
+                      data-paypal-popup-close="test"
+                      data-paypal-onboard-complete="onboardedCallback" href="https://www.sandbox.paypal.com/partnerexp/appEntry?referralToken=MWU2NTRmMmEtNjRkNC00MzEzLTg2NmItYjkxYTI4MmI1NjNkVDBaekF2MEtNS3RGNTh3UXB0TTlNNm9FN1R2OFNGbzhYVzk4V2hZNi9TST12Mg==&displayMode=minibrowser" data-paypal-button="true">Sign up for PayPal</a>
+                    -->
+
+                 
+                      
+                     <!-- <a target="_blank" data-paypal-onboard-complete="onboardedCallback" href="https://www.sandbox.paypal.com/partnerexp/appEntry?referralToken=ZWNjMDIxMDMtYTY5ZC00OTgyLTkxYTUtMTM1YTE0YTJjODdlZnhwbmpZTVYwZUhmSmdPSFI2SFdjT25SSlRVdHZJaEI5N1RReEwxSXhjaz12Mg==&displayMode=minibrowser" data-paypal-button="true">
+                        Begin 1st Party ISU Onboarding - Product: PPCP</a>
+                    -->
+
+
+                     
+
+
+                    <div id="onboarding-button-container" style="display:block"></div>
+
+                    <br />
+
+                    <div id="consoleWindow" class="panel panel-primary" style="width:100%;background-color:black">
+
+                        <%- include("../sourcecode") %>
+
+                        <div class="panel-heading" style="padding-bottom: 20px;">
+                            <div>Playground Status
+                                <!--<button type="button" class="btn btn-warning btn-sm openBtn" style="float:right;margin-bottom:10px" id="viewSC">View Source Code</button>-->
+                            </div>
+                        </div>
+
+                        <div class="panel-body" style="margin:0px;margin-bottom:10px;width:100%;overflow-y:auto;">
+                            <div id="plgStatus" style="color:white;">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <script>
+
+        </script>
+
+        <script>
+            function handleEnvChange() {
+
+                var env = $("[name=environment]").val();
+                if (env == "production") {
+                    $("[name=clientId]").val('');
+                    $("[name=clientSecret]").val('');
+
+                } else {
+                    $("[name=clientId]").val(
+                        'AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh');
+                    $("[name=clientSecret]").val('');
+                }
+
+            }
+
+            function handleClientIDChange() {
+                let clientID = $("[name=clientId").val().trim();
+                if (clientID === CLIENT_ID) {
+                    $("[name=clientSecret").attr("disabled", true);
+                    return;
+                }
+                $("[name=clientSecret").attr("disabled", false);
+            }
+        </script>
+
+
+        <%- include("../footer") %>
+
+    </body>
+    <script>
+        function addToConsole(msg, state) {
+            if (!state)
+                $("#plgStatus").append(
+                    "<span style='color:green'>" +
+                    msg +
+                    "</span><span style='float:right'>" +
+                    moment(new Date()).format("HH:mm:ss a") +
+                    "</span>"
+                );
+            else
+                $("#plgStatus").append(
+                    "<span style='color:red'>" +
+                    msg +
+                    "</span><span style='float:right'>" +
+                    moment(new Date()).format("HH:mm:ss a") +
+                    "</span>"
+                );
+
+            $("#plgStatus").append("<br/><br/>");
+        }
+    </script>
+
+</html>

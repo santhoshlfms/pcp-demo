@@ -3,7 +3,7 @@ var CLIENT_ID =
   "AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh";
 
 async function save() {
-  // Load PayPal script dynamically
+  // Load script dynamically
   try {
     // loader - for demo
     $("#apm-button-container").empty();

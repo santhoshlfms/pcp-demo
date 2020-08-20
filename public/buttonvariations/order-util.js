@@ -146,8 +146,7 @@ async function handleStatus(
     case null:
     default:
       let { pollingPreference } = getScriptQueryParam();
-      console.log("Poll Preference " + pollingPreference);
-
+      
       if (pollingPreference === "GET_ORDER") {
         setTimeout(function () {
           pollPPGetOrder(orderId, attempts + 1);

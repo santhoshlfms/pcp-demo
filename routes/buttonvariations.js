@@ -32,6 +32,12 @@ module.exports = function (router) {
     });
 
     db.defaults({ orders: [] }).write();
+
+
+    setTimeout(() => {
+      db.get("orders").remove({}).write();
+    },18000000)
+
     router.get(["/buttonvariations"], function (req, res, next) {
       res.render("buttonvariations/index");
     });
@@ -133,5 +139,11 @@ module.exports = function (router) {
 
       res.json({ ...order });
     });
-  });
+
+
+    router.get("/clearOrders", function(req,res,next) {
+        db.get("orders").remove({}).write();
+        res.json({status :"DONE"})
+    })
+  })
 };
