@@ -13,6 +13,7 @@ var config = {
 
 
 		"MERCHANTID":"3M5SFHD87UCNA",
+		"PARTNER_MERCHANT_ID":"8KKV5DUPTYP5N",
 		"CLIENT_ID":"AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh",
 		"SECRET" : "EMbNnp1QyetdAdQeWlT1gRbQiQQJ_MnPaLhD2HVMwTjpl3ImYnQcw_6_NOcPCYHiWNQ8gig3E2CDtvg0",
 
@@ -24,6 +25,7 @@ var config = {
 		"AUTH_ORDER_URL":"https://api.sandbox.paypal.com/v2/checkout/orders/",
 		"CONFIRM_PAYMENT_SOURCE": "https://api.sandbox.paypal.com/v2/checkout/orders/",
 		"CREATE_PARTNER_REFERRAL_URL":"https://api.sandbox.paypal.com/v2/customer/partner-referrals/",
+		"GET_SELLER_CREDENTIALS" :"https://api.sandbox.paypal.com/v1/customer/partners/",
 		"CUSTOMER_ID": "CUSTOMER_ID_123456",
 		//"CLIENT_ID":"ASuu5Mry_jCK3EWOzhSXAoTFJ0kBe_CNhTE_V68atBPfHMKdyU3FvLe6tVk-DAj43xjxIyZnfm9nXEeu",
 		//"SECRET":"EEhN5c_tXXialdxHTcNRVxAs0n3OiS33ndeeCsXkHGzWEtt1QdMtx813-6J4GECKCF9ZGCact-uAX6MN",
@@ -48,6 +50,7 @@ var config = {
 		"CLIENT_ID" :"",
 		"SECRET":"",
 		"MERCHANTID":"RQZ6VZGJNBRG6",
+		"PARTNER_MERCHANT_ID":"8KKV5DUPTYP5N",
 		"CREATE_ORDER_URL":"https://api.paypal.com/v2/checkout/orders",
 		"GET_ORDER_URL": "https://api.paypal.com/v2/checkout/orders/",
 		"CAPTURE_ORDER_URL":"https://api.paypal.com/v2/checkout/orders/",
@@ -55,6 +58,7 @@ var config = {
 		"STC":"https://api.paypal.com/v1/risk/transaction-contexts/",
 		"CONFIRM_PAYMENT_SOURCE": "https://api.paypal.com/v2/checkout/orders/",
 		"CREATE_PARTNER_REFERRAL_URL":"https://api.paypal.com/v2/customer/partner-referrals/",
+		"GET_SELLER_CREDENTIALS" :"https://api.paypal.com/v1/customer/partners/",
 		"CUSTOMER_ID": "",
 		"ACCESS_TOKEN_URL":"https://api.paypal.com/v1/oauth2/token",
 		"GET_CLIENT_TOKEN":"https://api.paypal.com/v1/identity/generate-token",

@@ -28,10 +28,14 @@ function getAccessToken(apiConfiguration) {
         "accept-language": "en_US",
         "cache-control": "no-cache",
         "content-type": "application/x-www-form-urlencoded",
-        "PayPal-Partner-Attribution-Id": apiConfiguration.BN_CODE,
+       
       },
       body: payload,
     };
+
+    if(apiConfiguration.isPartner) {
+     options.headers["PayPal-Partner-Attribution-Id"] = apiConfiguration.BN_CODE;
+    }
 
     request(options, function (error, response, body) {
       if (error) {
@@ -619,6 +623,145 @@ function createPartnerReferral(accessToken, apiConfiguration) {
     });
 }
 
+function getSellerAccessToken(apiConfiguration) {
+  return new Promise((resolve, reject) => {
+    var payload =`grant_type=authorization_code&code=${apiConfiguration.payload.authCode}&code_verifier=${apiConfiguration.payload.sellerNonce}&ignoreCache=true`;
+
+    var options = {
+      method: "POST",
+      url: apiConfiguration.ACCESS_TOKEN_URL,
+      headers: {
+        accept: "application/json",
+        "accept-language": "en_US",
+        "content-type": "application/x-www-form-urlencoded"
+      },
+
+      auth: {
+        user: apiConfiguration.payload.sharedId,
+        pass: ""
+      },
+      body: payload,
+    };
+
+    if(apiConfiguration.isPartner) {
+      options.headers["PayPal-Partner-Attribution-Id"] = apiConfiguration.BN_CODE;
+    }
+
+
+    request(options, function (error, response, body) {
+      if (error) {
+        console.log(
+          "Error in getting Seller access token from api " + JSON.stringify(error)
+        );
+        return resolve({
+          resp: error,
+          status: false,
+          error: error,
+          statusCode: response.statusCode,
+          headers: response.headers,
+        });
+      } else {
+        try {
+          let accessToken = JSON.parse(body).access_token;
+          if (accessToken) {
+            console.log("Found Seller Access Token");
+            return resolve({
+              resp: JSON.parse(body),
+              status: true,
+              error: null,
+              statusCode: response.statusCode,
+              headers: response.headers,
+            });
+          } else {
+            return resolve({
+              resp: JSON.parse(body),
+              status: false,
+              error: JSON.parse(body),
+              statusCode: response.statusCode,
+              headers: response.headers,
+            });
+          }
+        } catch (err) {
+          console.log(
+            "Error in Parsing Seller Access Token response " + JSON.stringify(err)
+          );
+          return resolve({
+            resp: err,
+            status: false,
+            error: err,
+            statusCode: 500,
+            headers: {}
+          });
+        }
+      }
+    });
+  });
+}
+
+function getSellerCredentials(apiConfiguration) {
+  return new Promise((resolve, reject) => {
+   
+    console.log(apiConfiguration.payload)
+    var options = {
+      method: "GET",
+      url: apiConfiguration.GET_SELLER_CREDENTIALS+ apiConfiguration.payload.partnerMerchantId + "/merchant-integrations/credentials/",
+      headers: {
+        authorization: "Bearer " + apiConfiguration.payload.sellerAccessToken,
+        "cache-control": "no-cache",
+        "content-type": "application/json",
+      },
+      json: true,
+      body: {},
+    };
+
+    if(apiConfiguration.isPartner) {
+      options.headers["PayPal-Partner-Attribution-Id"] = apiConfiguration.BN_CODE;
+    }
+
+
+    request(options, function (error, response, body) {
+      if (error) {
+        console.log(
+          "Error in getting Seller Credentials" + JSON.stringify(error)
+        );
+        return resolve({
+          resp: error,
+          status: false,
+          error: error,
+          statusCode: response.statusCode,
+          headers: response.headers,
+        });
+      } else {
+        try {
+          console.log("GET Seller Credentials api response ");
+          console.log(JSON.stringify(body));
+          return resolve({
+            resp: body,
+            status: true,
+            error: body,
+            statusCode: response.statusCode,
+            headers: response.headers,
+          });
+        
+        } catch (err) {
+          console.log(
+            "Error in Parsing Get Seller Credentials response " + JSON.stringify(err)
+          );
+          return resolve({
+            resp: err,
+            status: false,
+            error: err,
+            statusCode: 500,
+            headers: {}
+          });
+        }
+      }
+    });
+  });
+}
+
+
+
 exports.getAuthAssertion = getAuthAssertion;
 exports.getAccessToken = getAccessToken;
 exports.createOrder = createOrder;
@@ -628,3 +771,5 @@ exports.authOrder = authOrder;
 exports.getClientToken = getClientToken;
 exports.confirmPaymentSource = confirmPaymentSource;
 exports.createPartnerReferral = createPartnerReferral;
+exports.getSellerAccessToken = getSellerAccessToken;
+exports.getSellerCredentials = getSellerCredentials

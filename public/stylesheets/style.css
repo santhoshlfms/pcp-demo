@@ -508,30 +508,7 @@ a {
     .logoimage {
       max-width: 50px !important;
     }
-    
-    ::-webkit-scrollbar-track {
-      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-      background-color: #F5F5F5;
-    }
-    
-    ::-webkit-scrollbar {
-      width: 6px;
-      background-color: #F5F5F5;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background-color: grey;
-    }
-    
-    ::-webkit-scrollbar {
-      width: 6px;
-      background-color: #F5F5F5;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background-color: grey;
-    }
-    
+        
     th {
       text-align: center;
     }
@@ -552,11 +529,113 @@ a {
       height: 66%;
     }
     
-    #prettyprintHead{
+    ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      background-color: #F5F5F5;
+  }
+
+  ::-webkit-scrollbar {
+      width: 10px;
+      background-color: #F5F5F5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background-color: grey;
+  }
+
+  ::-webkit-scrollbar {
+      width: 10px;
+      background-color: #F5F5F5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background-color: grey;
+  }
+
+  th {
+      text-align: center;
+  }
+
+  .alert {
+      margin-bottom: 1px;
+      height: 30px;
+      line-height: 30px;
+      padding: 0px 15px;
+      font-weight: bold;
+  }
+
+  #prettyprintHead {
       opacity: 0;
       position: absolute;
       z-index: -9999;
       pointer-events: none;
-      height: 1px;
-    }
-    
+  }
+
+  .segmented-control {
+      height: 30px;
+      font-size: 11px;
+  }
+
+  .row {
+      margin-bottom: 5px;
+  }
+
+  .loadingText {
+      font-size: 20px !important;
+  }
+
+  h5 {
+      font-weight: bold;
+      font-size: 14px;
+  }
+
+  span.info {
+      font-weight: normal;
+      line-height: 2em;
+      font-size: 12px;
+  }
+
+  .options {
+      background: #ddd;
+      display: flex;
+      flex-flow: column;
+      padding-top: 10px;
+      padding-bottom: 20px;
+  }
+
+  .size {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      padding: 5px;
+      display: flex;
+      justify-content: center;
+  }
+
+  .options>* {
+      width: 100%;
+  }
+
+  #statusContainer {
+      padding-top: 0%;
+  }
+
+  @media screen and (min-width: 768px) {
+      #statusContainer {
+          padding-top: 11.3%;
+      }
+  }
+
+  .btn-save {
+    display: flex;
+    margin: auto;
+    cursor: pointer;
+    background-color: #319DD4;
+    color: white
+  }
+
+  .header {
+      padding-top: 20px;
+      padding-bottom: 10px;
+      line-height: 1.5em;
+  }
