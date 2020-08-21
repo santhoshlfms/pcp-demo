@@ -61,7 +61,7 @@ function createPartnerReferralPayload() {
         },
       },
     ],
-    products: ["EXPRESS_CHECKOUT", "PPCP"],
+    products: ["PPCP"],
     legal_consents: [
       {
         type: "SHARE_DATA_CONSENT",
