@@ -33,10 +33,9 @@ module.exports = function (router) {
 
     db.defaults({ orders: [] }).write();
 
-
     setTimeout(() => {
       db.get("orders").remove({}).write();
-    },18000000)
+    }, 18000000);
 
     router.get(["/buttonvariations"], function (req, res, next) {
       res.render("buttonvariations/index");
@@ -75,12 +74,25 @@ module.exports = function (router) {
         .get("orders")
         .push({ orderId: orderId, status: "RETURNED" })
         .write();
-      setTimeout(() => {
-        res.render("buttonvariations/return-apm", {
-          orderId: orderId,
-          status: "RETURNED",
+
+      result
+        .then(() => {
+          console.log("Updated order status in return callback");
+        })
+        .catch((err) => {
+          console.log(
+            "Error occured in updating order status in return callback ",
+            err
+          );
+        })
+        .finally(() => {
+          setTimeout(() => {
+            res.render("buttonvariations/return-apm", {
+              orderId: orderId,
+              status: "RETURNED",
+            });
+          }, 300);
         });
-      }, 300);
     });
 
     router.get(["/unbranded-apms/cancel"], async function (req, res, next) {
@@ -93,14 +105,24 @@ module.exports = function (router) {
         .push({ orderId: orderId, status: "CANCELLED" })
         .write();
 
-      console.log(result);
-
-      setTimeout(() => {
-        res.render("buttonvariations/cancel-apm", {
-          orderId: orderId,
-          status: "CANCELLED",
+      result
+        .then(() => {
+          console.log("Updated order status in cancel callback");
+        })
+        .catch((err) => {
+          console.log(
+            "Error occured in updating order status in cancel callback ",
+            err
+          );
+        })
+        .finally(() => {
+          setTimeout(() => {
+            res.render("buttonvariations/cancel-apm", {
+              orderId: orderId,
+              status: "CANCELLED",
+            });
+          }, 300);
         });
-      }, 300);
     });
 
     router.post(["/unbranded-apms/webhooks"], async function (req, res, next) {
@@ -137,13 +159,15 @@ module.exports = function (router) {
         .find({ orderId: req.query.orderId })
         .value();
 
+      console.log("Order status obj");
+      console.log(order);
+
       res.json({ ...order });
     });
 
-
-    router.get("/clearOrders", function(req,res,next) {
-        db.get("orders").remove({}).write();
-        res.json({status :"DONE"})
-    })
-  })
+    router.get("/clearOrders", function (req, res, next) {
+      db.get("orders").remove({}).write();
+      res.json({ status: "DONE" });
+    });
+  });
 };
