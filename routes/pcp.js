@@ -18,7 +18,9 @@ const {
   confirmPaymentSource,
   createPartnerReferral,
   getSellerAccessToken,
-  getSellerCredentials
+  getSellerCredentials,
+  captureQRC,
+  getCaptureQRCDetails,
 } = require("./util");
 
 module.exports = function (router) {
@@ -38,7 +40,9 @@ module.exports = function (router) {
       console.log("*** Create Order ***");
 
       if (!req.body.envObj || !req.body.orderObj) {
-        return res.status(400).json({ message : "Invalid Request", statusCode: 400});
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
       }
       console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj));
       console.log(" ORDER OBJ *** " + JSON.stringify(req.body.orderObj));
@@ -83,7 +87,7 @@ module.exports = function (router) {
       });
     } catch (err) {
       console.log("Error occurred in making CREATE order call ", err);
-      res.status(500).json({ err, message: err.message});
+      res.status(500).json({ err, message: err.message });
     }
   });
 
@@ -92,7 +96,9 @@ module.exports = function (router) {
       console.log("*** GET Order ***");
 
       if (!req.body.envObj || !req.query.id) {
-        return res.status(400).json({ message : "Invalid Request", statusCode: 400});
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
       }
       console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj));
 
@@ -137,7 +143,7 @@ module.exports = function (router) {
       });
     } catch (err) {
       console.log("Error occurred in making GET order call ", err.message);
-      res.status(500).json({ err, message: err.message});
+      res.status(500).json({ err, message: err.message });
     }
   });
 
@@ -146,7 +152,9 @@ module.exports = function (router) {
       console.log("*** Capture Order ***");
 
       if (!req.body.envObj || !req.query.id) {
-        return res.status(400).json({ message : "Invalid Request", statusCode: 400});
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
       }
       console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj));
 
@@ -197,7 +205,7 @@ module.exports = function (router) {
       });
     } catch (err) {
       console.log("Error occurred in making Capture order call ", err.message);
-      res.status(500).json({ err, message: err.message});
+      res.status(500).json({ err, message: err.message });
     }
   });
 
@@ -207,7 +215,9 @@ module.exports = function (router) {
       console.log("ENV OBJ *** " + JSON.stringify(req.body.envObj));
 
       if (!req.body.envObj || !req.query.id) {
-        return res.status(400).json({ message : "Invalid Request", statusCode: 400});
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
       }
       let { envObj } = req.body;
       let orderId = req.query.id;
@@ -250,7 +260,7 @@ module.exports = function (router) {
       });
     } catch (err) {
       console.log("Error occurred in making Auth order call ", err.message);
-      res.status(500).json({ err, message: err.message});
+      res.status(500).json({ err, message: err.message });
     }
   });
 
@@ -259,7 +269,9 @@ module.exports = function (router) {
       console.log("*** GET Client Token ***");
 
       if (!req.body.envObj) {
-        return res.status(400).json({ message : "Invalid Request", statusCode: 400});
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
       }
 
       console.log("ENV OBJ *** " + JSON.stringify(req.body.envObj));
@@ -314,7 +326,7 @@ module.exports = function (router) {
       });
     } catch (err) {
       console.log("Error occurred in getting client token ", err.message);
-      res.status(500).json({ err, message: err.message});
+      res.status(500).json({ err, message: err.message });
     }
   });
 
@@ -323,7 +335,9 @@ module.exports = function (router) {
       console.log("*** Confirm Payment Source ***");
 
       if (!req.body.envObj || !req.body.confirmPaymentSourceObj) {
-        return res.status(400).json({ message : "Invalid Request", statusCode: 400});
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
       }
       console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj));
       console.log(
@@ -378,10 +392,11 @@ module.exports = function (router) {
       return res.json({
         ...confirmPaymentSourceResp.orderResp,
         ...confirmPaymentSourceResp.headers,
+        statusCode: confirmPaymentSourceResp.statusCode,
       });
     } catch (err) {
       console.log("Error occurred in making Confirm Payment Source call ", err);
-      res.status(500).json({ err, message: err.message});
+      res.status(500).json({ err, message: err.message });
     }
   });
 
@@ -444,13 +459,14 @@ module.exports = function (router) {
       return res.json({
         ...createPartnerReferralRespObj.resp,
         ...createPartnerReferralRespObj.headers,
+        statusCode: createPartnerReferralRespObj.statusCode,
       });
     } catch (err) {
       console.log(
         "Error occurred in making Create Partner Referral call ",
         err
       );
-      res.status(500).json({ err, message: err.message});
+      res.status(500).json({ err, message: err.message });
     }
   });
 
@@ -459,7 +475,9 @@ module.exports = function (router) {
       console.log("*** GET SELLER ACCESS TOKEN ***");
 
       if (!req.body.envObj || !req.body.sellerAccessTokenObj) {
-        return res.status(400).json({ message : "Invalid Request", statusCode: 400});
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
       }
       console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj));
       console.log(
@@ -503,27 +521,32 @@ module.exports = function (router) {
       return res.json({
         ...sellerAccessTokenResp.resp,
         ...sellerAccessTokenResp.headers,
+        statusCode: sellerAccessTokenResp.statusCode,
       });
     } catch (err) {
       console.log(
         "Error occurred in making GET SELLER ACCESS TOKEN call ",
         err
       );
-      res.status(500).json({ err, message: err.message});
+      res.status(500).json({ err, message: err.message });
     }
   });
-
 
   router.post("/pcp-seller-credentials", async function (req, res, next) {
     try {
       console.log("*** GET SELLER Credentials ***");
 
       if (!req.body.envObj || !req.body.sellerCredentialsObj) {
-        return res.status(400).json({ message : "Invalid Request", statusCode: 400});
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
       }
       console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj));
-      console.log(" Seller credentials Obj *** " + JSON.stringify(req.body.sellerCredentialsObj));
-    
+      console.log(
+        " Seller credentials Obj *** " +
+          JSON.stringify(req.body.sellerCredentialsObj)
+      );
+
       let { envObj, sellerCredentialsObj } = req.body;
       let defaultConfig = getConfig(envObj.env);
 
@@ -532,7 +555,7 @@ module.exports = function (router) {
         ...envObj,
         CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID,
         SECRET: envObj.clientSecret || defaultConfig.SECRET,
-        MERCHANTID: envObj.merchantId
+        MERCHANTID: envObj.merchantId,
       };
 
       apiConfiguration.payload = sellerCredentialsObj;
@@ -557,14 +580,151 @@ module.exports = function (router) {
       return res.json({
         ...sellerCredentialsResp.resp,
         ...sellerCredentialsResp.headers,
+        statusCode: sellerCredentialsResp.statusCode,
       });
     } catch (err) {
-      console.log(
-        "Error occurred in making GET SELLER CREDENTIALS call ",
-        err
-      );
-      res.status(500).json({ err, message: err.message});
+      console.log("Error occurred in making GET SELLER CREDENTIALS call ", err);
+      res.status(500).json({ err, message: err.message });
     }
   });
 
+  router.post("/pcp-qrc-capture", async function (req, res, next) {
+    try {
+      console.log("*** CAPTURE QRC DETAILS ***");
+
+      if (!req.body.envObj || !req.body.qrcObj || !req.body.requestId) {
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
+      }
+      console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj));
+      console.log(
+        " CAPTURE QRC DETAILS OBJ *** " + JSON.stringify(req.body.qrcObj)
+      );
+      console.log("REQUEST ID " + req.body.requestId);
+
+      let { envObj, qrcObj, requestId } = req.body;
+
+      let defaultConfig = getConfig(envObj.env);
+
+      let apiConfiguration = {
+        ...defaultConfig,
+        ...envObj,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID_QRC,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET_QRC,
+        MERCHANTID: envObj.merchantId,
+        requestId,
+      };
+
+      let accessTokenResp = await getAccessToken(apiConfiguration);
+
+      if (!accessTokenResp.status || accessTokenResp.statusCode > 201) {
+        console.log(
+          "Error in getting Access Token " + JSON.stringify(accessTokenResp)
+        );
+        res.status;
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
+      }
+
+      let accessToken = accessTokenResp.accessToken;
+
+      apiConfiguration.payload = qrcObj;
+
+      let captureQRCResp = await captureQRC(accessToken, apiConfiguration);
+
+      if (!captureQRCResp.statusCode || captureQRCResp.statusCode > 201) {
+        console.log(
+          "Error in CAPTURE QRC DETAIL CALL " +
+            JSON.stringify(captureQRCResp.resp)
+        );
+        return res.status(captureQRCResp.statusCode).json({
+          ...captureQRCResp.resp,
+          ...captureQRCResp.headers,
+          statusCode: captureQRCResp.statusCode,
+        });
+      }
+      return res.json({
+        ...captureQRCResp.resp,
+        ...captureQRCResp.headers,
+        statusCode: captureQRCResp.statusCode,
+      });
+    } catch (err) {
+      console.log("Error occurred in making CAPTURE QRC DETAILS call ", err);
+      res.status(500).json({ err, message: err.message });
+    }
+  });
+
+  router.post("/pcp-qrc-capture-retrieve", async function (req, res, next) {
+    try {
+      console.log("*** GET CAPTURE QRC DETAILS ***");
+
+      if (!req.body.envObj || !req.body.reference_id || !req.body.requestId) {
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
+      }
+      console.log(" ENV OBJ *** " + JSON.stringify(req.body.envObj));
+
+      console.log("REFERENCE ID " + req.body.reference_id);
+
+      console.log("REQUEST ID " + req.body.requestId);
+
+      let { envObj, reference_id, requestId } = req.body;
+
+      let defaultConfig = getConfig(envObj.env);
+
+      let apiConfiguration = {
+        ...defaultConfig,
+        ...envObj,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID_QRC,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET_QRC,
+        MERCHANTID: envObj.merchantId,
+        reference_id,
+        requestId,
+      };
+
+      let accessTokenResp = await getAccessToken(apiConfiguration);
+
+      if (!accessTokenResp.status || accessTokenResp.statusCode > 201) {
+        console.log(
+          "Error in getting Access Token " + JSON.stringify(accessTokenResp)
+        );
+        res.status;
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
+      }
+
+      let accessToken = accessTokenResp.accessToken;
+
+      let getCaptureQRCDetailsResp = await getCaptureQRCDetails(
+        accessToken,
+        apiConfiguration
+      );
+
+      if (
+        !getCaptureQRCDetailsResp.statusCode ||
+        getCaptureQRCDetailsResp.statusCode > 201
+      ) {
+        console.log(
+          "Error in GETTING CAPTURE QRC DETAILS CALL " +
+            getCaptureQRCDetailsResp.resp
+        );
+        return res.status(getCaptureQRCDetailsResp.statusCode).json({
+          ...getCaptureQRCDetailsResp.resp,
+          ...getCaptureQRCDetailsResp.headers,
+          statusCode: getCaptureQRCDetailsResp.statusCode,
+        });
+      }
+      return res.json({
+        ...getCaptureQRCDetailsResp.resp,
+        ...getCaptureQRCDetailsResp.headers,
+        statusCode: getCaptureQRCDetailsResp.statusCode,
+      });
+    } catch (err) {
+      console.log(
+        "Error occurred in making GET CAPTURE QRC DETAILS call ",
+        err
+      );
+      res.status(500).json({ err, message: err.message });
+    }
+  });
 };

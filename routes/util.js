@@ -28,13 +28,13 @@ function getAccessToken(apiConfiguration) {
         "accept-language": "en_US",
         "cache-control": "no-cache",
         "content-type": "application/x-www-form-urlencoded",
-       
       },
       body: payload,
     };
 
-    if(apiConfiguration.isPartner) {
-     options.headers["PayPal-Partner-Attribution-Id"] = apiConfiguration.BN_CODE;
+    if (apiConfiguration.isPartner) {
+      options.headers["PayPal-Partner-Attribution-Id"] =
+        apiConfiguration.BN_CODE;
     }
 
     request(options, function (error, response, body) {
@@ -76,7 +76,7 @@ function getAccessToken(apiConfiguration) {
             status: false,
             error: err,
             statusCode: 500,
-            headers: {}
+            headers: {},
           });
         }
       }
@@ -472,7 +472,7 @@ function getClientToken(accessToken, apiConfiguration) {
             status: false,
             error: err,
             statusCode: 500,
-            headers: {}
+            headers: {},
           });
         }
       }
@@ -558,31 +558,30 @@ function confirmPaymentSource(accessToken, apiConfiguration) {
 }
 
 function createPartnerReferral(accessToken, apiConfiguration) {
-    return new Promise((resolve, reject) => {
-      try {
-        var options = {
-          headers: {
-            "content-type": "application/json",
-            authorization: "Bearer " + accessToken,
-          },
-          body: apiConfiguration.payload,
-          json: true,
-        };
+  return new Promise((resolve, reject) => {
+    try {
+      var options = {
+        headers: {
+          "content-type": "application/json",
+          authorization: "Bearer " + accessToken,
+        },
+        body: apiConfiguration.payload,
+        json: true,
+      };
 
-        console.log("Is Partner " + apiConfiguration.isPartner);
-        console.log("Is MSP " + apiConfiguration.isMSP);
+      console.log("Is Partner " + apiConfiguration.isPartner);
+      console.log("Is MSP " + apiConfiguration.isMSP);
 
-        if (apiConfiguration.isPartner && !apiConfiguration.isMSP) {
-          options.headers["PayPal-Auth-Assertion"] = getAuthAssertion(
-            apiConfiguration
-          );
-        }
+      if (apiConfiguration.isPartner && !apiConfiguration.isMSP) {
+        options.headers["PayPal-Auth-Assertion"] = getAuthAssertion(
+          apiConfiguration
+        );
+      }
 
-        request.post(apiConfiguration.CREATE_PARTNER_REFERRAL_URL, options, function (
-          err,
-          response,
-          body
-        ) {
+      request.post(
+        apiConfiguration.CREATE_PARTNER_REFERRAL_URL,
+        options,
+        function (err, response, body) {
           if (err) {
             console.error(err);
             return resolve({
@@ -597,8 +596,11 @@ function createPartnerReferral(accessToken, apiConfiguration) {
           console.log(body);
           let resp = body;
 
-          console.log("Create Partner Referral Response ", JSON.stringify(resp));
-          
+          console.log(
+            "Create Partner Referral Response ",
+            JSON.stringify(resp)
+          );
+
           return resolve({
             resp,
             status: true,
@@ -606,26 +608,27 @@ function createPartnerReferral(accessToken, apiConfiguration) {
             statusCode: response.statusCode,
             headers: response.headers,
           });
-        });
-      } catch (err) {
-        console.log(
-          "Some Error occurred in calling create partner referral api " +
-            JSON.stringify(err)
-        );
-        return resolve({
-          resp: err,
-          status: false,
-          error: err,
-          statusCode: 500,
-          headers: {}
-        });
-      }
-    });
+        }
+      );
+    } catch (err) {
+      console.log(
+        "Some Error occurred in calling create partner referral api " +
+          JSON.stringify(err)
+      );
+      return resolve({
+        resp: err,
+        status: false,
+        error: err,
+        statusCode: 500,
+        headers: {},
+      });
+    }
+  });
 }
 
 function getSellerAccessToken(apiConfiguration) {
   return new Promise((resolve, reject) => {
-    var payload =`grant_type=authorization_code&code=${apiConfiguration.payload.authCode}&code_verifier=${apiConfiguration.payload.sellerNonce}&ignoreCache=true`;
+    var payload = `grant_type=authorization_code&code=${apiConfiguration.payload.authCode}&code_verifier=${apiConfiguration.payload.sellerNonce}&ignoreCache=true`;
 
     var options = {
       method: "POST",
@@ -633,25 +636,26 @@ function getSellerAccessToken(apiConfiguration) {
       headers: {
         accept: "application/json",
         "accept-language": "en_US",
-        "content-type": "application/x-www-form-urlencoded"
+        "content-type": "application/x-www-form-urlencoded",
       },
 
       auth: {
         user: apiConfiguration.payload.sharedId,
-        pass: ""
+        pass: "",
       },
       body: payload,
     };
 
-    if(apiConfiguration.isPartner) {
-      options.headers["PayPal-Partner-Attribution-Id"] = apiConfiguration.BN_CODE;
+    if (apiConfiguration.isPartner) {
+      options.headers["PayPal-Partner-Attribution-Id"] =
+        apiConfiguration.BN_CODE;
     }
-
 
     request(options, function (error, response, body) {
       if (error) {
         console.log(
-          "Error in getting Seller access token from api " + JSON.stringify(error)
+          "Error in getting Seller access token from api " +
+            JSON.stringify(error)
         );
         return resolve({
           resp: error,
@@ -683,14 +687,15 @@ function getSellerAccessToken(apiConfiguration) {
           }
         } catch (err) {
           console.log(
-            "Error in Parsing Seller Access Token response " + JSON.stringify(err)
+            "Error in Parsing Seller Access Token response " +
+              JSON.stringify(err)
           );
           return resolve({
             resp: err,
             status: false,
             error: err,
             statusCode: 500,
-            headers: {}
+            headers: {},
           });
         }
       }
@@ -700,11 +705,13 @@ function getSellerAccessToken(apiConfiguration) {
 
 function getSellerCredentials(apiConfiguration) {
   return new Promise((resolve, reject) => {
-   
-    console.log(apiConfiguration.payload)
+    console.log(apiConfiguration.payload);
     var options = {
       method: "GET",
-      url: apiConfiguration.GET_SELLER_CREDENTIALS+ apiConfiguration.payload.partnerMerchantId + "/merchant-integrations/credentials/",
+      url:
+        apiConfiguration.GET_SELLER_CREDENTIALS +
+        apiConfiguration.payload.partnerMerchantId +
+        "/merchant-integrations/credentials/",
       headers: {
         authorization: "Bearer " + apiConfiguration.payload.sellerAccessToken,
         "cache-control": "no-cache",
@@ -714,10 +721,10 @@ function getSellerCredentials(apiConfiguration) {
       body: {},
     };
 
-    if(apiConfiguration.isPartner) {
-      options.headers["PayPal-Partner-Attribution-Id"] = apiConfiguration.BN_CODE;
+    if (apiConfiguration.isPartner) {
+      options.headers["PayPal-Partner-Attribution-Id"] =
+        apiConfiguration.BN_CODE;
     }
-
 
     request(options, function (error, response, body) {
       if (error) {
@@ -742,17 +749,17 @@ function getSellerCredentials(apiConfiguration) {
             statusCode: response.statusCode,
             headers: response.headers,
           });
-        
         } catch (err) {
           console.log(
-            "Error in Parsing Get Seller Credentials response " + JSON.stringify(err)
+            "Error in Parsing Get Seller Credentials response " +
+              JSON.stringify(err)
           );
           return resolve({
             resp: err,
             status: false,
             error: err,
             statusCode: 500,
-            headers: {}
+            headers: {},
           });
         }
       }
@@ -760,7 +767,132 @@ function getSellerCredentials(apiConfiguration) {
   });
 }
 
+function captureQRC(accessToken, apiConfiguration) {
+  return new Promise((resolve, reject) => {
+    try {
+      var options = {
+        headers: {
+          "content-type": "application/json",
+          authorization: "Bearer " + accessToken,
+          "PayPal-Request-Id": apiConfiguration.requestId,
+        },
+        body: apiConfiguration.payload,
+        json: true,
+      };
 
+      console.log("Is Partner " + apiConfiguration.isPartner);
+      console.log("Is MSP " + apiConfiguration.isMSP);
+
+      if (apiConfiguration.isPartner && !apiConfiguration.isMSP) {
+        options.headers["PayPal-Auth-Assertion"] = getAuthAssertion(
+          apiConfiguration
+        );
+      }
+
+      request.post(apiConfiguration.CAPTURE_QRC, options, function (
+        err,
+        response,
+        body
+      ) {
+        if (err) {
+          console.error(err);
+          return resolve({
+            resp: err,
+            status: false,
+            error: err,
+            statusCode: response.statusCode,
+            headers: response.headers,
+          });
+        }
+        console.log("*** CAPTURE QRC DETAILS Response ***");
+        console.log(body);
+        let resp = body;
+        return resolve({
+          resp,
+          status: true,
+          error: null,
+          statusCode: response.statusCode,
+          headers: response.headers,
+        });
+      });
+    } catch (err) {
+      console.log(
+        "Some Error occurred in calling capture qrc details api " +
+          JSON.stringify(err)
+      );
+      return resolve({
+        resp: err,
+        status: false,
+        error: err,
+        statusCode: 500,
+        headers: {},
+      });
+    }
+  });
+}
+
+function getCaptureQRCDetails(accessToken, apiConfiguration) {
+  return new Promise((resolve, reject) => {
+    try {
+      var options = {
+        headers: {
+          "content-type": "application/json",
+          authorization: "Bearer " + accessToken,
+          "PayPal-Request-Id": apiConfiguration.requestId,
+        },
+        json: true,
+      };
+
+      console.log("Is Partner " + apiConfiguration.isPartner);
+      console.log("Is MSP " + apiConfiguration.isMSP);
+
+      if (apiConfiguration.isPartner && !apiConfiguration.isMSP) {
+        options.headers["PayPal-Auth-Assertion"] = getAuthAssertion(
+          apiConfiguration
+        );
+      }
+
+      request.get(
+        apiConfiguration.CAPTURE_QRC + apiConfiguration.reference_id,
+        options,
+        function (err, response, body) {
+          if (err) {
+            console.error(err);
+            return resolve({
+              resp: err,
+              status: false,
+              error: err,
+              statusCode: response.statusCode,
+              headers: response.headers,
+            });
+          }
+          console.log("*** GET CAPTURE QRC DETAILS Response ***");
+          console.log(body);
+          let resp = body;
+          return resolve({
+            resp,
+            status: true,
+            error: null,
+            statusCode: response.statusCode,
+            headers: response.headers,
+          });
+        }
+      );
+    } catch (err) {
+      console.log(
+        "Some Error occurred in calling get capture qrc details api " +
+          JSON.stringify(err)
+      );
+      return resolve({
+        resp: err,
+        status: false,
+        error: err,
+        statusCode: 500,
+        headers: {},
+      });
+    }
+  });
+}
 
 exports.getAuthAssertion = getAuthAssertion;
 exports.getAccessToken = getAccessToken;
@@ -772,4 +904,6 @@ exports.getClientToken = getClientToken;
 exports.confirmPaymentSource = confirmPaymentSource;
 exports.createPartnerReferral = createPartnerReferral;
 exports.getSellerAccessToken = getSellerAccessToken;
-exports.getSellerCredentials = getSellerCredentials
+exports.getSellerCredentials = getSellerCredentials;
+exports.captureQRC = captureQRC;
+exports.getCaptureQRCDetails = getCaptureQRCDetails;
