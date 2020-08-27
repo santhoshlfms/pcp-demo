@@ -13,4 +13,11 @@ async function showQR() {
   }
 
   html5QrcodeScanner.render(onScanSuccess);
+  setTimeout(() => {
+    window.scrollTo(
+      0,
+      document.body.scrollHeight -
+        document.querySelector("#statusContainer").clientHeight
+    );
+  }, 200);
 }
