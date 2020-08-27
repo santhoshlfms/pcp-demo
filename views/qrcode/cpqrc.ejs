@@ -101,6 +101,14 @@
             padding-top: 10.5%;
         }
     }
+
+    .reader {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        flex-flow: row wrap;
+    }
 </style>
 
 <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -129,7 +137,7 @@
                     </h4>
 
                     <div class="">
-                        <div class="pb-5">
+                        <div class="pb-2">
                             <div>
                                 <div class="row">
                                     <div class="col-lg-6 p-1 bg-white rounded shadow-sm mb-1">
@@ -256,7 +264,9 @@
                     </div>
                 </div>
 
-                <div style="width: 500px" id="reader"></div>
+                <div class="reader">
+                    <div style="width:500vw;" id="reader"></div>
+                </div>
 
 
 
