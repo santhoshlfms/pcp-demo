@@ -50,9 +50,6 @@ async function onScanSuccess(qrCode) {
 
     addToConsole("GOT QR CODE INPUT");
     html5QrcodeScanner?.clear();
-    // ^ this will stop the scanner (video feed) and clear the scan area.
-
-    // handle on success condition with the decoded message
 
     addToConsole("QR CODE INPUT IS " + qrCode);
 
@@ -63,7 +60,7 @@ async function onScanSuccess(qrCode) {
       numeric: true,
     });
 
-    console.log("UNIQUE ID "+ uniqueId);
+    console.log("UNIQUE ID " + uniqueId);
 
     let envObj = getEnvObj();
 
@@ -125,20 +122,24 @@ async function onScanSuccess(qrCode) {
         "</pre>"
     );
 
+    let transactionStatus = captureQRCDetailsResp?.transaction_result?.status;
+
+    let reference_id = captureQRCDetailsResp?.transaction_result?.reference_id;
+
     $.LoadingOverlay("hide");
 
     // STEP 4
     // POLL GET CAPTURE QRC DETAILS
 
-    await delay(1000);
+    await delay(500);
 
     $.LoadingOverlay("show", {
       image: "",
-      text: "Polling Order Status...",
+      text: transactionStatus,
       textClass: "loadingText",
     });
 
-    pollCaptureQRCDetails(1);
+    pollCaptureQRCDetails(1, reference_id, uniqueId);
   } catch (err) {
     console.error(e);
     addToConsole("Error Occurred " + e.message, "error");
@@ -146,10 +147,119 @@ async function onScanSuccess(qrCode) {
   }
 }
 
-function pollCaptureQRCDetails(attempts) {
+async function pollCaptureQRCDetails(attempts, reference_id, uniqueId) {
   try {
+    if (attempts > 10) {
+      addToConsole("Unable to retrieve Capture status", "error");
+      $.LoadingOverlay("hide");
+      alert("Order not successful. Try again");
+      return;
+    }
+
+    await delay(200);
+
+    $.LoadingOverlay(
+      "text",
+      "Polling Capture Status - Current Status " + status
+    );
+
+    // CALL GET CAPTURE DETAILS CALL
+    addToConsole("POLLING CAPTURE STATUS ");
+
+    let envObj = getEnvObj();
+
+    let getCaptureQRCDetailsRespObj = await fetch("/pcp-qrc-capture-retrieve", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        envObj,
+        reference_id,
+        requestId: uniqueId,
+      }),
+    });
+
+    let getCaptureQRCDetailsResp = await getCaptureQRCDetailsRespObj.json();
+
+    addToConsole("GET CAPTURE DETAILS API response");
+
+    if (getCaptureQRCDetailsResp.statusCode > 200) {
+      addToConsole(
+        "<pre style='max-height:400px;color:red'>" +
+          JSON.stringify(getCaptureQRCDetailsResp, null, 2) +
+          "</pre>",
+        "error"
+      );
+      $.LoadingOverlay("hide");
+      alert("Error Occurred");
+      return;
+    }
+
+    let status = getCaptureQRCDetailsResp?.items[0]?.transaction_result?.status;
+
+    addToConsole("Order Status " + (status || "UNKNOWN"));
+
+    switch (status) {
+      case "SUCCESS":
+        addToConsole("The transaction is Successful.");
+        addToConsole(
+          "<pre style='max-height:500px;color:green'>" +
+            JSON.stringify(getCaptureQRCDetailsResp, null, 2) +
+            "</pre>"
+        );
+        alert("Transaction is Successful");
+        break;
+      case "PROCESSING":
+        addToConsole("The transaction is still being Processed.");
+        await delay(5000);
+        pollCaptureQRCDetails(attempts + 1, reference_id, uniqueId);
+        break;
+      case "ACCEPTED":
+        addToConsole("The transaction is Accepted for further processing.");
+        await delay(5000);
+        pollCaptureQRCDetails(attempts + 1, reference_id, uniqueId);
+        break;
+      case "AWAITING_USER_INPUT":
+        addToConsole(
+          "The transaction is Waiting for the some input from the USER."
+        );
+        await delay(5000);
+        pollCaptureQRCDetails(attempts + 1, reference_id, uniqueId);
+        break;
+      case "ABORTED":
+        addToConsole("The transaction is Timed out");
+        alert("Transaction Aborted");
+        break;
+      case "CANCELLED":
+        addToConsole("The transaction is Cancelled.");
+        alert("Transaction Cancelled");
+        break;
+      case "FAILED":
+      case undefined:
+      case null:
+        addToConsole("The transaction has Failed.");
+        alert("Transaction Failed");
+        break;
+    }
+
+    if (
+      !["SUCCESS", "PROCESSING", "AWAITING_USER_INPUT", "ACCEPTED"].includes(
+        status
+      )
+    ) {
+      addToConsole(
+        "<pre style='max-height:400px;color:red'>" +
+          JSON.stringify(getCaptureQRCDetailsResp, null, 2) +
+          "</pre>",
+        "error"
+      );
+    }
+    $.LoadingOverlay("hide");
   } catch (err) {
     console.error(e);
+    $.LoadingOverlay("hide");
     addToConsole("Error Occurred " + e.message, "error");
     alert("Some Error Occurred");
   }
