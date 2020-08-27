@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../pcpheader",{page_name:"onboarding",section_name:'first-party'}) %>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/stylesheets/style.css">
+<style>
+    ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: grey;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: grey;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    .alert {
+        margin-bottom: 1px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0px 15px;
+        font-weight: bold;
+    }
+
+    #prettyprintHead {
+        opacity: 0;
+        position: absolute;
+        z-index: -9999;
+        pointer-events: none;
+    }
+
+    .segmented-control {
+        height: 30px;
+        font-size: 11px;
+    }
+
+    .row {
+        margin-bottom: 5px;
+    }
+
+    .loadingText {
+        font-size: 20px !important;
+    }
+
+    h5 {
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    span.info {
+        font-weight: normal;
+        line-height: 2em;
+        font-size: 12px;
+    }
+
+    .options {
+        background: #ddd;
+        display: flex;
+        flex-flow: column;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+
+    .size {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .options>* {
+        width: 100%;
+    }
+
+    #statusContainer {
+        padding-top: 0%;
+    }
+
+    @media screen and (min-width: 768px) {
+        #statusContainer {
+            padding-top: 10.5%;
+        }
+    }
+</style>
+
+<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+
+<script defer src="/qrcode/payload.js"></script>
+<script defer src="/qrcode/scriptloader.js"></script>
+<script defer src="/qrcode/html5-qrcode.min.js"></script>
+
+
+</head>
+
+<body>
+
+    <body>
+        <div class="container-fluid" style="margin-top:2%">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <h4>
+                        <center>
+                            Customer Presented QR Code Demo
+                        </center>
+                    </h4>
+
+                    <div class="">
+                        <div class="pb-5">
+                            <div>
+                                <div class="row">
+                                    <div class="col-lg-6 p-1 bg-white rounded shadow-sm mb-1">
+
+                                        <!-- Shopping cart table -->
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" class="border-0 bg-light">
+                                                            <div class="p-2 px-3 text-uppercase">Product</div>
+                                                        </th>
+                                                        <th scope="col" class="border-0 bg-light">
+                                                            <div class="py-2 text-uppercase">Price</div>
+                                                        </th>
+                                                        <th scope="col" class="border-0 bg-light">
+                                                            <div class="py-2 text-uppercase">Quantity</div>
+                                                        </th>
+                                                        <th scope="col" class="border-0 bg-light">
+                                                            <div class="py-2 text-uppercase">Remove</div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row" class="border-0">
+                                                            <div class="p-2">
+                                                                <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-1_zrifhn.jpg"
+                                                                    alt="" width="70"
+                                                                    class="img-fluid rounded shadow-sm">
+                                                                <div class="ml-3 d-inline-block align-middle">
+                                                                    <h5 class="mb-0"> <a href="#"
+                                                                            class="text-dark d-inline-block align-middle">Timex
+                                                                            Unisex Originals</a></h5><span
+                                                                        class="text-muted font-weight-normal font-italic d-block">Category:
+                                                                        Watches</span>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td class="border-0 align-middle"><strong>$79.00</strong></td>
+                                                        <td class="border-0 align-middle"><strong>3</strong></td>
+                                                        <td class="border-0 align-middle"><a href="#"
+                                                                class="text-dark"><i class="fa fa-trash"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <div class="p-2">
+                                                                <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-3_cexmhn.jpg"
+                                                                    alt="" width="70"
+                                                                    class="img-fluid rounded shadow-sm">
+                                                                <div class="ml-3 d-inline-block align-middle">
+                                                                    <h5 class="mb-0"><a href="#"
+                                                                            class="text-dark d-inline-block">Lumix
+                                                                            camera lense</a></h5><span
+                                                                        class="text-muted font-weight-normal font-italic">Category:
+                                                                        Electronics</span>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <td class="align-middle"><strong>$79.00</strong></td>
+                                                        <td class="align-middle"><strong>3</strong></td>
+                                                        <td class="align-middle"><a href="#" class="text-dark"><i
+                                                                    class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <div class="p-2">
+                                                                <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-2_qxjis2.jpg"
+                                                                    alt="" width="70"
+                                                                    class="img-fluid rounded shadow-sm">
+                                                                <div class="ml-3 d-inline-block align-middle">
+                                                                    <h5 class="mb-0"> <a href="#"
+                                                                            class="text-dark d-inline-block">Gray Nike
+                                                                            running shoe</a></h5><span
+                                                                        class="text-muted font-weight-normal font-italic">Category:
+                                                                        Fashion</span>
+                                                                </div>
+                                                            </div>
+                                                        <td class="align-middle"><strong>$79.00</strong></td>
+                                                        <td class="align-middle"><strong>3</strong></td>
+                                                        <td class="align-middle"><a href="#" class="text-dark"><i
+                                                                    class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- End -->
+                                    </div>
+
+                                    <div class="col-lg-6 py-1 p-1 bg-white rounded shadow-sm">
+                                        <div class="">
+                                            <div
+                                                class="bg-light rounded-pill px-4 py-3 text-uppercase text-center font-weight-bold">
+                                                Order summary </div>
+                                            <div class="p-4">
+                                                <p class="font-italic mb-4">Shipping and additional costs are calculated
+                                                    based on values you have entered.</p>
+                                                <ul class="list-unstyled mb-4">
+                                                    <li class="d-flex justify-content-between py-3 border-bottom">
+                                                        <strong class="text-muted">Order Subtotal
+                                                        </strong><strong>$390.00</strong></li>
+                                                    <li class="d-flex justify-content-between py-3 border-bottom">
+                                                        <strong class="text-muted">Shipping and
+                                                            handling</strong><strong>$10.00</strong></li>
+                                                    <li class="d-flex justify-content-between py-3 border-bottom">
+                                                        <strong class="text-muted">Tax</strong><strong>$0.00</strong>
+                                                    </li>
+                                                    <li class="d-flex justify-content-between py-3 border-bottom">
+                                                        <strong class="text-muted">Total</strong>
+                                                        <h5 class="font-weight-bold">$400.00</h5>
+                                                    </li>
+                                                </ul><a href="#" class="btn btn-dark rounded-pill py-2 btn-block"
+                                                    id="showQr" onclick="showQR()">PayPal
+                                                    Show QR CODE</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="width: 500px" id="reader"></div>
+
+
+
+                <div class="col-md-12 col-sm-12 col-xs-12" id="statusContainer" style="padding-top:1% !important">
+
+                    <div id="consoleWindow" class="panel panel-primary" style="width:100%;background-color:black">
+
+                        <div class="panel-heading" style="padding-bottom: 20px;">
+                            <div>Playground Status
+                            </div>
+                        </div>
+
+                        <div class="panel-body" style="margin:0px;margin-bottom:10px;width:100%;overflow-y:auto;">
+                            <div id="plgStatus" style="color:white;">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+
+    <%- include("../footer") %>
+
+</html>

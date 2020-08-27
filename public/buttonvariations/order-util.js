@@ -28,10 +28,9 @@ async function delay(ms) {
 
 async function pollOrderStatus(orderId, attempts = 1) {
   try {
-    
-    console.log("Poll DB Order status attempt "+ attempts);
+    console.log("Poll DB Order status attempt " + attempts);
 
-    addToConsole("Poll DB Order status attempt "+ attempts);
+    addToConsole("Poll DB Order status attempt " + attempts);
 
     if (attempts > 12) {
       addToConsole("PayPal Order Status is not updated", "error");
@@ -57,10 +56,9 @@ async function pollOrderStatus(orderId, attempts = 1) {
 
 async function pollPPGetOrder(orderId, attempts = 1) {
   try {
-    
-    console.log("Poll PP Get Order status attempt : "+ attempts);
+    console.log("Poll PP Get Order status attempt : " + attempts);
 
-    addToConsole("Poll PP Get Order status attempt : "+ attempts);
+    addToConsole("Poll PP Get Order status attempt : " + attempts);
 
     let { envObj } = getCreateOrderPayload();
 
@@ -88,7 +86,9 @@ async function pollPPGetOrder(orderId, attempts = 1) {
       addToConsole(
         "<pre style='max-height:320px;color:red'>" +
           JSON.stringify(getOrderResp, null, 2) +
-          "</pre>", "error");
+          "</pre>",
+        "error"
+      );
       $.LoadingOverlay("hide");
       alert("Error Occurred");
       return;
@@ -146,7 +146,7 @@ async function handleStatus(
     case null:
     default:
       let { pollingPreference } = getScriptQueryParam();
-      
+
       if (pollingPreference === "GET_ORDER") {
         setTimeout(function () {
           pollPPGetOrder(orderId, attempts + 1);
@@ -189,7 +189,9 @@ async function captureOrder(orderId) {
     addToConsole(
       "<pre style='max-height:320px;color:red'>" +
         JSON.stringify(captureOrderResp, null, 2) +
-        "</pre>", "error");
+        "</pre>",
+      "error"
+    );
     $.LoadingOverlay("hide");
     alert("Error Occurred");
     return;

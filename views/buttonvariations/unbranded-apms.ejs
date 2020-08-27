@@ -4,14 +4,13 @@
 
 <head>
     <meta charset="UTF-8">
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
     <style>
-        
-        ul > li {
-            
-        padding-bottom: 10px;
+        ul>li {
+
+            padding-bottom: 10px;
 
         }
     </style>
@@ -25,7 +24,7 @@
     <script defer src="/buttonvariations/order-util.js"></script>
     <script defer src="/buttonvariations/scriptloader.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    
+
 </head>
 
 <body>
@@ -38,8 +37,7 @@
                             <center><mark>Customize the UnBranded APM experience and click on Save</mark> </center>
                         </u></h4>
 
-                    <button class="btn btn-md btn-save"
-                        onclick="save()">Save
+                    <button class="btn btn-md btn-save" onclick="save()">Save
                     </button>
                     <br />
 
@@ -118,7 +116,7 @@
                                 <h5>Currency</h5>
 
                                 <select name="currency" class="form-control input-sm control-sm" style="color:#319DD4">
-                                    
+
                                     <option value="EUR">EUR</option>
                                     <% Object.keys(config.CURRENCY).forEach(function(key){ %>
                                     <option value="<%= config.CURRENCY[key] %>">
@@ -145,7 +143,7 @@
                                     <input type="radio" name="polling-preference" id="polling-preference-get-order"
                                         data-value="GET_ORDER" checked>
                                     <input type="radio" name="polling-preference" id="polling-preference-webhook"
-                                        data-value="WEBHOOK" >
+                                        data-value="WEBHOOK">
                                     <label for="polling-preference-get-order" data-value="GET_ORDER">GET_ORDER</label>
                                     <label for="polling-preference-webhook" data-value="WEBHOOK">WEBHOOK</label>
                                 </div>
@@ -176,8 +174,7 @@
 
                     <br />
 
-                    <button class="btn btn-md btn-save"
-                        onclick="save()">Save
+                    <button class="btn btn-md btn-save" onclick="save()">Save
                     </button>
 
                     <br /><br />
@@ -186,9 +183,11 @@
                 </div>
                 <div class="col-md-6 col-sm-12 col-xs-12" id="statusContainer">
                     <ul style="list-style-type: decimal;line-height:1.4em">
-                        <li>Usually Partners / Merchants can use custom styling and buttons for APMs and can show multiple buttons as well based on their requirement.</li>
-                        <li>This playground shows only 1 APM at a time and use the appropriate logo of the APM wherever possible</li>
-                    </ul>    
+                        <li>Usually Partners / Merchants can use custom styling and buttons for APMs and can show
+                            multiple buttons as well based on their requirement.</li>
+                        <li>This playground shows only 1 APM at a time and use the appropriate logo of the APM wherever
+                            possible</li>
+                    </ul>
                     <div id="apm-button-container" style="display:block"></div>
 
                     <br />
