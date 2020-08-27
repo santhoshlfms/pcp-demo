@@ -24,7 +24,7 @@ function createCaptureDetailsPayload(uniqueId, qrCode) {
         external_id: "5",
         type: "CASH_REGISTER",
       },
-      retailer_name: "Jewellery Loc 2",
+      retailer_name: "Retailer Loc 2",
     },
     credential_info: {
       retailer: {
@@ -39,58 +39,51 @@ function createCaptureDetailsPayload(uniqueId, qrCode) {
       partial_approval_supported: true,
       amount: {
         currency_code: "USD",
-        value: "3.50",
+        value: "400.00",
       },
       invoice: {
-        external_id: uniqueId,
+        external_id: uniqueId + "_invoice_id",
         soft_descriptor: "Test Merchant",
         items: [
           {
-            name: "Ticondra Pencil",
-            description: "Long lasting and laser tip LED",
+            name: "Timex Unisex Originals",
+            description: "Watches",
             ean: "001101",
             sku: "110011",
             return_policy_id: "fee1101",
             total_price: {
               currency_code: "USD",
-              value: "5.00",
+              value: "100.00",
             },
             item_price: {
               currency_code: "USD",
-              value: "5.00",
+              value: "50.00",
             },
             item_count: "2",
-            discounts: [
-              {
-                name: "Ticondra Promotional discount",
-                description: "Buy one get one free",
-                amount: {
-                  currency_code: "USD",
-                  value: "5.00",
-                },
-                redeemed_offer_type: "MERCHANT_COUPON",
-                redeemed_offer_id: uniqueId,
-              },
-            ],
           },
-        ],
-        discounts: [
+
           {
-            name: "MerchantCoupon",
-            description: "This is a merchant coupon for 1.00 $",
-            amount: {
+            name: "Lumix Camera Lens",
+            description: "Camera",
+            ean: "001201",
+            sku: "110021",
+            return_policy_id: "fee1201",
+            total_price: {
               currency_code: "USD",
-              value: "2.50",
+              value: "300.00",
             },
-            redeemed_offer_type: "MERCHANT_COUPON",
-            redeemed_offer_id: uniqueId,
+            item_price: {
+              currency_code: "USD",
+              value: "300.00",
+            },
+            item_count: "1",
           },
         ],
       },
     },
     receipt_info: {
       terminal_sales_time: new Date().toISOString(),
-      retailer_transaction_id: "transaction_id",
+      retailer_transaction_id: uniqueId + "_transaction_id",
     },
   };
   return { qrcObj };
