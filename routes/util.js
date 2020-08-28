@@ -853,7 +853,7 @@ function getCaptureQRCDetails(accessToken, apiConfiguration) {
       }
 
       request.get(
-        apiConfiguration.CAPTURE_QRC + apiConfiguration.reference_id,
+        apiConfiguration.GET_CAPTURE_QRC + apiConfiguration.reference_id,
         options,
         function (err, response, body) {
           if (err) {
