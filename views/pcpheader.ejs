@@ -13,10 +13,14 @@
 
   <link rel="preload" as="style" href="/stylesheets/style.css">
 
+  <% if (page_name != 'qrcode' && page_name != 'hw') { %>
   <link rel="preload" as="style" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <% }  %>
 
+  <% if (page_name == 'qrcode') { %>
   <link rel="preload" as="style"
     href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <% }  %>
 
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
     crossorigin="anonymous">
