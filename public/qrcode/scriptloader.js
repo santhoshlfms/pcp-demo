@@ -126,6 +126,8 @@ async function onScanSuccess(qrCode) {
 
     let reference_id = captureQRCDetailsResp?.transaction_result?.reference_id;
 
+    addToConsole("Reference Id " + reference_id);
+
     $.LoadingOverlay("hide");
 
     // STEP 4
