@@ -52,7 +52,7 @@ async function onScanSuccess(qrCode) {
     // Step 1
     // GET QR CODE INPUT
 
-    addToConsole("GOT QR CODE INPUT");
+    //addToConsole("GOT QR CODE INPUT");
     html5QrcodeScanner?.clear();
 
     addToConsole("QR CODE INPUT IS " + qrCode);
@@ -140,13 +140,16 @@ async function onScanSuccess(qrCode) {
 
     await delay(500);
 
+    addToConsole(
+      "POLLING Order STATUS - CALL GET CAPTURE DETAILS API using " +
+        reference_id
+    );
+
     $.LoadingOverlay("show", {
       image: "",
-      text: "Polling Order Status",
+      text: "Polling Order Status. Current Status: " + transactionStatus,
       textClass: "loadingText",
     });
-
-    addToConsole("POLLING Order STATUS - CALL GET CAPTURE DETAILS API");
 
     pollCaptureQRCDetails(1, reference_id, uniqueId);
   } catch (err) {
