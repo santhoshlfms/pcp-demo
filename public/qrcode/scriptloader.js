@@ -1,4 +1,3 @@
-var html5QrcodeScanner;
 addToConsole("Customer Presented QR Code Demo");
 
 async function showQR() {
@@ -53,7 +52,6 @@ async function onScanSuccess(qrCode) {
     // GET QR CODE INPUT
 
     //addToConsole("GOT QR CODE INPUT");
-    html5QrcodeScanner?.clear();
 
     addToConsole("QR CODE INPUT IS " + qrCode);
 
@@ -232,7 +230,23 @@ async function pollCaptureQRCDetails(attempts, reference_id, uniqueId) {
             JSON.stringify(getCaptureQRCDetailsResp, null, 2) +
             "</pre>"
         );
-        alert("Transaction is Successful");
+
+        let {
+          transaction_result: {
+            transaction_id,
+            amount_approved: { currency_code, value },
+          },
+          payer_info: { email_address },
+        } = getCaptureQRCDetailsResp;
+
+        document.getElementById("trIdRes").innerText = transaction_id;
+        document.getElementById(
+          "amountRes"
+        ).innerText = `${value} ${currency_code}`;
+        document.getElementById("emailRes").innerText = email_address;
+
+        $("#transactionResultModal").modal("show");
+
         $.LoadingOverlay("hide");
         break;
       case "PROCESSING":

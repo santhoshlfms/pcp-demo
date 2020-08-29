@@ -1,125 +1,143 @@
 <!DOCTYPE html>
 <%- include("../pcpheader",{page_name:"hw",section_name:'hw'}) %>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+  crossorigin="anonymous">
 
 <!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"  crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+  crossorigin="anonymous">
 
-<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+  crossorigin="anonymous">
 
 <head>
-<style>
-
-    h3,p {
-        font-weight: 800;
-        color: yellow !important;
+  <style>
+    h3,
+    p {
+      font-weight: 800;
+      color: yellow !important;
     }
-    
+
     .carousel-control.left,
     .carousel-control.right {
       background-image: none;
     }
-    
-  .container-fluid>.navbar-collapse, .container-fluid>.navbar-header, .container>.navbar-collapse, .container>.navbar-header {
+
+    .container-fluid>.navbar-collapse,
+    .container-fluid>.navbar-header,
+    .container>.navbar-collapse,
+    .container>.navbar-header {
       margin-right: 0px !important;
       margin-left: 0px !important;
-  }
-  .navbar-collapse > ul >li >a {
-    color : white !important;
-    padding: 10px 10px;
-  }
-
-  .navbar-collapse > ul >li >a:hover {
-    color : white !important;
-    background-color : transparent;
-  }
-  .navbar-collapse > ul >li >a:focus {
-    color : white !important;
-    background-color : transparent;
-  }
-  li.active {
-    background-color : lightslategrey;
-  }
-  @media screen and (min-width: 602px) {
-   .navbar-header {
-      float: left;
-      padding-top: 5px;
-      text-align: center;
-      width: 100%;
     }
-  }
-  .nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
-    color : white !important;
-     background-color : transparent;
- }
- .nav .open>a, .nav .open>a:focus, .nav .open>a:focus{
-    color : white !important;
-     background-color : transparent;
- }
-/* .navbar-brand {float:none;} */
+
+    .navbar-collapse>ul>li>a {
+      color: white !important;
+      padding: 10px 10px;
+    }
+
+    .navbar-collapse>ul>li>a:hover {
+      color: white !important;
+      background-color: transparent;
+    }
+
+    .navbar-collapse>ul>li>a:focus {
+      color: white !important;
+      background-color: transparent;
+    }
+
+    li.active {
+      background-color: lightslategrey;
+    }
+
+    @media screen and (min-width: 602px) {
+      .navbar-header {
+        float: left;
+        padding-top: 5px;
+        text-align: center;
+        width: 100%;
+      }
+    }
+
+    .nav .open>a,
+    .nav .open>a:focus,
+    .nav .open>a:hover {
+      color: white !important;
+      background-color: transparent;
+    }
+
+    .nav .open>a,
+    .nav .open>a:focus,
+    .nav .open>a:focus {
+      color: white !important;
+      background-color: transparent;
+    }
+
+    /* .navbar-brand {float:none;} */
 
 
-.dropdown-submenu {
-  position: relative;
-}
+    .dropdown-submenu {
+      position: relative;
+    }
 
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  -webkit-border-radius: 0 6px 6px 6px;
-  -moz-border-radius: 0 6px 6px;
-  border-radius: 0 6px 6px 6px;
-}
+    .dropdown-submenu>.dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -6px;
+      margin-left: -1px;
+      -webkit-border-radius: 0 6px 6px 6px;
+      -moz-border-radius: 0 6px 6px;
+      border-radius: 0 6px 6px 6px;
+    }
 
-.dropdown-submenu:hover>.dropdown-menu {
-  display: block;
-}
+    .dropdown-submenu:hover>.dropdown-menu {
+      display: block;
+    }
 
-.dropdown-submenu>a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #ccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
+    .dropdown-submenu>a:after {
+      display: block;
+      content: " ";
+      float: right;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+      border-width: 5px 0 5px 5px;
+      border-left-color: #ccc;
+      margin-top: 5px;
+      margin-right: -10px;
+    }
 
-.dropdown-submenu:hover>a:after {
-  border-left-color: #fff;
-}
+    .dropdown-submenu:hover>a:after {
+      border-left-color: #fff;
+    }
 
-.dropdown-submenu.pull-left {
-  float: none;
-}
+    .dropdown-submenu.pull-left {
+      float: none;
+    }
 
-.dropdown-submenu.pull-left>.dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  -webkit-border-radius: 6px 0 6px 6px;
-  -moz-border-radius: 6px 0 6px 6px;
-  border-radius: 6px 0 6px 6px;
-}
+    .dropdown-submenu.pull-left>.dropdown-menu {
+      left: -100%;
+      margin-left: 10px;
+      -webkit-border-radius: 6px 0 6px 6px;
+      -moz-border-radius: 6px 0 6px 6px;
+      border-radius: 6px 0 6px 6px;
+    }
+  </style>
 
-</style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-        
 </head>
+
 <body>
 
-<div class="well well-sm" style="text-align: center">
+  <div class="well well-sm" style="text-align: center">
 
-  Hyperwallet Demo
-</div>
-<!-- <img src="images/ppcp.jpg" class="img img-responsive" style="height:600px;margin:auto"/>
+    Hyperwallet Demo
+  </div>
+  <!-- <img src="images/ppcp.jpg" class="img img-responsive" style="height:600px;margin:auto"/>
 
 <img src="images/ppcp-readiness.png" class="img img-responsive" style="height:600px;margin:auto"/>
 
@@ -127,20 +145,20 @@
 
 <img src="images/paymentsdk.png" class="img img-responsive" style="height:600px;margin:auto"/> -->
 
-    <div class="row" style="margin-right:15px">
-        <div class="col-md-8 col-md-offset-2">
-        <div id="myCarousel" class="carousel slide">
+  <div class="row" style="margin-right:15px">
+    <div class="col-md-8 col-md-offset-2">
+      <div id="myCarousel" class="carousel slide">
         <!-- Indicators -->
         <ol class="carousel-indicators">
           <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
           <li data-target="#myCarousel" data-slide-to="1"></li>
 
         </ol>
-    
+
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
-    
-         
+
+
           <div class="item active">
             <img src="HW2.jpg" alt="HW" style="width:100%;height:50%">
           </div>
@@ -149,9 +167,9 @@
             <img src="HW3.jpg" alt="HW" style="width:100%;height:50%">
           </div>
 
-      
+
         </div>
-    
+
         <!-- Left and right controls -->
         <a class="left carousel-control" href="#myCarousel" data-slide="prev">
           <span class="glyphicon glyphicon-chevron-left" style="color:#3f51b5"></span>
@@ -162,12 +180,12 @@
           <span class="sr-only">Next</span>
         </a>
       </div>
-      </div>
-      </div>
+    </div>
+  </div>
 
-      <p style="color:black!important;text-align:center">Image Source: Hyperwallet.com</p>
+  <p style="color:black!important;text-align:center">Image Source: Hyperwallet.com</p>
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>      
-<%- include("../footer") %>
+  <%- include("../footer",{page_name:"hw",section_name:'hw'}) %>
 </body>
+
 </html>

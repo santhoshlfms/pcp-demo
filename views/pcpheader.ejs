@@ -14,16 +14,23 @@
   <link rel="preload" as="style" href="/stylesheets/style.css">
 
   <% if (page_name != 'qrcode' && page_name != 'hw') { %>
+
   <link rel="preload" as="style" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="preload" as="script" type="text/javascript"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+
   <% }  %>
 
   <% if (page_name == 'qrcode') { %>
+
   <link rel="preload" as="style"
     href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="preload" as="script" type="text/javascript"
     href="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js">
   <link rel="preload" as="script" type="text/javascript"
     href="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js">
+  <link rel="preload" as="script" type="text/javascript"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
 
   <% }  %>
 
@@ -41,9 +48,6 @@
 
   <link rel="preload" as="script" type="text/javascript"
     href="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js">
-
-  <link rel="preload" as="script" type="text/javascript"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
 
 
   <link rel="apple-touch-icon-precomposed" sizes="152x152"
