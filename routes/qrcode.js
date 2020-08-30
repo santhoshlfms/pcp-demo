@@ -3,10 +3,17 @@ module.exports = function (router) {
     res.render("qrcode/cpqrc");
   });
 
-  router.post("/mpqrc/callback", function (req, res, next) {
+  router.get(["/qrcode/mpqrc"], function (req, res, next) {
+    res.render("qrcode/mpqrc");
+  });
+
+  router.all("/mpqrc/callback", function (req, res, next) {
+    let query = req.query;
     let body = req.body;
 
     console.log("Incoming MPQRC Webhook");
+
+    console.log("**** webhook query **** ", query);
 
     console.log("**** webhook body **** ", body);
 

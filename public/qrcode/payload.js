@@ -1,6 +1,5 @@
 function getScriptQueryParam() {
   var env = "sandbox";
-
   return {
     env,
   };
@@ -8,7 +7,6 @@ function getScriptQueryParam() {
 
 function getEnvObj() {
   var env = "sandbox";
-
   return {
     env,
   };

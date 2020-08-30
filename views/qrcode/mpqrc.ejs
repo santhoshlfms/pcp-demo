@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include("../pcpheader",{page_name:"qrcode",section_name:'cpqrc'}) %>
+<%- include("../pcpheader",{page_name:"qrcode",section_name:'mpqrc'}) %>
 
 <!-- <link rel="preload" as="image" href="http://goactionstations.co.uk/wp-content/uploads/2017/03/Green-Round-Tick.png"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
@@ -193,11 +193,9 @@
 </script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <script defer src="/qrcode/payload.js"></script>
-<script defer src="/qrcode/cpqrc/scriptloader.js"></script>
+<script defer src="/qrcode/mpqrc/scriptloader.js"></script>
 <script defer src="/qrcode/chance.js"></script>
-<script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js">
-</script>
-<script defer src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<script defer src="/qrcode/mpqrc/qrcode.min.js"></script>
 
 <script>
     $.LoadingOverlay("show");
@@ -213,7 +211,7 @@
 
                     <h4>
                         <center>
-                            Customer Presented QR Code Demo
+                            Merchant Presented QR Code Demo
                         </center>
                     </h4>
 
@@ -304,7 +302,7 @@
                                                         <h5 class="font-weight-bold">$400.00</h5>
                                                     </li>
                                                 </ul><a class="btn btn-dark text-white rounded-pill py-2 btn-block"
-                                                    id="showQr" onclick="showQR()">Show QR CODE</a>
+                                                    id="showQr" onclick="scanQR()">Scan QR CODE</a>
                                             </div>
                                         </div>
                                     </div>
@@ -316,7 +314,7 @@
                 </div>
 
                 <div id="reader" style="display:none;">
-                    <video id="preview" style="width:60vw;"></video>
+                    <div id="qrcode"></div>
                 </div>
 
                 <!-- Button to Open the Modal -->
