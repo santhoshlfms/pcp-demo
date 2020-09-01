@@ -74,7 +74,7 @@ module.exports = function (router) {
       res.set("Connection", "keep-alive");
       res.set("X-Accel-Buffering", "no");
       let done = false;
-
+      let attempts = 1;
       do {
         try {
           console.log("Checking DB **** " + merchant_ref_id);
@@ -85,7 +85,7 @@ module.exports = function (router) {
 
           console.log("qrc  " + JSON.stringify(qrCode));
 
-          console.log("QrCode is ");
+          console.log("QR Code is ");
 
           let { qrc_refid } = qrCode || {};
           console.log(qrc_refid);
@@ -97,14 +97,15 @@ module.exports = function (router) {
               qrc_refid: qrc_refid,
             });
           } else {
-            await delay(5000);
+            await delay(8000);
           }
+          attempts++;
         } catch (err) {
           console.log("error in getting QRC ID from db " + err);
           done = true;
           sendEvent(req, res, "EXCEPTION", { message: err.message });
         }
-      } while (!done);
+      } while (!done && attempts < 15);
 
       function sendEvent(req, res, status, data) {
         const END_OF_RECORD = "\n";
