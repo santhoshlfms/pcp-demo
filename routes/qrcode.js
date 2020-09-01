@@ -43,10 +43,13 @@ module.exports = function (router) {
     router.all("/mpqrc/callback", function (req, res, next) {
       let query = req.query;
       let body = req.body;
+      let method = req.method;
 
       let { merchant_ref_id, qrc_refid } = query || {};
 
       console.log("Incoming MPQRC Webhook");
+
+      console.log("Request Method is " + method);
 
       console.log("**** webhook query **** ", query);
 
