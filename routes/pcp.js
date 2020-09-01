@@ -632,7 +632,7 @@ module.exports = function (router) {
 
       let captureQRCResp = await captureQRC(accessToken, apiConfiguration);
 
-      if (!captureQRCResp.statusCode || captureQRCResp.statusCode > 201) {
+      if (!captureQRCResp.statusCode || captureQRCResp.statusCode > 202) {
         console.log(
           "Error in CAPTURE QRC DETAIL CALL " +
             JSON.stringify(captureQRCResp.resp)
