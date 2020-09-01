@@ -62,7 +62,7 @@ async function showQR() {
     });
 
     source.addEventListener("MSG", (event) => {
-      document.getElementById("reader").style.display = "none";
+      //document.getElementById("reader").style.display = "none";
       console.log("MSG event");
       console.log("Data ", event.data);
     });
