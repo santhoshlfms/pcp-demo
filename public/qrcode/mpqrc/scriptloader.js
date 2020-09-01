@@ -66,6 +66,7 @@ async function scanQR() {
 
       console.log("Exception Event");
       console.log("error ", event.data);
+      addToConsole("Error in getting QR ID from callback " + event.data);
       alert("Error occured");
       source.close();
     });

@@ -107,6 +107,11 @@ module.exports = function (router) {
         }
       } while (!done && attempts < 15);
 
+      if (attempts >= 15) {
+        console.log("TIMED OUT");
+        sendEvent(req, res, "EXCEPTION", { message: "TIMED OUT" });
+      }
+
       function sendEvent(req, res, status, data) {
         const END_OF_RECORD = "\n";
         const record = [
