@@ -99,6 +99,7 @@ module.exports = function (router) {
           } else {
             await delay(8000);
           }
+          sendEvent(req, res, "MSG", { attempts: attempts });
           attempts++;
         } catch (err) {
           console.log("error in getting QRC ID from db " + err);
