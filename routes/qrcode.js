@@ -1,22 +1,141 @@
+const EventSource = require("eventsource");
+const low = require("lowdb");
+const FileAsync = require("lowdb/adapters/FileAsync");
+
+const adapter = new FileAsync("qrcodes.json");
+
+async function delay(ms) {
+  return new Promise((res) => {
+    setTimeout(() => res(), ms);
+  });
+}
+
 module.exports = function (router) {
-  router.get(["/qrcode/cpqrc"], function (req, res, next) {
-    res.render("qrcode/cpqrc");
-  });
+  low(adapter).then((db) => {
+    db._.mixin({
+      upsert: function (collection, obj, key) {
+        key = key || "id";
+        for (var i = 0; i < collection.length; i++) {
+          var el = collection[i];
+          if (el[key] === obj[key]) {
+            collection[i] = obj;
+            return collection;
+          }
+        }
+        collection.push(obj);
+      },
+    });
 
-  router.get(["/qrcode/mpqrc"], function (req, res, next) {
-    res.render("qrcode/mpqrc");
-  });
+    db.defaults({ qrcodes: [] }).write();
 
-  router.all("/mpqrc/callback", function (req, res, next) {
-    let query = req.query;
-    let body = req.body;
+    setTimeout(() => {
+      db.get("qrcodes").remove({}).write();
+    }, 18000000);
 
-    console.log("Incoming MPQRC Webhook");
+    router.get(["/qrcode/cpqrc"], function (req, res, next) {
+      res.render("qrcode/cpqrc");
+    });
 
-    console.log("**** webhook query **** ", query);
+    router.get(["/qrcode/mpqrc"], function (req, res, next) {
+      res.render("qrcode/mpqrc");
+    });
 
-    console.log("**** webhook body **** ", body);
+    router.all("/mpqrc/callback", function (req, res, next) {
+      let query = req.query;
+      let body = req.body;
 
-    res.end();
-  });
+      let { merchant_ref_id, qrc_refid } = query || {};
+
+      console.log("Incoming MPQRC Webhook");
+
+      console.log("**** webhook query **** ", query);
+
+      console.log("**** webhook body **** ", body);
+
+      const result = db
+        .get("qrcodes")
+        .upsert(
+          { merchant_ref_id: merchant_ref_id, qrc_refid: qrc_refid },
+          "merchant_ref_id"
+        )
+        .write();
+
+      res.end();
+    });
+
+    router.get("/mpqrc/status", async function (req, res, next) {
+      let query = req.query;
+      let merchant_ref_id = query.merchant_ref_id || "";
+
+      console.log("SSE mpqrc status for " + merchant_ref_id);
+
+      res.set("Cache-control", "no-cache");
+      res.set("Content-type", "text/event-stream");
+      res.set("Connection", "keep-alive");
+      res.set("X-Accel-Buffering", "no");
+      let done = false;
+
+      do {
+        try {
+          console.log("Checking DB **** " + merchant_ref_id);
+          const qrCode = db
+            .get("qrcodes")
+            .find({ merchant_ref_id: merchant_ref_id })
+            .value();
+
+          console.log("qrc  " + JSON.stringify(qrCode));
+
+          console.log("QrCode is ");
+
+          let { qrc_refid } = qrCode || {};
+          console.log(qrc_refid);
+
+          if (qrc_refid) {
+            done = true;
+            sendEvent(req, res, "QRC_ID", {
+              merchant_ref_id,
+              qrc_refid: qrc_refid,
+            });
+          } else {
+            await delay(5000);
+          }
+        } catch (err) {
+          console.log("error in getting QRC ID from db " + err);
+          done = true;
+          sendEvent(req, res, "EXCEPTION", { message: err.message });
+        }
+      } while (!done);
+
+      function sendEvent(req, res, status, data) {
+        const END_OF_RECORD = "\n";
+        const record = [
+          "event: " + status,
+          "data: " + JSON.stringify(data),
+          END_OF_RECORD,
+        ].join("\n");
+        console.log(`(posterminal) Sending record: ${record}`);
+        res.write(record);
+      }
+
+      res.end();
+    }); // router end
+
+    router.get("/mpqrc/qrcId", async function (req, res, next) {
+      console.log("GET QRC ID FOR " + req.query.merchant_ref_id);
+      const qrcode = db
+        .get("qrcodes")
+        .find({ merchant_ref_id: req.query.merchant_ref_id })
+        .value();
+
+      console.log("Qr code obj");
+      console.log(qrcode);
+
+      res.json({ ...qrcode });
+    });
+
+    router.get("/clearQrcs", function (req, res, next) {
+      db.get("qrcodes").remove({}).write();
+      res.json({ status: "DONE" });
+    });
+  }); // db end
 };
