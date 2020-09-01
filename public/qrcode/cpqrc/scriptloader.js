@@ -1,6 +1,6 @@
 addToConsole("Customer Presented QR Code Demo");
 
-async function showQR() {
+async function scanQR() {
   try {
     document.getElementById("reader").style.display = "flex";
     addToConsole("GET QR INPUT");

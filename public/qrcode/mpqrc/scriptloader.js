@@ -1,6 +1,6 @@
 addToConsole("Merchant Presented QR Code Demo");
 
-async function scanQR() {
+async function showQR() {
   try {
     document.getElementById("reader").style.display = "flex";
 
