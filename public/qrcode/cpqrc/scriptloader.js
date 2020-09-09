@@ -1,7 +1,22 @@
 addToConsole("Customer Presented QR Code Demo");
 
 async function scanQR() {
+  document.getElementById("reader").style.display = "none";
+
   try {
+    let qrIdSelectManual = document.getElementById("qrIdSelectManual")?.checked;
+    let qrIdInput = document.getElementById("qrIdInput")?.value;
+
+    if (qrIdSelectManual) {
+      if (!qrIdInput || qrIdInput.trim().length == 0) {
+        alert("Please enter QR ID as you have chosen to enter it manually");
+        return;
+      }
+
+      onScanSuccess(qrIdInput);
+      return;
+    }
+
     document.getElementById("reader").style.display = "flex";
     addToConsole("GET QR INPUT");
     await delay(200);
