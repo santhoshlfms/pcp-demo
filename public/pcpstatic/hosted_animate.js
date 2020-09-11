@@ -113,21 +113,62 @@ function loadHostedButtons() {
             contingencies: contingencies,
             vault: envObj.isVaulting,
           })
-            .then(function (payload) {
+            .then(async function (payload) {
               addToConsole("Payload " + JSON.stringify(payload, null, "\t"));
               if (payload.nonce) {
                 addToConsole("Tokenized (Nonce): " + payload.nonce);
               }
               addToConsole("LiabilityShifted " + payload.liabilityShifted);
 
-              $.LoadingOverlay("show", {
-                image: "",
-                text:
-                  intent === "capture"
+              if (is3dsEnabled) {
+                // Get the transaction details
+                $.LoadingOverlay("show", {
+                  image: "",
+                  text: "GET ORDER after 3DS",
+                  textClass: "loadingText",
+                });
+                addToConsole("GET ORDER after 3DS");
+
+                await fetch("/pcp-get-order?id=" + payload.orderId, {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    envObj,
+                  }),
+                })
+                  .then((res) => res.json())
+                  .then((res) => {
+                    if (!res.id) {
+                      addToConsole(JSON.stringify(res, null, 4), "error");
+                    }
+                    return res;
+                  })
+                  .then((details) => {
+                    addToConsole(
+                      "<pre style='max-height:320px'>" +
+                        JSON.stringify(details, null, 2) +
+                        "</pre>"
+                    );
+                  });
+                $.LoadingOverlay(
+                  "text",
+                  intent == "capture"
                     ? "Capturing Order..."
-                    : "Authorizing Order...",
-                textClass: "loadingText",
-              });
+                    : "Authorizing Order..."
+                );
+              } else {
+                $.LoadingOverlay("show", {
+                  image: "",
+                  text:
+                    intent == "capture"
+                      ? "Capturing Order..."
+                      : "Authorizing Order...",
+                  textClass: "loadingText",
+                });
+              }
 
               // Capture/ Authorize the funds from the transaction
               if (intent == "authorize") {
@@ -181,7 +222,6 @@ function loadHostedButtons() {
               }
             })
             .then(function (details) {
-              $.LoadingOverlay("hide");
               if (details === "Error") {
                 alert("Some Error Occurred");
                 throw new Error("Some Error Occurred");
@@ -207,16 +247,14 @@ function loadHostedButtons() {
                   "</pre>"
               );
 
-              setTimeout(() => {
-                $.LoadingOverlay("show", {
-                  image: "",
-                  text: "GET Order...",
-                  textClass: "loadingText",
-                });
-              }, 300);
+              $.LoadingOverlay(
+                "text",
+                "GET ORDER after " + intent.toUpperCase()
+              );
 
               // Get the transaction details
-              addToConsole("GET ORDER DETAILS ");
+              addToConsole("GET ORDER after  " + intent.toUpperCase());
+
               return fetch("/pcp-get-order?id=" + details.id, {
                 method: "POST",
                 headers: {

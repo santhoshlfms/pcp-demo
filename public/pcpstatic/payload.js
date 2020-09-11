@@ -3,8 +3,8 @@ function getCreateOrderPayload() {
   var currency = $("[name=currency]").val();
   var intent = $("[name=intent]:checked").attr("data-value");
 
-  var isShippingPrefillAddressUsed = $(
-    "[name=prefill-shipping-address]:checked"
+  var shippingAddressPreference = $(
+    "[name=shipping-address-preference]:checked"
   ).attr("data-value");
 
   var isBiillingPrefillAddressUsed = $(
@@ -22,10 +22,10 @@ function getCreateOrderPayload() {
   var isVaulting = $("[name=vaultingEnabled]").val() === "Yes";
 
   var components = $("[name=components]:checked")
-  .map(function() {
-    return this.value;
-  })
-  .get();
+    .map(function () {
+      return this.value;
+    })
+    .get();
 
   var shippingObj = getInlineGuestShippingDetails(country);
 
@@ -94,7 +94,7 @@ function getCreateOrderPayload() {
             },
           },
           shipping: {
-             address: shippingAddress,
+            address: shippingAddress,
             // name: {
             //   full_name :"Arvindan TA"
             // }
@@ -109,27 +109,30 @@ function getCreateOrderPayload() {
       };
     }
 
-    if (isShippingPrefillAddressUsed === "false") {
-      delete orderObj.purchase_units[0].shipping.address;
-    }
-    
-    if(isShippingPrefillAddressUsed === "true") {
+    if (shippingAddressPreference === "SET_PROVIDED_ADDRESS") {
       orderObj.application_context = {
-        shipping_preference: "SET_PROVIDED_ADDRESS"
-      }
+        shipping_preference: "SET_PROVIDED_ADDRESS",
+      };
+    } else {
+      delete orderObj.purchase_units[0].shipping.address;
+      orderObj.application_context = {
+        shipping_preference: shippingAddressPreference, // NO_SHIPPING / GET_FROM_FILE
+      };
     }
-    
-    if(isVaulting && isShippingPrefillAddressUsed === "false"
-    && components.includes("hosted-fields")
+
+    if (
+      isVaulting &&
+      shippingAddressPreference === "GET_FROM_FILE" &&
+      components.includes("hosted-fields")
     ) {
       orderObj.application_context = {
-        shipping_preference: "NO_SHIPPING"
-      }
+        shipping_preference: "NO_SHIPPING",
+      };
     }
 
     if (isBiillingPrefillAddressUsed === "false") {
       delete orderObj.payer.address;
-      delete orderObj.payer.phone
+      delete orderObj.payer.phone;
     }
   }
 
@@ -159,20 +162,26 @@ function getCreateOrderPayload() {
       delete orderObj.payer.phone;
     }
 
-    if(isShippingPrefillAddressUsed === "true") {
+    if (shippingAddressPreference === "SET_PROVIDED_ADDRESS") {
       orderObj.application_context = {
-        shipping_preference: "SET_PROVIDED_ADDRESS"
-      }
+        shipping_preference: "SET_PROVIDED_ADDRESS",
+      };
+    } else {
+      orderObj.application_context = {
+        shipping_preference: shippingAddressPreference, // NO_SHIPPING / GET_FROM_FILE
+      };
     }
-    
-    if(isVaulting && isShippingPrefillAddressUsed === "false"
-    && components.includes("hosted-fields")
+
+    if (
+      isVaulting &&
+      shippingAddressPreference === "GET_FROM_FILE" &&
+      components.includes("hosted-fields")
     ) {
       orderObj.application_context = {
-        shipping_preference: "NO_SHIPPING"
-      }
+        shipping_preference: "NO_SHIPPING",
+      };
     }
- 
+
     let merchantIDs = merchantId.split(",");
     if (!merchantIDs || merchantIDs.length === 0) {
       alert("Merchant ID is missing");
@@ -184,7 +193,11 @@ function getCreateOrderPayload() {
     let totalAmt = +amount;
     let unitsLength = merchantIDs.length;
 
-    const breakIntoParts = (num, parts) => Array.from({length: parts}, (_,i) => 0|(i < num%parts ? num/parts+1 : num/parts))
+    const breakIntoParts = (num, parts) =>
+      Array.from(
+        { length: parts },
+        (_, i) => 0 | (i < num % parts ? num / parts + 1 : num / parts)
+      );
 
     let purchaseUnitsAmount = breakIntoParts(totalAmt, unitsLength);
 
@@ -192,9 +205,9 @@ function getCreateOrderPayload() {
 
     orderObj.purchase_units.push(...purchaseUnits);
 
-    function getPurchaseUnit (merchantID, index) {
+    function getPurchaseUnit(merchantID, index) {
       var unitObj = {
-        "reference_id": "PU-"+ merchantID + "-"+Math.random()*100000,
+        reference_id: "PU-" + merchantID + "-" + Math.random() * 100000,
         amount: {
           value: purchaseUnitsAmount[index].toString(),
           currency_code: currency,
@@ -232,12 +245,11 @@ function getCreateOrderPayload() {
         invoice_id: merchantID + "-invoice-" + Math.random() * 100000,
       };
 
-      if (isShippingPrefillAddressUsed === "false") {
+      if (shippingAddressPreference !== "SET_PROVIDED_ADDRESS") {
         delete unitObj.shipping.address;
       }
       return unitObj;
-    };
-  
+    }
   }
   var envObj = getEnvObj();
 
@@ -264,7 +276,7 @@ function getScriptQueryParam() {
   var isVaulting = $("[name=vaultingEnabled]").val() === "Yes";
   var isMSP = $("[name=isMSP]").val() === "Yes";
 
-  if(!isMSP) {
+  if (!isMSP) {
     merchantId = merchantId.split(",")[0];
   }
 
@@ -296,7 +308,7 @@ function getEnvObj() {
   var isVaulting = $("[name=vaultingEnabled]").val() === "Yes";
   var isMSP = $("[name=isMSP]").val() === "Yes";
 
-  if(!isMSP) {
+  if (!isMSP) {
     merchantId = merchantId.split(",")[0];
   }
 

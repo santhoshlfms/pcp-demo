@@ -35,7 +35,7 @@
             <center><mark>Customize the PayPal experience and click on Save</mark> </center>
           </u></h4>
 
-        <button class="btn btn-md btn-save" onclick="save()">Save
+        <button class="btn btn-md btn-save" style="position:sticky;top:0;z-index:100000000" onclick="save()">Save
         </button>
         <br />
 
@@ -257,7 +257,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-10 col-md-offset-1">
               <h5>Prefill Shipping Address ?</h5>
               <div class="segmented-control" style="width: 100%; color: #f7ae40">
@@ -271,6 +271,27 @@
               </div>
             </div>
           </div>
+         -->
+
+          <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+              <h5>Shipping Address Preference </h5>
+              <div class="segmented-control" style="width: 100%; color: #8D74C0">
+                <input type="radio" name="shipping-address-preference" id="shipping-address-preference-no"
+                  data-value="NO_SHIPPING">
+                <input type="radio" name="shipping-address-preference" id="shipping-address-preference-get"
+                  data-value="GET_FROM_FILE">
+                <input type="radio" name="shipping-address-preference" id="shipping-address-preference-set"
+                  data-value="SET_PROVIDED_ADDRESS" checked>
+
+                <label for="shipping-address-preference-no" data-value="NO_SHIPPING">NO_SHIPPING</label>
+                <label for="shipping-address-preference-get" data-value="GET_FROM_FILE">GET_FROM_FILE</label>
+                <label for="shipping-address-preference-set" data-value="SET_PROVIDED_ADDRESS"
+                  title="SET_PROVIDED_ADDRESS">SET_PROVIDED_ADDRESS</label>
+              </div>
+            </div>
+          </div>
+
 
           <div class="row">
             <div class="col-md-10 col-md-offset-1">

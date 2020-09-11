@@ -1,6 +1,7 @@
 var timerId = null;
 
-var CLIENT_ID = "AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh";
+var CLIENT_ID =
+  "AVajOV0VnH8tD0mWYqeWH22uB-DOIWPO5yRzmrqTCOeWx0oopJfeZl6NiL1NAITC3mKiTY1XuAT_mXeh";
 
 async function loadPPAndHostedJS(type) {
   var isLoaded = false;
@@ -26,7 +27,7 @@ async function loadPPAndHostedJS(type) {
       clientId,
       clientSecret,
       buyercountry,
-      
+
       // country,
       // lang,
       locale,
@@ -38,7 +39,7 @@ async function loadPPAndHostedJS(type) {
       intent,
       isPartner,
       isVaulting,
-      isMSP
+      isMSP,
     } = getScriptQueryParam();
 
     $("#paypal-button").empty();
@@ -75,7 +76,7 @@ async function loadPPAndHostedJS(type) {
     }
 
     $.LoadingOverlay("show");
-    
+
     let components = type;
 
     if (type == "both") {
@@ -86,43 +87,43 @@ async function loadPPAndHostedJS(type) {
     let shouldFetchClientToken =
       isVaulting || components.indexOf("hosted-fields") > -1;
 
-     if (shouldFetchClientToken) {
-       let clientTokenRespJson = await fetch("/pcp-get-client-token", {
-         method: "POST",
-         headers: {
-           Accept: "application/json",
-           "Content-Type": "application/json"
-         },
-         body: JSON.stringify({
-           envObj
-         })
-       });
+    if (shouldFetchClientToken) {
+      let clientTokenRespJson = await fetch("/pcp-get-client-token", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          envObj,
+        }),
+      });
 
-       let clientTokenResp = await clientTokenRespJson.json();
+      let clientTokenResp = await clientTokenRespJson.json();
 
-       console.log(clientTokenResp);
-       if (!clientTokenResp.status || !clientTokenResp.clientToken) {
-         alert(
-           "Some Error Occured in loading Hosted fields. Check the configuration"
-         );
-         addToConsole(
-           "Some Error Occured in loading Hosted fields. Check the configuration",
-           "error"
-         );
-         addToConsole(JSON.stringify(clientTokenResp.error));
-         $.LoadingOverlay("hide");
-         return;
-       }
+      console.log(clientTokenResp);
+      if (!clientTokenResp.status || !clientTokenResp.clientToken) {
+        alert(
+          "Some Error Occured in loading Hosted fields. Check the configuration"
+        );
+        addToConsole(
+          "Some Error Occured in loading Hosted fields. Check the configuration",
+          "error"
+        );
+        addToConsole(JSON.stringify(clientTokenResp.error));
+        $.LoadingOverlay("hide");
+        return;
+      }
 
-       clientToken = clientTokenResp.clientToken;
-     }
+      clientToken = clientTokenResp.clientToken;
+    }
 
     var file = `https://www.paypal.com/sdk/js?client-id=${clientId}&commit=true&components=${components}&debug=false&currency=${currency}`;
 
     file += `&intent=${intent}`;
 
     if (isPartner) {
-      if(isMSP) {
+      if (isMSP) {
         file += `&merchant-id=*`;
       } else {
         file += `&merchant-id=${merchantId}`;
@@ -134,9 +135,8 @@ async function loadPPAndHostedJS(type) {
     }
 
     if (setBuyerCountry == "true") {
-      if(env == "sandbox")
-        file += `&buyer-country=${buyercountry}`;
-      else  {
+      if (env == "sandbox") file += `&buyer-country=${buyercountry}`;
+      else {
         alert("Buyer Country cannot be used in Live");
         return;
       }
@@ -149,13 +149,13 @@ async function loadPPAndHostedJS(type) {
 
     if (shouldFetchClientToken) jsElm.dataset["clientToken"] = clientToken;
 
-    if(isPartner) {
+    if (isPartner) {
       jsElm.dataset["merchantId"] = merchantId;
     }
 
     document.body.appendChild(jsElm);
 
-    jsElm.onload = function() {
+    jsElm.onload = function () {
       if (type == "buttons") renderPPButton();
       else if (type == "hosted-fields") renderHostedButton();
       else if (type == "both") {
@@ -163,7 +163,7 @@ async function loadPPAndHostedJS(type) {
         renderHostedButton();
       }
 
-      setTimeout(function() {
+      setTimeout(function () {
         $.LoadingOverlay("hide");
         isLoaded = true;
       }, 4000);
@@ -182,21 +182,21 @@ async function loadPPAndHostedJS(type) {
 function save() {
   $("#plgStatus").empty();
 
+  window.scrollTo(0, 0);
 
-  let {
-    clientId,
-    clientSecret,
-  } = getScriptQueryParam();
+  let { clientId, clientSecret } = getScriptQueryParam();
 
-  if(clientId !== CLIENT_ID) {
-    if(!clientSecret || clientSecret.trim().length === 0) {
-      alert(" Looks like you have changed the Client Id . Please Enter Client Secret");
+  if (clientId !== CLIENT_ID) {
+    if (!clientSecret || clientSecret.trim().length === 0) {
+      alert(
+        " Looks like you have changed the Client Id . Please Enter Client Secret"
+      );
       return;
     }
   }
 
   var components = $("[name=components]:checked")
-    .map(function() {
+    .map(function () {
       return this.value;
     })
     .get();
@@ -240,10 +240,10 @@ function addToConsole(msg, state) {
   $("#plgStatus").append("<br/><br/>");
 }
 
-window.onerror = function(message, url, line, column, error) {
+window.onerror = function (message, url, line, column, error) {
   $.LoadingOverlay("hide");
   console.log("Uncaught error" + message + " " + error);
-  $("#paypal-error-container").html(
-    "<br/>Error Occurred while rendering buttons."
-  );
+  // $("#paypal-error-container").html(
+  //   "<br/>Error Occurred while rendering buttons."
+  // );
 };

@@ -79,35 +79,7 @@ function renderPPButton(isChange) {
           });
       },
 
-      onApprove: function (data, actions) {
-        $.LoadingOverlay("show", {
-          image: "",
-          text:
-            intent == "capture" ? "Capturing Order..." : "Authorizing Order...",
-          textClass: "loadingText",
-        });
-
-        let pr = null;
-        // // Get the transaction details
-        // return fetch("/pcp-get-order?id="+data.orderID,{
-        //   method: 'POST',
-        //   headers: {
-        //     Accept: "application/json",
-        //     "Content-Type": "application/json"
-        //   },
-        //   body: JSON.stringify({
-        //     envObj,
-        //   })
-        // })
-        // .then(res => res.json())
-        // .then(res => {
-        //     if(!res.id) {
-        //         addToConsole(JSON.stringify(res,null,4));
-        //     }
-        //     return res;
-        // })
-        // .then(function(details) {
-        // Optionally display the transaction details to the buyer
+      onApprove: async function (data, actions) {
         addToConsole("Authorized by Buyer");
         addToConsole("Info ");
         addToConsole(
@@ -117,6 +89,51 @@ function renderPPButton(isChange) {
         );
 
         console.log(data.orderID, data.payerID);
+
+        // if (false) {
+        //   // Get the transaction details
+        //   $.LoadingOverlay("show", {
+        //     image: "",
+        //     text: "GET ORDER after APPROVAL",
+        //     textClass: "loadingText",
+        //   });
+        //   addToConsole("GET ORDER after APPROVAL");
+
+        //   await fetch("/pcp-get-order?id=" + data.orderID, {
+        //     method: "POST",
+        //     headers: {
+        //       Accept: "application/json",
+        //       "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({
+        //       envObj,
+        //     }),
+        //   })
+        //     .then((res) => res.json())
+        //     .then((res) => {
+        //       if (!res.id) {
+        //         addToConsole(JSON.stringify(res, null, 4), "error");
+        //       }
+        //       return res;
+        //     })
+        //     .then((details) => {
+        //       addToConsole(
+        //         "<pre style='max-height:320px'>" +
+        //           JSON.stringify(details, null, 2) +
+        //           "</pre>"
+        //       );
+        //     });
+        // }
+
+        $.LoadingOverlay("show", {
+          image: "",
+          text:
+            intent == "capture" ? "Capturing Order..." : "Authorizing Order...",
+          textClass: "loadingText",
+        });
+
+        let pr = null;
+
         // Capture the funds from the transaction
         if (intent == "authorize") {
           pr = fetch("/pcp-auth-order?id=" + data.orderID, {
@@ -169,9 +186,10 @@ function renderPPButton(isChange) {
               return res;
             });
         }
+
         return pr
           .then(function (details) {
-            $.LoadingOverlay("hide");
+            //$.LoadingOverlay("hide");
             if (details === "Error") {
               alert("Some Error Occurred");
               throw new Error("Some Error Occurred");
@@ -179,7 +197,7 @@ function renderPPButton(isChange) {
             }
             return details;
           })
-          .then(function (details) {
+          .then(async function (details) {
             // Show a success message to your buyer
             if (intent == "capture") {
               alert("Payment Successful");
@@ -198,16 +216,12 @@ function renderPPButton(isChange) {
                 "</pre>"
             );
 
-            setTimeout(() => {
-              $.LoadingOverlay("show", {
-                image: "",
-                text: "GET Order...",
-                textClass: "loadingText",
-              });
-            }, 200);
+            await delay(100);
+
+            $.LoadingOverlay("text", "GET ORDER after " + intent.toUpperCase());
 
             // Get the transaction details
-            addToConsole("GET ORDER DETAILS ");
+            addToConsole("GET ORDER after  " + intent.toUpperCase());
             return fetch("/pcp-get-order?id=" + details.id, {
               method: "POST",
               headers: {
@@ -273,3 +287,9 @@ function renderPPButton(isChange) {
       addToConsole("ERROR - " + err.message, "error");
     });
 } // end of pp button render
+
+async function delay(ms) {
+  return new Promise((res) => {
+    setTimeout(() => res(), ms);
+  });
+}
