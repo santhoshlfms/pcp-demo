@@ -6,7 +6,18 @@ async function showQR() {
 
     let payer_id = "7J5E5MRJUDW9Q";
 
+    // Step 1 - SHOW QR
+
+    // Generate Unique Merchant Ref ID
+
     let merchant_ref_id = chance.string({
+      length: 45,
+      casing: "upper",
+      alpha: true,
+      numeric: true,
+    });
+
+    let uniqueId = chance.string({
       length: 45,
       casing: "upper",
       alpha: true,
@@ -15,11 +26,12 @@ async function showQR() {
 
     let time_stamp = Date.now();
 
+    console.log("UNIQUE ID " + uniqueId);
     console.log("Merchant Reference ID " + merchant_ref_id);
 
     let qrText = `https://www.paypal.com/qrcode/integrated?payer_id=${payer_id}&merchant_ref_id=${merchant_ref_id}&time_stamp=${time_stamp}`;
 
-    var qrcode = new QRCode(document.getElementById("qrcode"), {
+    let qrcode = new QRCode(document.getElementById("qrcode"), {
       text: qrText,
       width: 200,
       height: 200,
@@ -38,52 +50,40 @@ async function showQR() {
         document.querySelector("#statusContainer").clientHeight
     );
 
-    let source = new EventSource(
-      "/mpqrc/status?merchant_ref_id=" + merchant_ref_id
-    );
-
-    source.addEventListener("QRC_ID", (event) => {
-      document.getElementById("reader").style.display = "none";
-
-      console.log("QRC_ID event ", event);
-      console.log("data ", event.data);
-      let data = JSON.parse(event.data);
-
-      let qrcId = data?.qrc_refid;
-
-      console.log("QR ID from SSE ", qrcId);
-
-      if (qrcId) {
-        onScanSuccess(qrcId);
-      } else {
-        alert("QRC not received");
-      }
-      source.close();
-    });
-
-    source.addEventListener("MSG", (event) => {
-      //document.getElementById("reader").style.display = "none";
-      console.log("MSG event");
-      console.log("Data ", event.data);
-    });
-
-    source.addEventListener("EXCEPTION", (event) => {
-      document.getElementById("reader").style.display = "none";
-
-      console.log("Exception Event");
-      console.log("error ", event.data);
-      addToConsole("Error in getting QR ID from callback " + event.data);
-      alert("Error occured");
-      source.close();
-    });
+    processMPQRC(merchant_ref_id, uniqueId);
   } catch (err) {
     document.getElementById("reader").style.display = "none";
     console.error(err);
     addToConsole("Error Occurred " + err.message, "error");
     alert("Some Error Occurred");
+    $.LoadingOverlay("hide");
+  }
+}
+
+async function processMPQRC(merchant_ref_id, uniqueId) {
+  try {
+    // Step 1
+
+    let envObj = getEnvObj();
+
+    let source = new EventSource(
+      "/pcp-qrc-mpqrc-sse?merchant_ref_id=" +
+        merchant_ref_id +
+        "&uniqueId=" +
+        uniqueId +
+        "&env=" +
+        envObj.env
+    );
+
+    configureEventSourceListeners(source);
+  } catch (err) {
+    console.log("Error occurred " + err.message);
+    document.getElementById("reader").style.display = "none";
+    alert("Error occurred");
+    $.LoadingOverlay("hide");
   }
 }
 
 // setTimeout(() => {
-//   onScanSuccess(791036711956);
+//   processMPQRC(791036711951231231236);
 // }, 2000);

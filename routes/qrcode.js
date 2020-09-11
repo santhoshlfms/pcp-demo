@@ -1,4 +1,7 @@
 const request = require("request");
+const events = require("events");
+let eventEmitter = new events.EventEmitter();
+
 const getConfig = require("./pcpConfig").getConfig;
 
 const { getAccessToken, createCaptureDetailsQRPayload } = require("./util");
@@ -69,6 +72,10 @@ module.exports = function (router) {
       console.log("**** webhook query **** ", query);
 
       console.log("**** webhook body **** ", body);
+
+      // emit back the qrc id for the given merchant ref id
+      console.log("Emit QRC ID for merchant ref id " + merchant_ref_id);
+      eventEmitter.emit(merchant_ref_id, qrc_refid);
 
       const result = db
         .get("qrcodes")
@@ -153,10 +160,12 @@ module.exports = function (router) {
     });
   }); // db end
 
+  // cpqrc handler
   router.get("/pcp-qrc-cpqrc-sse", async function (req, res, next) {
-    let isResSent = false;
     try {
       console.log("*** CPQRC Capture DETAILS SSE ***");
+
+      console.log("Input Query CPQRC " + JSON.stringify(req.query));
 
       res.set("Cache-control", "no-cache");
       res.set("Content-type", "text/event-stream");
@@ -172,7 +181,70 @@ module.exports = function (router) {
 
       await delay(1000);
 
-      let { uniqueId, qrCode, env } = req.query;
+      qrcProcess(req, res);
+    } catch (e) {
+      console.log("Error occurred in CPQRC capture " + e.message);
+      res.end();
+    }
+  });
+
+  // mpqrc handler
+  router.get("/pcp-qrc-mpqrc-sse", async function (req, res, next) {
+    try {
+      console.log("*** MPQRC Capture DETAILS SSE ***");
+
+      console.log("Input Query MPQRC " + JSON.stringify(req.query));
+
+      res.set("Cache-control", "no-cache");
+      res.set("Content-type", "text/event-stream");
+      res.set("Connection", "keep-alive");
+      res.set("X-Accel-Buffering", "no");
+
+      let { merchant_ref_id } = req.query;
+
+      console.log("Setting up listener");
+      // listen on the merchant ref id to get the qrc id
+      eventEmitter.on(merchant_ref_id, callbackListener);
+
+      async function callbackListener(mpqrcData) {
+        console.log(
+          `Event fired for merchant ref id ${merchant_ref_id} with ${mpqrcData}`
+        );
+        let { qrc_refid } = mpqrcData || {};
+
+        sendEvent(req, res, "CALLBACK_RECVD", {
+          data: {
+            qrc_refid,
+            merchant_ref_id,
+          },
+        });
+
+        await delay(3000);
+
+        sendEvent(req, res, "STATUS", {
+          data: {
+            status: "AWAITING_USER_INPUT",
+            isDirect: true,
+          },
+        });
+
+        req.query.qrCode = qrc_refid;
+
+        qrcProcess(req, res);
+      }
+    } catch (e) {
+      console.log("Error occurred in MPQRC capture " + e.message);
+      res.end();
+    }
+  });
+
+  async function qrcProcess(req, res, listener) {
+    let isResSent = false;
+    try {
+      let { uniqueId, qrCode, env, merchant_ref_id } = req.query;
+
+      // remove event listener for mpqrc once fired
+      if (listener) eventEmitter.off(merchant_ref_id, listener);
 
       let requestId = uniqueId;
 
@@ -193,7 +265,7 @@ module.exports = function (router) {
       }
 
       console.log(" ENV OBJ *** " + JSON.stringify(envObj));
-      console.log(" CAPTURE QRC DETAILS SSE OBJ *** " + JSON.stringify(qrcObj));
+      console.log(" CAPTURE QRC DETAILS OBJ *** " + JSON.stringify(qrcObj));
       console.log("REQUEST ID " + requestId);
 
       let defaultConfig = getConfig(envObj.env);
@@ -253,13 +325,13 @@ module.exports = function (router) {
       });
 
       eventSource.on("close", function () {
-        console.log("over");
+        console.log("Stream Over");
         sendEvent(req, res, "CLOSE", { status: "CLOSE" });
         if (!isResSent) res.end();
       });
     } catch (err) {
-      console.log("Error occurred in making CAPTURE CPQRC DETAILS call ", err);
+      console.log("Error occurred in making CAPTURE QRC DETAILS call ", err);
       if (!isResSent) res.status(500).json({ err, message: err.message });
     }
-  });
+  }
 };

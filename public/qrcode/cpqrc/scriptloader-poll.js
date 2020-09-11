@@ -13,7 +13,7 @@ async function scanQR() {
         return;
       }
 
-      processCPQRC(qrIdInput);
+      onScanSuccess(qrIdInput);
       return;
     }
 
@@ -34,7 +34,7 @@ async function scanQR() {
       console.log("scan content " + content);
       scanner.stop();
       document.getElementById("reader").style.display = "none";
-      processCPQRC(content);
+      onScanSuccess(content);
     });
     Instascan.Camera.getCameras()
       .then(function (cameras) {
@@ -49,61 +49,14 @@ async function scanQR() {
         console.error(e);
         addToConsole("Error Occurred " + e.message, "error");
         alert("Some Error Occurred");
-        $.LoadingOverlay("hide");
-        document.getElementById("reader").style.display = "none";
       });
   } catch (err) {
     console.error(err);
-    document.getElementById("reader").style.display = "none";
     addToConsole("Error Occurred " + err.message, "error");
     alert("Some Error Occurred");
-    $.LoadingOverlay("hide");
-  }
-}
-
-async function processCPQRC(qrCode) {
-  try {
-    // Step 1
-    // GET QR CODE INPUT
-
-    addToConsole("QR CODE INPUT IS " + qrCode);
-
-    let uniqueId = chance.string({
-      length: 45,
-      casing: "upper",
-      alpha: true,
-      numeric: true,
-    });
-
-    console.log("UNIQUE ID " + uniqueId);
-
-    let envObj = getEnvObj();
-
-    // STEP 2
-    $.LoadingOverlay("show", {
-      image: "",
-      text: "CAPTURE DETAILS...",
-      textClass: "loadingText",
-    });
-
-    let source = new EventSource(
-      "/pcp-qrc-cpqrc-sse?uniqueId=" +
-        uniqueId +
-        "&qrCode=" +
-        qrCode +
-        "&env=" +
-        envObj.env
-    );
-
-    configureEventSourceListeners(source);
-  } catch (err) {
-    console.log("Error occurred " + err.message);
-    document.getElementById("reader").style.display = "none";
-    alert("Error occurred");
-    $.LoadingOverlay("hide");
   }
 }
 
 // setTimeout(() => {
-//   processCPQRC(791036711956);
+//   onScanSuccess(791036711956);
 // }, 2000);
