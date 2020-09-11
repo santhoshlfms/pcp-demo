@@ -1,4 +1,8 @@
-const EventSource = require("eventsource");
+const request = require("request");
+const getConfig = require("./pcpConfig").getConfig;
+
+const { getAccessToken, createCaptureDetailsQRPayload } = require("./util");
+
 const low = require("lowdb");
 const FileAsync = require("lowdb/adapters/FileAsync");
 
@@ -8,6 +12,17 @@ async function delay(ms) {
   return new Promise((res) => {
     setTimeout(() => res(), ms);
   });
+}
+
+function sendEvent(req, res, status, data) {
+  const END_OF_RECORD = "\n";
+  const record = [
+    "event: " + status,
+    "data: " + JSON.stringify(data),
+    END_OF_RECORD,
+  ].join("\n");
+  console.log(`(posterminal) Sending record: ${record}`);
+  res.write(record);
 }
 
 module.exports = function (router) {
@@ -116,17 +131,6 @@ module.exports = function (router) {
         sendEvent(req, res, "EXCEPTION", { message: "TIMED OUT" });
       }
 
-      function sendEvent(req, res, status, data) {
-        const END_OF_RECORD = "\n";
-        const record = [
-          "event: " + status,
-          "data: " + JSON.stringify(data),
-          END_OF_RECORD,
-        ].join("\n");
-        console.log(`(posterminal) Sending record: ${record}`);
-        res.write(record);
-      }
-
       res.end();
     }); // router end
 
@@ -148,4 +152,114 @@ module.exports = function (router) {
       res.json({ status: "DONE" });
     });
   }); // db end
+
+  router.get("/pcp-qrc-cpqrc-sse", async function (req, res, next) {
+    let isResSent = false;
+    try {
+      console.log("*** CPQRC Capture DETAILS SSE ***");
+
+      res.set("Cache-control", "no-cache");
+      res.set("Content-type", "text/event-stream");
+      res.set("Connection", "keep-alive");
+      res.set("X-Accel-Buffering", "no");
+
+      sendEvent(req, res, "STATUS", {
+        data: {
+          status: "AWAITING_USER_INPUT",
+          isDirect: true,
+        },
+      });
+
+      await delay(1000);
+
+      let { uniqueId, qrCode, env } = req.query;
+
+      let requestId = uniqueId;
+
+      let envObj = {
+        env,
+      };
+
+      let { qrcObj } = createCaptureDetailsQRPayload(uniqueId, qrCode);
+
+      sendEvent(req, res, "PAYLOAD", {
+        data: qrcObj,
+      });
+
+      if (!uniqueId || !qrCode || !env) {
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
+      }
+
+      console.log(" ENV OBJ *** " + JSON.stringify(envObj));
+      console.log(" CAPTURE QRC DETAILS SSE OBJ *** " + JSON.stringify(qrcObj));
+      console.log("REQUEST ID " + requestId);
+
+      let defaultConfig = getConfig(envObj.env);
+
+      let apiConfiguration = {
+        ...defaultConfig,
+        ...envObj,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID_QRC,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET_QRC,
+        MERCHANTID: envObj.merchantId,
+        requestId,
+      };
+
+      let accessTokenResp = await getAccessToken(apiConfiguration);
+
+      if (!accessTokenResp.status || accessTokenResp.statusCode > 201) {
+        console.log(
+          "Error in getting Access Token " + JSON.stringify(accessTokenResp)
+        );
+        res.status;
+        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
+      }
+
+      let accessToken = accessTokenResp.accessToken;
+
+      apiConfiguration.payload = qrcObj;
+
+      // do sse with capture qrc
+      var options = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "text/event-stream",
+          "PayPal-Request-Id": apiConfiguration.requestId,
+        },
+        body: apiConfiguration.payload,
+        json: true,
+      };
+
+      const eventSource = request.post(apiConfiguration.CAPTURE_QRC, options);
+
+      eventSource.on("data", function (event) {
+        console.log("Incoming Event ");
+        let bufferStr = event.toString();
+
+        console.log(bufferStr);
+
+        let indexStr = bufferStr.indexOf("{");
+        let dataStr = bufferStr.substr(indexStr);
+        try {
+          sendEvent(req, res, "STATUS", dataStr);
+        } catch (e) {
+          sendEvent(req, res, "EXCEPTION", { message: e.message });
+          isResSent = true;
+          if (!isResSent) res.end();
+        }
+      });
+
+      eventSource.on("close", function () {
+        console.log("over");
+        sendEvent(req, res, "CLOSE", { status: "CLOSE" });
+        if (!isResSent) res.end();
+      });
+    } catch (err) {
+      console.log("Error occurred in making CAPTURE CPQRC DETAILS call ", err);
+      if (!isResSent) res.status(500).json({ err, message: err.message });
+    }
+  });
 };

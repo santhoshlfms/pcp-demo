@@ -13,7 +13,7 @@ async function scanQR() {
         return;
       }
 
-      onScanSuccess(qrIdInput);
+      processQRC(qrIdInput);
       return;
     }
 
@@ -34,7 +34,7 @@ async function scanQR() {
       console.log("scan content " + content);
       scanner.stop();
       document.getElementById("reader").style.display = "none";
-      onScanSuccess(content);
+      processQRC(content);
     });
     Instascan.Camera.getCameras()
       .then(function (cameras) {
@@ -58,5 +58,5 @@ async function scanQR() {
 }
 
 // setTimeout(() => {
-//   onScanSuccess(791036711956);
+//   processQRC(791036711956);
 // }, 2000);
