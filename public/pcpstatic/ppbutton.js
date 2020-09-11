@@ -82,7 +82,8 @@ function renderPPButton(isChange) {
       onApprove: function (data, actions) {
         $.LoadingOverlay("show", {
           image: "",
-          text: intent == "capture" ? "Capturing Order..." : "Authorizing Order...",
+          text:
+            intent == "capture" ? "Capturing Order..." : "Authorizing Order...",
           textClass: "loadingText",
         });
 
@@ -118,7 +119,7 @@ function renderPPButton(isChange) {
         console.log(data.orderID, data.payerID);
         // Capture the funds from the transaction
         if (intent == "authorize") {
-          pr = fetch("/pcp-auth-order?id=" + data.payerID, {
+          pr = fetch("/pcp-auth-order?id=" + data.orderID, {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -134,8 +135,10 @@ function renderPPButton(isChange) {
                 addToConsole(
                   "<pre style='max-height:320px;color:red'>" +
                     JSON.stringify(res, null, 2) +
-                    "</pre>", "error");
-    
+                    "</pre>",
+                  "error"
+                );
+
                 return "Error";
               }
               return res;
@@ -151,18 +154,20 @@ function renderPPButton(isChange) {
               envObj,
             }),
           })
-          .then((res) => res.json())
-          .then((res) => {
-            if (!res.id) {
-              addToConsole(
-                "<pre style='max-height:320px;color:red'>" +
-                  JSON.stringify(res, null, 2) +
-                  "</pre>", "error");
-  
-              return "Error";
-            }
-            return res;
-          });
+            .then((res) => res.json())
+            .then((res) => {
+              if (!res.id) {
+                addToConsole(
+                  "<pre style='max-height:320px;color:red'>" +
+                    JSON.stringify(res, null, 2) +
+                    "</pre>",
+                  "error"
+                );
+
+                return "Error";
+              }
+              return res;
+            });
         }
         return pr
           .then(function (details) {
@@ -192,15 +197,15 @@ function renderPPButton(isChange) {
                 JSON.stringify(details, null, 2) +
                 "</pre>"
             );
-            
+
             setTimeout(() => {
               $.LoadingOverlay("show", {
                 image: "",
                 text: "GET Order...",
                 textClass: "loadingText",
               });
-            },200)
-            
+            }, 200);
+
             // Get the transaction details
             addToConsole("GET ORDER DETAILS ");
             return fetch("/pcp-get-order?id=" + details.id, {
@@ -220,19 +225,20 @@ function renderPPButton(isChange) {
               addToConsole(
                 "<pre style='max-height:320px;color:red'>" +
                   JSON.stringify(res, null, 2) +
-                  "</pre>", "error");
+                  "</pre>",
+                "error"
+              );
             }
             return res;
           })
           .then(function (details) {
-            
             addToConsole(
               "<pre style='max-height:320px'>" +
                 JSON.stringify(details, null, 2) +
                 "</pre>"
             );
           })
-          .catch(err => {
+          .catch((err) => {
             $.LoadingOverlay("hide");
           })
           .finally(() => {
