@@ -172,14 +172,16 @@ module.exports = function (router) {
       res.set("Connection", "keep-alive");
       res.set("X-Accel-Buffering", "no");
 
-      sendEvent(req, res, "STATUS", {
-        data: {
-          status: "AWAITING_USER_INPUT",
-          isDirect: true,
-        },
-      });
+      // sendEvent(req, res, "STATUS", {
+      //   data: {
+      //     status: "AWAITING_USER_INPUT",
+      //     isDirect: true,
+      //   },
+      // });
 
-      await delay(1000);
+      // await delay(1000);
+
+      req.query.qrType = "cpqrc";
 
       qrcProcess(req, res);
     } catch (e) {
@@ -230,16 +232,18 @@ module.exports = function (router) {
           },
         });
 
-        await delay(3000);
+        //await delay(3000);
 
-        sendEvent(req, res, "STATUS", {
-          data: {
-            status: "AWAITING_USER_INPUT",
-            isDirect: true,
-          },
-        });
+        // sendEvent(req, res, "STATUS", {
+        //   data: {
+        //     status: "AWAITING_USER_INPUT",
+        //     isDirect: true,
+        //   },
+        // });
 
         req.query.qrCode = qrc_refid;
+
+        req.query.qrType = "mpqrc";
 
         qrcProcess(req, res, callbackListener);
       }
@@ -252,7 +256,7 @@ module.exports = function (router) {
   async function qrcProcess(req, res, listener) {
     let isResSent = false;
     try {
-      let { uniqueId, qrCode, env, merchant_ref_id } = req.query;
+      let { uniqueId, qrCode, env, merchant_ref_id, qrType } = req.query;
 
       // remove event listener for mpqrc once fired
       if (listener) eventEmitter.off(merchant_ref_id, listener);
@@ -270,10 +274,20 @@ module.exports = function (router) {
       });
       console.log(uniqueId, qrCode, env);
 
-      if (!uniqueId || !qrCode || !env) {
+      if (!uniqueId || !qrCode || !env || !qrType) {
         console.log("Input values missing");
         sendEvent(req, res, "EXCEPTION", { message: "Invalid Request" });
         return;
+      }
+
+      if (qrType === "cpqrc") {
+        sendEvent(req, res, "STATUS", {
+          data: {
+            status: "AWAITING_USER_INPUT",
+            isDirect: true,
+          },
+        });
+        await delay(2000);
       }
 
       console.log(" ENV OBJ *** " + JSON.stringify(envObj));
