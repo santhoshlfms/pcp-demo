@@ -1,4 +1,10 @@
 async function configureEventSourceListeners(source) {
+  source.addEventListener("MSG", (event) => {
+    //document.getElementById("reader").style.display = "none";
+    console.log("MSG event");
+    console.log("Data ", event.data);
+  });
+
   source.addEventListener("CALLBACK_RECVD", async (event) => {
     document.getElementById("reader").style.display = "none";
     try {

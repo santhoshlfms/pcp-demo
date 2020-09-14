@@ -190,6 +190,7 @@ module.exports = function (router) {
 
   // mpqrc handler
   router.get("/pcp-qrc-mpqrc-sse", async function (req, res, next) {
+    let attempts = 1;
     try {
       console.log("*** MPQRC Capture DETAILS SSE ***");
 
@@ -206,11 +207,17 @@ module.exports = function (router) {
       // listen on the merchant ref id to get the qrc id
       eventEmitter.on(merchant_ref_id, callbackListener);
 
+      let interval = setInterval(() => {
+        sendEvent(req, res, "MSG", { attempts: attempts++ });
+      }, 2000);
+
       async function callbackListener(mpqrcData) {
         console.log(
           `Event fired for merchant ref id ${merchant_ref_id} with ${mpqrcData}`
         );
         let { qrc_refid } = mpqrcData || {};
+
+        clearInterval(interval);
 
         sendEvent(req, res, "CALLBACK_RECVD", {
           data: {
