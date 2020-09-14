@@ -237,7 +237,7 @@ module.exports = function (router) {
 
         req.query.qrCode = qrc_refid;
 
-        qrcProcess(req, res);
+        qrcProcess(req, res, callbackListener);
       }
     } catch (e) {
       console.log("Error occurred in MPQRC capture " + e.message);
