@@ -202,15 +202,16 @@ module.exports = function (router) {
       res.set("X-Accel-Buffering", "no");
 
       let { merchant_ref_id } = req.query;
-
+      console.log("Set up Attempts Timer");
       let interval = setInterval(() => {
         if (attempts > 25) {
+          console.log("Removing Attempts Timer");
           clearInterval(interval);
         }
         sendEvent(req, res, "MSG", { attempts: attempts++ });
       }, 3000);
 
-      console.log("Setting up listener");
+      console.log("Setting up listener on Merchant Id " + merchant_ref_id);
       // listen on the merchant ref id to get the qrc id
       eventEmitter.on(merchant_ref_id, callbackListener);
 
