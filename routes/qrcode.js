@@ -203,17 +203,16 @@ module.exports = function (router) {
 
       let { merchant_ref_id } = req.query;
 
-      console.log("Setting up listener");
-      // listen on the merchant ref id to get the qrc id
-      eventEmitter.on(merchant_ref_id, callbackListener);
-
       let interval = setInterval(() => {
+        if (attempts > 25) {
+          clearInterval(interval);
+        }
         sendEvent(req, res, "MSG", { attempts: attempts++ });
       }, 3000);
 
-      if (attempts > 25) {
-        clearInterval(interval);
-      }
+      console.log("Setting up listener");
+      // listen on the merchant ref id to get the qrc id
+      eventEmitter.on(merchant_ref_id, callbackListener);
 
       async function callbackListener(mpqrcData) {
         console.log(
