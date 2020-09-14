@@ -209,7 +209,7 @@ module.exports = function (router) {
 
       let interval = setInterval(() => {
         sendEvent(req, res, "MSG", { attempts: attempts++ });
-      }, 2000);
+      }, 3000);
 
       async function callbackListener(mpqrcData) {
         console.log(
