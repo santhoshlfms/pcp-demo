@@ -215,7 +215,7 @@ module.exports = function (router) {
         console.log(
           `Event fired for merchant ref id ${merchant_ref_id} with ${mpqrcData}`
         );
-        let { qrc_refid } = mpqrcData || {};
+        let qrc_refid = mpqrcData || "";
 
         clearInterval(interval);
 
@@ -264,11 +264,12 @@ module.exports = function (router) {
       sendEvent(req, res, "PAYLOAD", {
         data: qrcObj,
       });
+      console.log(uniqueId, qrCode, env);
 
       if (!uniqueId || !qrCode || !env) {
-        return res
-          .status(400)
-          .json({ message: "Invalid Request", statusCode: 400 });
+        console.log("Input values missing");
+        sendEvent(req, res, "EXCEPTION", { message: "Invalid Request" });
+        return;
       }
 
       console.log(" ENV OBJ *** " + JSON.stringify(envObj));
@@ -292,8 +293,10 @@ module.exports = function (router) {
         console.log(
           "Error in getting Access Token " + JSON.stringify(accessTokenResp)
         );
-        res.status;
-        return res.status(accessTokenResp.statusCode).json(accessTokenResp);
+        sendEvent(req, res, "EXCEPTION", {
+          message: "Error In getting access token",
+        });
+        return;
       }
 
       let accessToken = accessTokenResp.accessToken;
@@ -338,7 +341,11 @@ module.exports = function (router) {
       });
     } catch (err) {
       console.log("Error occurred in making CAPTURE QRC DETAILS call ", err);
-      if (!isResSent) res.status(500).json({ err, message: err.message });
+      if (!isResSent)
+        sendEvent(req, res, "EXCEPTION", {
+          message:
+            "Error occurred in making CAPTURE QRC DETAILS call " + err.message,
+        });
     }
   }
 };
