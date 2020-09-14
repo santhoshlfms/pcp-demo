@@ -272,7 +272,7 @@ module.exports = function (router) {
       sendEvent(req, res, "PAYLOAD", {
         data: qrcObj,
       });
-      console.log(uniqueId, qrCode, env);
+      console.log(uniqueId, qrCode, env, qrType);
 
       if (!uniqueId || !qrCode || !env || !qrType) {
         console.log("Input values missing");
