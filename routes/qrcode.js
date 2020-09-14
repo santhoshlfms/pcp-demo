@@ -211,6 +211,10 @@ module.exports = function (router) {
         sendEvent(req, res, "MSG", { attempts: attempts++ });
       }, 3000);
 
+      if (attempts > 25) {
+        clearInterval(interval);
+      }
+
       async function callbackListener(mpqrcData) {
         console.log(
           `Event fired for merchant ref id ${merchant_ref_id} with ${mpqrcData}`
