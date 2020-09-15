@@ -277,18 +277,20 @@ module.exports = function (router) {
       if (!uniqueId || !qrCode || !env || !qrType) {
         console.log("Input values missing");
         sendEvent(req, res, "EXCEPTION", { message: "Invalid Request" });
+        if (!isResSent) res.end();
+        isResSent = true;
         return;
       }
 
-      if (qrType === "cpqrc") {
-        sendEvent(req, res, "STATUS", {
-          data: {
-            status: "AWAITING_USER_INPUT",
-            isDirect: true,
-          },
-        });
-        await delay(2000);
-      }
+      // if (qrType === "cpqrc") {
+      //   sendEvent(req, res, "STATUS", {
+      //     data: {
+      //       status: "AWAITING_USER_INPUT",
+      //       isDirect: true,
+      //     },
+      //   });
+      //   await delay(2000);
+      // }
 
       console.log(" ENV OBJ *** " + JSON.stringify(envObj));
       console.log(" CAPTURE QRC DETAILS OBJ *** " + JSON.stringify(qrcObj));
@@ -314,6 +316,8 @@ module.exports = function (router) {
         sendEvent(req, res, "EXCEPTION", {
           message: "Error In getting access token",
         });
+        if (!isResSent) res.end();
+        isResSent = true;
         return;
       }
 
@@ -347,8 +351,8 @@ module.exports = function (router) {
           sendEvent(req, res, "STATUS", dataStr);
         } catch (e) {
           sendEvent(req, res, "EXCEPTION", { message: e.message });
-          isResSent = true;
           if (!isResSent) res.end();
+          isResSent = true;
         }
       });
 
@@ -356,6 +360,7 @@ module.exports = function (router) {
         console.log("Stream Over");
         sendEvent(req, res, "CLOSE", { status: "CLOSE" });
         if (!isResSent) res.end();
+        isResSent = true;
       });
     } catch (err) {
       console.log("Error occurred in making CAPTURE QRC DETAILS call ", err);
@@ -364,6 +369,8 @@ module.exports = function (router) {
           message:
             "Error occurred in making CAPTURE QRC DETAILS call " + err.message,
         });
+      isResSent = true;
+      res.end();
     }
   }
 };
