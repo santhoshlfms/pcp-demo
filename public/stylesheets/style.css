@@ -639,3 +639,7 @@ a {
       padding-bottom: 10px;
       line-height: 1.5em;
   }
+
+  #myModal {
+    z-index:10000000000 !important;
+  }
