@@ -120,6 +120,8 @@ async function loadPPAndHostedJS(type) {
 
     var file = `https://www.paypal.com/sdk/js?client-id=${clientId}&commit=true&components=${components}&debug=false&currency=${currency}`;
 
+    //file += `&enable-funding=venmo`;
+
     file += `&intent=${intent}`;
 
     if (isPartner) {

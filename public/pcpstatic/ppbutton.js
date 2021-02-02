@@ -2,12 +2,13 @@
 function renderPPButton(isChange) {
   if (isChange) {
     $.LoadingOverlay("show");
-
+    $("#paypal-button").empty();
     setTimeout(() => {
       $.LoadingOverlay("hide");
     }, 1000);
+    
   }
-  //$("#paypal-button").empty();
+  
   $("#paypal-button").show();
 
   const { envObj, orderObj } = getCreateOrderPayload();
