@@ -18,7 +18,7 @@ function loadHostedButtons() {
         expirationDate: {
           selector: "#cc-expiration-date",
           placeholder: "MM/YYYY",
-          prefill: "01/2021",
+          prefill: "01/2022",
         },
       },
       styles: {

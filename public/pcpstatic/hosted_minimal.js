@@ -131,8 +131,8 @@ function loadHostedButtons() {
         },
         expirationDate: {
           selector: "#expiration-date",
-          placeholder: "01/2021",
-          prefill: "01/2021",
+          placeholder: "01/2022",
+          prefill: "01/2022",
         },
       },
     })

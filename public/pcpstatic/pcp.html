@@ -15,12 +15,12 @@
     var is3dsEnabled = $("#3dsEnabled").val() == "Yes";
 
     var components = $("[name=components]:checked")
-    .map(function() {
-      return this.value;
-    })
-    .get();
+        .map(function () {
+            return this.value;
+        })
+        .get();
 
-    
+
     const styleObj = {
         layout: $("#layout").val(),
         shape: $("#shape").val(), // pill | rect
@@ -34,7 +34,7 @@
 
     function loadData() {
 
-        if(!components || components.length == 0) return;
+        if (!components || components.length == 0) return;
 
         editor = ace.edit('editor');
         editor.setTheme("ace/theme/tomorrow_night_blue");
@@ -61,214 +61,215 @@
         }
 
         function code() {
-            var resp = "<html>\r\n<head>\r\n" +  scriptHtml + "\r\n";
-            resp +='<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">\r\n';
-            
+            var resp = "<html>\r\n<head>\r\n" + scriptHtml + "\r\n";
+            resp +=
+                '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">\r\n';
+
             resp += '</head>\r\n\r\n<body>\r\n\r\n';
 
             // pp butons container
-            if(components.includes("buttons")) {
-            resp +=
-                "<h1>PayPal Buttons </h1>\r\n\r\n<div id=\"paypal-button-container\"></div>\r\n\r\n";
+            if (components.includes("buttons")) {
+                resp +=
+                    "<h1>PayPal Buttons </h1>\r\n\r\n<div id=\"paypal-button-container\"></div>\r\n\r\n";
             }
             // hosted fields container
-            if(components.includes("hosted-fields")) {
-            resp +=
-                '<h1>Hosted-Fields</h1>\r\n\r\n <form id="my-sample-form">\r\n'+
-                    '        <div class="row">\r\n'+
-                    '            <div class="form-group col-sm-8">\r\n'+
-                    '                <label class="control-label">Card Number</label>\r\n'+
-                    '                <div class="form-control" id="card-number"></div>\r\n'+
-                    '                <span class="helper-text"></span>\r\n'+
-                    '            </div>\r\n'+
-                    '        </div>\r\n'+
-                    '        <div class="row">\r\n'+
-                    '            <div class="form-group col-sm-8">\r\n'+
-                    '                <label class="control-label">Expiration Date</label>\r\n'+
-                    '                <div class="form-control" id="expiration-date"></div>\r\n'+
-                    '            </div>\r\n'+
-                    '        </div>\r\n'+
-                    '        <div class="row">\r\n'+
-                    '            <div class="form-group col-sm-8">\r\n'+
-                    '                <label class="control-label">Security Code</label>\r\n'+
-                    '                <div class="form-control" id="cvv"></div>\r\n'+
-                    '            </div>\r\n'+
-                    '        </div>\r\n'+
-                    '        <button value="submit" id="submit" class="btn btn-success btn-sm">Pay with <span id="card-type">Card</span></button>\r\n'+
-                    '      <div id="payments-sdk__contingency-lightbox"></div>\r\n'+
+            if (components.includes("hosted-fields")) {
+                resp +=
+                    '<h1>Hosted-Fields</h1>\r\n\r\n <form id="my-sample-form">\r\n' +
+                    '        <div class="row">\r\n' +
+                    '            <div class="form-group col-sm-8">\r\n' +
+                    '                <label class="control-label">Card Number</label>\r\n' +
+                    '                <div class="form-control" id="card-number"></div>\r\n' +
+                    '                <span class="helper-text"></span>\r\n' +
+                    '            </div>\r\n' +
+                    '        </div>\r\n' +
+                    '        <div class="row">\r\n' +
+                    '            <div class="form-group col-sm-8">\r\n' +
+                    '                <label class="control-label">Expiration Date</label>\r\n' +
+                    '                <div class="form-control" id="expiration-date"></div>\r\n' +
+                    '            </div>\r\n' +
+                    '        </div>\r\n' +
+                    '        <div class="row">\r\n' +
+                    '            <div class="form-group col-sm-8">\r\n' +
+                    '                <label class="control-label">Security Code</label>\r\n' +
+                    '                <div class="form-control" id="cvv"></div>\r\n' +
+                    '            </div>\r\n' +
+                    '        </div>\r\n' +
+                    '        <button value="submit" id="submit" class="btn btn-success btn-sm">Pay with <span id="card-type">Card</span></button>\r\n' +
+                    '      <div id="payments-sdk__contingency-lightbox"></div>\r\n' +
                     '    </form>\r\n';
-            }   
+            }
 
             resp += "\r\n<\script>\r\n";
 
             // pp buttons code    
-            if(components.includes("buttons")) {       
-                resp += '// Code to set up PayPal Buttons '+ 
-                "    // Render the PayPal button\r\n" +
-                "    paypal.Buttons({\r\n" +
-                "        // Specify the style of the button\r\n" +
-                "       "+  loadStyles()+
-                "        // Wait for the PayPal button to be clicked\r\n" +
-                "        createOrder: function(data, actions) {\r\n" +
-                "           // Replace your create order server url below \r\n"+
-                "           return fetch('/create-order',{ \r\n" +
-                "                    method: 'POST', \r\n"+
-                "                    headers: { \r\n"+
-                "                        'Accept': 'application/json', \r\n"+
-                "                        'Content-Type': 'application/json' \r\n"+
-                "                       },\r\n"+
-                "                    body: JSON.stringify("+JSON.stringify(orderObj, null , 4)+")\r\n"+
-                "          }).then(res => res.json())\r\n"+
-                "          .then(d => d.id)"+"\r\n"+
-                "        },\r\n" +
-                "        // Wait for the payment to be authorized by the customer\r\n" +
-                "        onApprove: function(data, actions) {\r\n" +
-                "           // Replace your get order server url below \r\n"+
-                "            return fetch('/get-order?id='+data.orderID,{ "+"\r\n"+
-                "                    method: 'GET', \r\n"+
-                "                    headers: { \r\n"+
-                "                      'Accept': 'application/json', \r\n"+
-                "                      'Content-Type': 'application/json' \r\n"+
-                "                    }\r\n"+
-                "            })\r\n"+
-                "            .then(res => res.json())\r\n"+
-                "            .then(function(details) { \r\n"+
-                "                console.log('approved ', details); \r\n";
+            if (components.includes("buttons")) {
+                resp += '// Code to set up PayPal Buttons ' +
+                    "    // Render the PayPal button\r\n" +
+                    "    paypal.Buttons({\r\n" +
+                    "        // Specify the style of the button\r\n" +
+                    "       " + loadStyles() +
+                    "        // Wait for the PayPal button to be clicked\r\n" +
+                    "        createOrder: function(data, actions) {\r\n" +
+                    "           // Replace your create order server url below \r\n" +
+                    "           return fetch('/create-order',{ \r\n" +
+                    "                    method: 'POST', \r\n" +
+                    "                    headers: { \r\n" +
+                    "                        'Accept': 'application/json', \r\n" +
+                    "                        'Content-Type': 'application/json' \r\n" +
+                    "                       },\r\n" +
+                    "                    body: JSON.stringify(" + JSON.stringify(orderObj, null, 4) + ")\r\n" +
+                    "          }).then(res => res.json())\r\n" +
+                    "          .then(d => d.id)" + "\r\n" +
+                    "        },\r\n" +
+                    "        // Wait for the payment to be authorized by the customer\r\n" +
+                    "        onApprove: function(data, actions) {\r\n" +
+                    "           // Replace your get order server url below \r\n" +
+                    "            return fetch('/get-order?id='+data.orderID,{ " + "\r\n" +
+                    "                    method: 'GET', \r\n" +
+                    "                    headers: { \r\n" +
+                    "                      'Accept': 'application/json', \r\n" +
+                    "                      'Content-Type': 'application/json' \r\n" +
+                    "                    }\r\n" +
+                    "            })\r\n" +
+                    "            .then(res => res.json())\r\n" +
+                    "            .then(function(details) { \r\n" +
+                    "                console.log('approved ', details); \r\n";
                 resp += intent == "capture" ?
-                "                // Replace your capture order server url below \r\n"+
-                "                return fetch('/capture-order?id='+data.orderID,{ \r\n"+
-                "                       method: 'POST', \r\n"+
-                "                       headers: { \r\n"+
-                "                           'Accept': 'application/json', \r\n"+
-                "                           'Content-Type': 'application/json' \r\n"+
-                "                       } \r\n"+
-                "                }).then(res => res.json());\r\n" : 
-                "                // Replace your authorize order server url below \r\n"+
-                "                return fetch('/auth-order?id='+data.orderID,{\r\n"+
-                "                       method: 'POST', \r\n"+
-                "                       headers: { \r\n"+
-                "                         'Accept': 'application/json',\r\n"+
-                "                         'Content-Type': 'application/json'\r\n"+
-                "                       }\r\n"+
-                "               }).then(res => res.json());\r\n";
-                resp +="\r\n";
-                
-        resp+="            })\r\n" +
-                "           .then(function(result){\r\n"+
-                "               console.log('Result ', result);\r\n";
-            resp += intent=='capture' ? "\r\n"+
-                "               alert('Payment Successful') \r\n":
-                "               alert('Payment Authorized. Capture the Order once you are ready') \r\n";
-            resp +="           })\r\n"+
-                "        },\r\n" +
-                "        onCancel: function(data) { \r\n"+
-                "         // Show a cancel page or return to cart page \r\n" +
-                "        },\r\n"+
-                "        onError: function(err) { \r\n"+
-                "         // Show an error page here, when an error occurs \r\n" +
-                "        },\r\n"+
-                "    }).render('#paypal-button-container');\r\n" ;
+                    "                // Replace your capture order server url below \r\n" +
+                    "                return fetch('/capture-order?id='+data.orderID,{ \r\n" +
+                    "                       method: 'POST', \r\n" +
+                    "                       headers: { \r\n" +
+                    "                           'Accept': 'application/json', \r\n" +
+                    "                           'Content-Type': 'application/json' \r\n" +
+                    "                       } \r\n" +
+                    "                }).then(res => res.json());\r\n" :
+                    "                // Replace your authorize order server url below \r\n" +
+                    "                return fetch('/auth-order?id='+data.orderID,{\r\n" +
+                    "                       method: 'POST', \r\n" +
+                    "                       headers: { \r\n" +
+                    "                         'Accept': 'application/json',\r\n" +
+                    "                         'Content-Type': 'application/json'\r\n" +
+                    "                       }\r\n" +
+                    "               }).then(res => res.json());\r\n";
+                resp += "\r\n";
+
+                resp += "            })\r\n" +
+                    "           .then(function(result){\r\n" +
+                    "               console.log('Result ', result);\r\n";
+                resp += intent == 'capture' ? "\r\n" +
+                    "               alert('Payment Successful') \r\n" :
+                    "               alert('Payment Authorized. Capture the Order once you are ready') \r\n";
+                resp += "           })\r\n" +
+                    "        },\r\n" +
+                    "        onCancel: function(data) { \r\n" +
+                    "         // Show a cancel page or return to cart page \r\n" +
+                    "        },\r\n" +
+                    "        onError: function(err) { \r\n" +
+                    "         // Show an error page here, when an error occurs \r\n" +
+                    "        },\r\n" +
+                    "    }).render('#paypal-button-container');\r\n";
             }
 
             // hosted fields code
-           if(components.includes("hosted-fields")) {
-            resp +="// Code to set up hosted fields "+         
-                "// Set up the Hosted Fields\r\n"+
-"   paypal.HostedFields.render({\r\n"+
-"        createOrder: function(data, actions) {\r\n" +
-"           // Replace your create order server url below \r\n"+
-"           return fetch('/create-order',{ \r\n" +
-"                    method: 'POST', \r\n"+
-"                    headers: { \r\n"+
-"                       'Accept': 'application/json', \r\n"+
-"                       'Content-Type': 'application/json' \r\n"+
-"                    },\r\n"+
-"                    body: JSON.stringify("+JSON.stringify(orderObj, null , 4)+")\r\n"+
-"            }).then(res => res.json())\r\n"+
-"            .then(d => d.id)"+"\r\n"+
-"        },\r\n" +
-'        styles: {\r\n'+
-'           \'input\': {\r\n'+
-'              \'font-size\': \'20px\',\r\n'+
-'              \'font-family\': \'helvetica, tahoma, calibri, sans-serif\',\r\n'+
-'              \'color\': \'#3a3a3a\'\r\n'+
-'           },\r\n'+
-'           \':focus\': {\r\n'+
-'           \'color\': \'black\'\r\n'+
-'          }\r\n'+
-'        },\r\n'+
-'        fields: {\r\n'+
-'            number: {\r\n'+
-'               selector: \'#card-number\',\r\n'+
-'               placeholder: \'card number\',\r\n'+
-'               prefill: \'5555 5555 5555 4444\'\r\n'+
-'           },\r\n'+
-'            cvv: {\r\n'+
-'              selector: \'#cvv\',\r\n'+
-'               placeholder: \'cvv\',\r\n'+
-'               prefill: \'123\'\r\n'+
-'            },\r\n'+
-'            expirationDate: {\r\n'+
-'               selector: \'#expiration-date\',\r\n'+
-'               placeholder: \'MM/YYYY\',\r\n'+
-'               prefill: \'01/2021\'\r\n'+
-'            }\r\n'+
-'        }\r\n'+
-'       }).then(function (hf) {\r\n'+
-'          document.getElementById(\'my-sample-form\').addEventListener("submit",function (event) {\r\n'+
-'              event.preventDefault();\r\n'+
-'\r\n'+
-'           hf.submit({\r\n';
-if(is3dsEnabled) {
-    resp += '   		    contingencies: [\'3D_SECURE\'] \r\n';
-}
-if(isVaulting) {
-    resp += '              vault: true  \r\n';
-}
+            if (components.includes("hosted-fields")) {
+                resp += "// Code to set up hosted fields " +
+                    "// Set up the Hosted Fields\r\n" +
+                    "   paypal.HostedFields.render({\r\n" +
+                    "        createOrder: function(data, actions) {\r\n" +
+                    "           // Replace your create order server url below \r\n" +
+                    "           return fetch('/create-order',{ \r\n" +
+                    "                    method: 'POST', \r\n" +
+                    "                    headers: { \r\n" +
+                    "                       'Accept': 'application/json', \r\n" +
+                    "                       'Content-Type': 'application/json' \r\n" +
+                    "                    },\r\n" +
+                    "                    body: JSON.stringify(" + JSON.stringify(orderObj, null, 4) + ")\r\n" +
+                    "            }).then(res => res.json())\r\n" +
+                    "            .then(d => d.id)" + "\r\n" +
+                    "        },\r\n" +
+                    '        styles: {\r\n' +
+                    '           \'input\': {\r\n' +
+                    '              \'font-size\': \'20px\',\r\n' +
+                    '              \'font-family\': \'helvetica, tahoma, calibri, sans-serif\',\r\n' +
+                    '              \'color\': \'#3a3a3a\'\r\n' +
+                    '           },\r\n' +
+                    '           \':focus\': {\r\n' +
+                    '           \'color\': \'black\'\r\n' +
+                    '          }\r\n' +
+                    '        },\r\n' +
+                    '        fields: {\r\n' +
+                    '            number: {\r\n' +
+                    '               selector: \'#card-number\',\r\n' +
+                    '               placeholder: \'card number\',\r\n' +
+                    '               prefill: \'5555 5555 5555 4444\'\r\n' +
+                    '           },\r\n' +
+                    '            cvv: {\r\n' +
+                    '              selector: \'#cvv\',\r\n' +
+                    '               placeholder: \'cvv\',\r\n' +
+                    '               prefill: \'123\'\r\n' +
+                    '            },\r\n' +
+                    '            expirationDate: {\r\n' +
+                    '               selector: \'#expiration-date\',\r\n' +
+                    '               placeholder: \'MM/YYYY\',\r\n' +
+                    '               prefill: \'01/2022\'\r\n' +
+                    '            }\r\n' +
+                    '        }\r\n' +
+                    '       }).then(function (hf) {\r\n' +
+                    '          document.getElementById(\'my-sample-form\').addEventListener("submit",function (event) {\r\n' +
+                    '              event.preventDefault();\r\n' +
+                    '\r\n' +
+                    '           hf.submit({\r\n';
+                if (is3dsEnabled) {
+                    resp += '   		    contingencies: [\'3D_SECURE\'] \r\n';
+                }
+                if (isVaulting) {
+                    resp += '              vault: true  \r\n';
+                }
 
-resp += '\r\n       	    }).then(function (payload) {\r\n'+
-'		    	 console.log("Payload "+ payload);\r\n'+
-'          	     if (payload.nonce) {\r\n'+
-'			        console.log(\'Tokenized (Nonce): \' + payload.nonce);\r\n'+
-'			    }\r\n'+
-'			    if (payload.orderId) {\r\n';
+                resp += '\r\n       	    }).then(function (payload) {\r\n' +
+                    '		    	 console.log("Payload "+ payload);\r\n' +
+                    '          	     if (payload.nonce) {\r\n' +
+                    '			        console.log(\'Tokenized (Nonce): \' + payload.nonce);\r\n' +
+                    '			    }\r\n' +
+                    '			    if (payload.orderId) {\r\n';
 
-resp += intent == "capture" ? " // Replace your capture order server url below \r\n"+     
-"                  return fetch('/capture-order?id='+payload.orderId,{ \r\n"+
-"                                   method: 'POST', \r\n"+
-"                                   headers: { \r\n"+
-"                                     'Accept': 'application/json', \r\n"+
-"                                     'Content-Type': 'application/json' \r\n"+
-"                                   } \r\n"+
-"                    }).then(res => res.json());\r\n" : 
-"                    // Replace your authorize order server url below \r\n"+
-"                    return fetch('/auth-order?id='+payload.orderId,{\r\n"+
-"                           method: 'POST', \r\n"+
-"                           headers: { \r\n"+
-"                               'Accept': 'application/json',\r\n"+
-"                               'Content-Type': 'application/json'\r\n"+
-"                           }\r\n"+
-"                    }).then(res => res.json());\r\n ";
+                resp += intent == "capture" ? " // Replace your capture order server url below \r\n" +
+                    "                  return fetch('/capture-order?id='+payload.orderId,{ \r\n" +
+                    "                                   method: 'POST', \r\n" +
+                    "                                   headers: { \r\n" +
+                    "                                     'Accept': 'application/json', \r\n" +
+                    "                                     'Content-Type': 'application/json' \r\n" +
+                    "                                   } \r\n" +
+                    "                    }).then(res => res.json());\r\n" :
+                    "                    // Replace your authorize order server url below \r\n" +
+                    "                    return fetch('/auth-order?id='+payload.orderId,{\r\n" +
+                    "                           method: 'POST', \r\n" +
+                    "                           headers: { \r\n" +
+                    "                               'Accept': 'application/json',\r\n" +
+                    "                               'Content-Type': 'application/json'\r\n" +
+                    "                           }\r\n" +
+                    "                    }).then(res => res.json());\r\n ";
 
-resp +="        }\r\n";
-resp+="            })\r\n" +
-        "           .then(function(result){\r\n"+
-        "               console.log('done ', result);\r\n";
-    resp += intent=='capture' ? "\r\n"+
-        "               alert('Payment Successful') \r\n":
-        "               alert('Payment Authorized. Capture the Order once you are ready') \r\n";
-    resp +="           })\r\n"+
-        "        })\r\n" +
-        "    })\r\n" ;
-    }
-
-
-        // close content
-        resp +=        "<\/script>\r\n" +
-                "    \r\n</body>\r\n</html>\r\n";
-                return resp;
+                resp += "        }\r\n";
+                resp += "            })\r\n" +
+                    "           .then(function(result){\r\n" +
+                    "               console.log('done ', result);\r\n";
+                resp += intent == 'capture' ? "\r\n" +
+                    "               alert('Payment Successful') \r\n" :
+                    "               alert('Payment Authorized. Capture the Order once you are ready') \r\n";
+                resp += "           })\r\n" +
+                    "        })\r\n" +
+                    "    })\r\n";
             }
-    
+
+
+            // close content
+            resp += "<\/script>\r\n" +
+                "    \r\n</body>\r\n</html>\r\n";
+            return resp;
+        }
+
 
         function loadStyles() {
 
