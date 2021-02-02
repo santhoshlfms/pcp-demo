@@ -42,7 +42,7 @@ async function loadPPAndHostedJS(type) {
       isMSP,
     } = getScriptQueryParam();
 
-    $("#paypal-button").empty();
+    //$("#paypal-button").empty();
     $("#paypal-button").hide();
     $("#hcontainer").empty();
 

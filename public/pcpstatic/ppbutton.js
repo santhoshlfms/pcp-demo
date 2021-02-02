@@ -7,7 +7,7 @@ function renderPPButton(isChange) {
       $.LoadingOverlay("hide");
     }, 1000);
   }
-  $("#paypal-button").empty();
+  //$("#paypal-button").empty();
   $("#paypal-button").show();
 
   const { envObj, orderObj } = getCreateOrderPayload();
