@@ -265,7 +265,10 @@ function getScriptQueryParam() {
   var clientId = $("[name=clientId]").val().trim();
   var clientSecret = $("[name=clientSecret]").val().trim();
   var merchantId = $("[name=merchantId]").val().trim();
-  var customerId = $("[name=customerId]").val().trim();
+
+  var customerId = localStorage.getItem("customerId");
+  if (!customerId || customerId === "null" || customerId === "undefined")
+    customerId = $("[name=customerId]").val().trim();
 
   var currency = $("[name=currency]").val();
   var setLocale = $("[name=set-locale]:checked").attr("data-value");

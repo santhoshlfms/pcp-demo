@@ -456,6 +456,18 @@
     </div>
 
     <script>
+        var customerId = localStorage.getItem("customerId");
+
+        if (!customerId || customerId == "null" || customerId == "undefined")
+            customerId = chance.string({
+                length: 10,
+                casing: 'upper',
+                alpha: true,
+                numeric: true
+            });
+
+        $("[name=customerId").val(customerId);
+
         loadPPAndHostedJS('hosted-fields');
     </script>
 
@@ -468,21 +480,7 @@
             }
             $("[name=clientSecret").attr("disabled", false);
         }
-
-
-        var customerId = localStorage.getItem("customerId");
-
-        if (!customerId || customerId == "null" || customerId == "undefined")
-            customerId = chance.string({
-                length: 10,
-                casing: 'upper',
-                alpha: true,
-                numeric: true
-            });
-
-        $("[name=customerId").val(customerId);
     </script>
-
 
     <%- include("../footer",{page_name:"pcp",section_name:'home'}) %>
 
