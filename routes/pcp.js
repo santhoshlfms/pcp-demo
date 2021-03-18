@@ -21,6 +21,7 @@ const {
   getSellerCredentials,
   captureQRC,
   getCaptureQRCDetails,
+  getVaultToken,
 } = require("./util");
 
 module.exports = function (router) {
@@ -724,6 +725,72 @@ module.exports = function (router) {
         "Error occurred in making GET CAPTURE QRC DETAILS call ",
         err
       );
+      res.status(500).json({ err, message: err.message });
+    }
+  });
+
+  router.post("/pcp-get-vault-token", async function (req, res, next) {
+    try {
+      console.log("*** GET Vault Token ***");
+
+      if (!req.body.envObj) {
+        return res
+          .status(400)
+          .json({ message: "Invalid Request", statusCode: 400 });
+      }
+
+      console.log("ENV OBJ *** " + JSON.stringify(req.body.envObj));
+
+      let { envObj } = req.body;
+
+      let defaultConfig = getConfig(envObj.env);
+
+      let apiConfiguration = {
+        ...defaultConfig,
+        ...envObj,
+        CLIENT_ID: envObj.clientId || defaultConfig.CLIENT_ID,
+        SECRET: envObj.clientSecret || defaultConfig.SECRET,
+        MERCHANTID: envObj.merchantId,
+        CUSTOMER_ID: envObj.customerId,
+        isVaulting: envObj.isVaulting,
+      };
+
+      let accessTokenResp = await getAccessToken(apiConfiguration);
+
+      if (!accessTokenResp.status || accessTokenResp.statusCode > 201) {
+        console.log(
+          "Error in getting Access Token " + JSON.stringify(accessTokenResp)
+        );
+        return res
+          .status(accessTokenResp.statusCode)
+          .json({ ...accessTokenResp });
+      }
+
+      let accessToken = accessTokenResp.accessToken;
+
+      let getVaultTokenResponse = await getVaultToken(
+        accessToken,
+        apiConfiguration
+      );
+
+      if (
+        !getVaultTokenResponse.status ||
+        getVaultTokenResponse.statusCode > 201
+      ) {
+        console.log(
+          "Error in getting vault token call " +
+            JSON.stringify(getVaultTokenResponse)
+        );
+        return res
+          .status(getVaultTokenResponse.statusCode)
+          .json({ ...getVaultTokenResponse });
+      }
+      console.log("Returning back the vault token response ");
+      return res.json({
+        ...getVaultTokenResponse,
+      });
+    } catch (err) {
+      console.log("Error occurred in getting vault token ", err.message);
       res.status(500).json({ err, message: err.message });
     }
   });

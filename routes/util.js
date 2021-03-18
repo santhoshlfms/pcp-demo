@@ -969,6 +969,96 @@ function createCaptureDetailsQRPayload(uniqueId, qrCode) {
   return { qrcObj };
 }
 
+function getVaultToken(accessToken, apiConfiguration) {
+  console.log("Is Vaulting Enabled " + apiConfiguration.isVaulting);
+  console.log("CUSTOMER_ID ", apiConfiguration.CUSTOMER_ID);
+  const url =
+    apiConfiguration.GET_VAULT_TOKEN +
+    "?customer_id=" +
+    apiConfiguration.CUSTOMER_ID;
+  console.log("URL ", url);
+  return new Promise((resolve, reject) => {
+    var options = {
+      method: "GET",
+      url,
+      headers: {
+        authorization: "Bearer " + accessToken,
+        "cache-control": "no-cache",
+        "content-type": "application/json",
+      },
+      json: true,
+    };
+    console.log("Is Partner " + apiConfiguration.isPartner);
+
+    console.log("Is MSP " + apiConfiguration.isMSP);
+
+    if (apiConfiguration.isPartner && !apiConfiguration.isMSP) {
+      options.headers["PayPal-Auth-Assertion"] = getAuthAssertion(
+        apiConfiguration
+      );
+    }
+
+    request(options, function (error, response, body) {
+      if (error) {
+        console.log(
+          "Error in getting vault token from api " + JSON.stringify(error)
+        );
+        return resolve({
+          vaultToken: "",
+          vaultTokenResp: error,
+          status: false,
+          error: error,
+          statusCode: response.statusCode,
+          headers: response.headers,
+        });
+      } else {
+        try {
+          let vaultTokenResp = body;
+          console.log(
+            "Vault Token response is " + JSON.stringify(vaultTokenResp)
+          );
+          if (
+            vaultTokenResp &&
+            vaultTokenResp.payment_tokens &&
+            vaultTokenResp.payment_tokens.length > 0
+          ) {
+            console.log("Found Vault Token ", vaultTokenResp.payment_tokens);
+            return resolve({
+              vaultToken: vaultTokenResp.payment_tokens,
+              vaultTokenResp: vaultTokenResp,
+              status: true,
+              error: null,
+              statusCode: response.statusCode,
+              headers: response.headers,
+            });
+          } else {
+            return resolve({
+              vaultToken: "",
+              vaultTokenResp: vaultTokenResp,
+              status: false,
+              error: body,
+              statusCode: response.statusCode,
+              headers: response.headers,
+            });
+          }
+        } catch (err) {
+          console.log(
+            "Error in Parsing Vault Token response " + JSON.stringify(err)
+          );
+          return resolve({
+            vaultToken: "",
+            vaultTokenResp: err,
+            status: false,
+            error: err,
+            statusCode: 500,
+            headers: {},
+          });
+        }
+      }
+    });
+  });
+}
+
 exports.getAuthAssertion = getAuthAssertion;
 exports.getAccessToken = getAccessToken;
 exports.createOrder = createOrder;
@@ -983,3 +1073,4 @@ exports.getSellerCredentials = getSellerCredentials;
 exports.captureQRC = captureQRC;
 exports.getCaptureQRCDetails = getCaptureQRCDetails;
 exports.createCaptureDetailsQRPayload = createCaptureDetailsQRPayload;
+exports.getVaultToken = getVaultToken;

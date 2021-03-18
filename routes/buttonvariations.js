@@ -169,5 +169,17 @@ module.exports = function (router) {
       db.get("orders").remove({}).write();
       res.json({ status: "DONE" });
     });
+
+    router.get(["/vault"], function (req, res, next) {
+      var obj = {
+        COUNTRY,
+        LANG,
+        LOCALES,
+        CURRENCY,
+        LOCALE_COUNTRY,
+        APM,
+      };
+      res.render("buttonvariations/vault", { config: obj });
+    });
   });
 };

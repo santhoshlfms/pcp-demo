@@ -58,6 +58,7 @@ var config = {
     CANCEL_URL: "https://ignis.serveo.net/cancel-url",
     RETURN_URL: "https://android-ec-nvp-server.herokuapp.com/execute-payments",
     BN_CODE: "PCP-DEMO-PORTAL",
+    GET_VAULT_TOKEN: "https://api.sandbox.paypal.com/v2/vault/payment-tokens",
   },
   production: {
     CLIENT_ID: "",
@@ -80,6 +81,7 @@ var config = {
     CUSTOMER_ID: "",
     ACCESS_TOKEN_URL: "https://api.paypal.com/v1/oauth2/token",
     GET_CLIENT_TOKEN: "https://api.paypal.com/v1/identity/generate-token",
+    GET_VAULT_TOKEN: "https://api.paypal.com/v2/vault/payment-tokens",
   },
 };
 
