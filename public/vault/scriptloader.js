@@ -106,12 +106,20 @@ async function loadPPAndHostedJS(type) {
       console.log(vaultTokenResp);
       if (!vaultTokenResp.status || !vaultTokenResp.vaultToken) {
         addToConsole("GET Vault token Response", "error");
-        addToConsole(JSON.stringify(vaultTokenResp.vaultTokenResp));
+        addToConsole(
+          "<pre style='max-height:180px'>" +
+            JSON.stringify(vaultTokenResp.vaultTokenResp, null, 2) +
+            "</pre>"
+        );
         shouldRenderStandaloneCard = false;
       } else {
         addToConsole("GET Vault token Response");
         addToConsole("Customer's Card Vaulted Already");
-        addToConsole(JSON.stringify(vaultTokenResp.vaultTokenResp));
+        addToConsole(
+          "<pre style='max-height:320px'>" +
+            JSON.stringify(vaultTokenResp.vaultTokenResp, null, 2) +
+            "</pre>"
+        );
 
         shouldRenderStandaloneCard = true;
 
