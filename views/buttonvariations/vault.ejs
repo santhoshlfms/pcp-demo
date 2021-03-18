@@ -458,15 +458,17 @@
     <script>
         var customerId = localStorage.getItem("customerId");
 
-        if (!customerId || customerId == "null" || customerId == "undefined")
+        if (!customerId || customerId == "null" || customerId == "undefined") {
             customerId = chance.string({
                 length: 10,
                 casing: 'upper',
                 alpha: true,
                 numeric: true
             });
-
+            localStorage.setItem("customerId", customerId);
+        }
         $("[name=customerId").val(customerId);
+
 
         loadPPAndHostedJS('hosted-fields');
     </script>
