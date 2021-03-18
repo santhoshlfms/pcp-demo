@@ -111,7 +111,7 @@ async function loadPPAndHostedJS(type) {
       } else {
         addToConsole("GET Vault token Response");
         addToConsole("Customer's Card Vaulted Already");
-        addToConsole(JSON.stringify(vaultTokenResp.vaultToken));
+        addToConsole(JSON.stringify(vaultTokenResp.vaultTokenResp));
 
         shouldRenderStandaloneCard = true;
 
